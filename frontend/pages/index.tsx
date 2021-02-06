@@ -1,4 +1,5 @@
-import Head from 'next/head'
+import Head from 'next/head';
+import Image from 'next/image';
 
 export const Home = (): JSX.Element => (
   <div className="container">
@@ -18,9 +19,8 @@ export const Home = (): JSX.Element => (
 
       <button
         onClick={() => {
-          window.alert('With typescript and Jest')
-        }}
-      >
+          window.alert('With typescript and Jest');
+        }}>
         Test Button
       </button>
 
@@ -37,19 +37,26 @@ export const Home = (): JSX.Element => (
 
         <a
           href="https://github.com/vercel/next.js/tree/master/examples"
-          className="card"
-        >
+          className="card">
           <h3>Examples &rarr;</h3>
           <p>Discover and deploy boilerplate example Next.js projects.</p>
         </a>
 
         <a
           href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          className="card"
-        >
+          className="card">
           <h3>Deploy &rarr;</h3>
           <p>Instantly deploy your Next.js site to a public URL with Vercel.</p>
         </a>
+      </div>
+      <div className="w-100">
+        <Image
+          src="/images/profile.jpg"
+          alt="Cat"
+          width={600}
+          height={400}
+          layout="responsive"
+        />
       </div>
     </main>
 
@@ -57,8 +64,7 @@ export const Home = (): JSX.Element => (
       <a
         href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
         target="_blank"
-        rel="noopener noreferrer"
-      >
+        rel="noopener noreferrer">
         Powered by <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
       </a>
     </footer>
@@ -208,6 +214,6 @@ export const Home = (): JSX.Element => (
       }
     `}</style>
   </div>
-)
+);
 
-export default Home
+export default Home;
