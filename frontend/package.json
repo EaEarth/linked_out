@@ -26,7 +26,13 @@
     ]
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.34",
+    "@fortawesome/free-brands-svg-icons": "^5.15.2",
+    "@fortawesome/free-regular-svg-icons": "^5.15.2",
+    "@fortawesome/free-solid-svg-icons": "^5.15.2",
+    "@fortawesome/react-fontawesome": "^0.1.14",
     "bootstrap": "^4.6.0",
+    "bootstrap-icons": "^1.3.0",
     "next": "latest",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.3",
