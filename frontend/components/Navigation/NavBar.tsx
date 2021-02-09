@@ -32,7 +32,12 @@ export const NavBar = (props) => {
   }, [router.pathname]);
   // Render navigation bar
   return (
-    <Navbar bg="light" expand="md" sticky="top" className={styles.navbar}>
+    <Navbar
+      bg="primary"
+      variant="dark"
+      expand="md"
+      sticky="top"
+      className={styles.navbar}>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Brand
         href="/"
@@ -66,7 +71,7 @@ export const NavBar = (props) => {
             </NavDropdown.Item>
           </NavDropdown>
         </Nav>
-        <Form inline>
+        <Form inline className="d-none d-md-flex">
           <FormControl type="text" placeholder="Search" className="mr-sm-2" />
           <Button variant="outline-success">Search</Button>
         </Form>
