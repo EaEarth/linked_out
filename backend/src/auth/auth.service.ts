@@ -1,15 +1,38 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
+import { genSaltSync, hashSync, compareSync } from "bcrypt";
+import { JwtService } from '@nestjs/jwt';
+
 
 @Injectable()
 export class AuthService {
-    constructor(private readonly usersService: UsersService){}
+    constructor(
+        private readonly usersService: UsersService,
+        private readonly jwtService: JwtService
+        ){}
 
     async validateUser(username:string, pass:string): Promise<any> {
-        const user = await this.usersService.findOne(username);
-        if(user && user.hashedPassword){
-
+        const user = await this.usersService.findByUsername(username);
+        if(user && this.vertify(pass,user.hashedPassword)){
+            const { hashedPassword, ...result} = user;
+            return result;
         }
         return null;
+    }
+
+    async login(user: any) {
+        const payload = { username: user.username, sub: user.id };
+        return {
+          access_token: this.jwtService.sign(payload),
+        };
+      }
+
+    hash(pwd: string): string{
+        const salt: string = genSaltSync(12);
+        return hashSync(pwd, salt);
+    }
+
+    vertify(pwd: string,pwdhash: string): boolean{
+        return compareSync(pwd, pwdhash)
     }
 }
