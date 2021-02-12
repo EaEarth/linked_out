@@ -1,5 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToOne, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
-import { JobDetail } from "./jobDetail.entity"
+import { Column, Entity, PrimaryGeneratedColumn, OneToOne, CreateDateColumn, UpdateDateColumn, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Tag } from './tag.entity';
 
 @Entity()
 export class JobAnnouncement {
@@ -10,25 +10,31 @@ export class JobAnnouncement {
   title: string;
 
   @Column()
-  tag: string;
-
-  @Column()
-  description: string;
-
-  @Column()
   company: string;
 
   @Column()
   ownerId: number;
 
   @Column()
-  salary: number;
+  lowerSalary: number;
 
   @Column()
-  position: string;
+  upperSalary: number;
 
   @Column({ default: true })
   isPublished: boolean;
+
+  @Column()
+  description: string;
+
+  @Column()
+  address: string;
+
+  @Column()
+  province: string;
+
+  @Column()
+  amountRequired: number;
   
   @CreateDateColumn()
   createdAt: Date;
@@ -36,8 +42,8 @@ export class JobAnnouncement {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToOne(type => JobDetail, jobDetail => jobDetail.jobAnnouncement)
-  @JoinColumn()
-  jobDetail: JobDetail;
+  @ManyToMany(() => Tag, tag => tag.jobAnnouncements)
+  @JoinTable()
+  tags: Tag[];
 
 }

@@ -7,14 +7,29 @@ import {
     Param,
     ParseIntPipe,
     Patch,
+    ValidationPipe,
+    UsePipes,
   } from '@nestjs/common';
 import { JobAnnouncement } from 'src/entities/job/jobAnnouncement.entity';
-import { createAnnouncement } from './dto/create-announcement.dto';
+import { createAnnouncement } from './jobDto/create-announcement.dto';
+import { updateAnnouncement } from './jobDto/update-announcement.dto';
 import { JobService } from './job.service';
+import { searchAnnouncement } from './jobDto/search-announcement.dto';
 
 @Controller('job')
 export class JobController {
     constructor(private readonly service: JobService) {}
+
+    @Get('index')
+    indexGet(): Promise<JobAnnouncement[]> {
+      return this.service.index();
+    }
+
+    @Get('search')
+    @UsePipes(new ValidationPipe({whitelist:true}))
+    searchGet(@Body() dto: searchAnnouncement): Promise<JobAnnouncement[]> {
+      return this.service.search(dto);
+    }
 
     @Get('index/:id')
     findById(@Param('id', new ParseIntPipe()) id: number): Promise<JobAnnouncement> {
@@ -37,12 +52,19 @@ export class JobController {
     }
   
     @Post()
-    create(@Body() dto: Omit<createAnnouncement, 'id'>): Promise<JobAnnouncement> {
+    @UsePipes(new ValidationPipe({whitelist:true}))
+    create(@Body() dto: createAnnouncement): Promise<JobAnnouncement> {
       return this.service.createAnnouncement(dto);
     }
   
     @Patch(':id')
-    update( @Param('id', new ParseIntPipe()) id: number, @Body() dto: Partial<Omit<JobAnnouncement, 'id'>>,): Promise<JobAnnouncement> {
+    @UsePipes(new ValidationPipe({whitelist:true}))
+    update( @Param('id', new ParseIntPipe()) id: number, @Body() dto: updateAnnouncement): Promise<JobAnnouncement> {
+      for (const [key, value] of Object.entries(dto)) {
+        if (value == null) {
+            delete dto[key];
+        }
+      }
       return this.service.update(id, dto);
     }
   

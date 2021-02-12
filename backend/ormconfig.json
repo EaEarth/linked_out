@@ -2,9 +2,9 @@
     "type": "mysql",
     "host": "localhost",
     "port": 3306,
-    "username": "userSolus",
+    "username": "solus",
     "password": "solus",
-    "database": "linkedOut",
+    "database": "solus",
     "entities": ["dist/**/*.entity{.ts,.js}"],
     "synchronize": true
   }

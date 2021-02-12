@@ -2,36 +2,38 @@ import { IsInt, IsBoolean, IsNotEmpty } from 'class-validator';
 
 export class createAnnouncement{
     @IsNotEmpty()
-    readonly title : string;
-
-    @IsNotEmpty()
-    readonly description : string;
-
-    readonly tag : string;
+    readonly tag : string[];
 
     @IsNotEmpty()
     readonly company : string;
 
     @IsNotEmpty()
+    @IsInt()
     readonly ownerId : number;
 
     @IsNotEmpty()
     @IsInt()
-    readonly salary: number;
+    readonly lowerSalary: number;
 
     @IsNotEmpty()
-    readonly position: string;
+    @IsInt()
+    readonly upperSalary: number;
+
+    @IsNotEmpty()
+    readonly title: string;
 
     @IsNotEmpty()
     @IsBoolean()
     readonly isPublished: boolean;
 
-    // For creating detail
     @IsNotEmpty()
-    readonly detailDescription: string;
+    readonly description: string;
 
     @IsNotEmpty()
     readonly address: string;
+
+    @IsNotEmpty()
+    readonly province: string;
 
     @IsInt()
     readonly amountRequired: number;
