@@ -18,6 +18,7 @@ const DEFAULT_NAVBAR_TITLE = 'LinkedOut';
 const navBarTitleMapping: Record<string, string> = {
   '/test': 'Test',
   '/': 'Home',
+  '/jobs': 'Job Announcements',
 };
 
 export const NavBar = (props) => {
@@ -59,6 +60,12 @@ export const NavBar = (props) => {
               Test
             </Nav.Link>
           </Link>
+          <Link href="/jobs">
+            <Nav.Link active={router.pathname === '/jobs'} href="/jobs">
+              Jobs
+            </Nav.Link>
+          </Link>
+
           <NavDropdown title="Dropdown" id="basic-nav-dropdown">
             <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
             <NavDropdown.Item href="#action/3.2">
