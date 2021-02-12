@@ -27,8 +27,8 @@ export class User {
     @Column()
     lastname: string;
 
-    @Column("timestamp")
-    birthDate: Timestamp;
+    @Column("date")
+    birthDate: Date;
 
     @Column()
     address: string;
