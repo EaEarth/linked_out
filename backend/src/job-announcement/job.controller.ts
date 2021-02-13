@@ -61,6 +61,7 @@ export class JobController {
       return this.service.createAnnouncement(req.user,dto);
     }
   
+    @UseGuards(JwtAuthGuard)
     @Patch(':id')
     @UsePipes(new ValidationPipe({whitelist:true}))
     update( @Param('id', new ParseIntPipe()) id: number, @Body() dto: updateAnnouncement): Promise<JobAnnouncement> {
@@ -72,6 +73,7 @@ export class JobController {
       return this.service.update(id, dto);
     }
   
+    @UseGuards(JwtAuthGuard)
     @Delete(':id')
     delete(@Param('id', new ParseIntPipe()) id: number): Promise<JobAnnouncement> {
       return this.service.delete(id);

@@ -43,7 +43,7 @@ export class JobService {
     }
 
     findBySalary(salaryMin: number): Promise<JobAnnouncement[]>{
-        return this.repo.find({where:{ salary: MoreThanOrEqual(salaryMin) }});
+        return this.repo.find({where:{ lowerSalary: MoreThanOrEqual(salaryMin), is_published: true }});
     }
 
     async createAnnouncement(owner : User ,dto: createAnnouncement): Promise<JobAnnouncement>{
@@ -70,8 +70,33 @@ export class JobService {
     }
 
     async update(id: number, dto: updateAnnouncement): Promise<JobAnnouncement> {
-        const jobAnnouncement = { ...(await this.findById(id)), ...dto };
-        return this.repo.save(jobAnnouncement);
+        const {tag, ...updateInfo} = dto;
+        var tagArr = [];
+        var seen = {};
+        var tagEntity;
+        if(tag !== undefined){
+            for(var i=0; i<tag.length; ++i){
+                tagEntity = await this.tagRepo.findOne({where:{ name: tag[i]}}).then(async (entity)=>{
+                    if(seen[tag[i]] == 1) return;
+                    seen[tag[i]] = 1;
+                    if (entity === undefined){
+                        const info = {name : tag[i]}
+                        const tagObj = {...new Tag(), ...info};
+                        await this.tagRepo.save(tagObj);
+                        tagArr.push(tagObj);
+                    }else {
+                        tagArr.push(entity);
+                    }
+                });
+            }
+        }
+        var announcement, repoAnnouncement
+        await this.findById(id).then(async (entity)=>{
+            if(tag !== undefined ) entity.tags = tagArr;
+            announcement = {...entity, ...updateInfo}
+            repoAnnouncement = await this.repo.save(announcement);
+        })
+        return repoAnnouncement
     }
 
     async delete(id: number): Promise<JobAnnouncement>{

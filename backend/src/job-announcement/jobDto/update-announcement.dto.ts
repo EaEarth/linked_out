@@ -9,7 +9,7 @@ export class updateAnnouncement{
     readonly description : string;
 
     @IsOptional()
-    readonly tag : string;
+    readonly tag : string[];
 
     @IsOptional()
     readonly company : string;
@@ -22,10 +22,6 @@ export class updateAnnouncement{
 
     @IsOptional()
     readonly province: string;
-
-    @IsOptional()
-    @IsInt()
-    readonly ownerId : number;
 
     @IsOptional()
     @IsInt()
@@ -42,4 +38,8 @@ export class updateAnnouncement{
     @IsOptional()
     @IsInt()
     readonly amountRequired: number;
+
+    @IsOptional()
+    @IsInt()
+    readonly pictureId= 1;
 }
