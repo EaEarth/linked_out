@@ -1,5 +1,6 @@
 import { Type } from "class-transformer";
 import { IsDate, IsDateString, IsEmail, IsEmpty, IsInt, IsLatitude, IsLongitude, IsNotEmpty, IsNumber, IsNumberString, Length } from "class-validator";
+import { JobAnnouncement } from "src/entities/job/jobAnnouncement.entity";
 import { Double } from "typeorm";
 
 export class createUser{
@@ -50,5 +51,9 @@ export class createUser{
     @IsEmpty()
     avatarFileId: number;
 
+    @IsEmpty()
+    isAdmin: boolean;
 
+    @IsEmpty()
+    jobAnnouncement : JobAnnouncement[];
 }

@@ -24,7 +24,6 @@ export class UsersController {
     @Post()
     @UsePipes(new ValidationPipe({whitelist:true, transform: true}))
     create(@Body() dto: createUser){
-        console.log(dto);
         return this.service.create(dto);
     }
 

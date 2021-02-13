@@ -6,6 +6,5 @@
     "password": "solus",
     "database": "solus",
     "entities": ["dist/**/*.entity{.ts,.js}"],
-    "synchronize": true,
-    "dropSchema":true
+    "synchronize": true
   }

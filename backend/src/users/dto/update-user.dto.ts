@@ -44,4 +44,7 @@ export class updateUser{
     @IsOptional()
     @IsNumber()
     avatarFileId: number;
+
+    @IsOptional()
+    isAdmin: boolean;
 }
