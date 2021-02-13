@@ -7,15 +7,17 @@ import { updateAnnouncement } from './jobDto/update-announcement.dto';
 import { searchAnnouncement } from './jobDto/search-announcement.dto';
 import { Tag } from 'src/entities/job/tag.entity';
 import { User } from 'src/entities/users/user.entity';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class JobService {
     constructor(
         @InjectRepository(JobAnnouncement) private readonly repo: Repository<JobAnnouncement>,
         @InjectRepository(Tag) private readonly tagRepo: Repository<Tag>,
+        private UsersService: UsersService
     ){}
 
-    index(): Promise<JobAnnouncement[]>{
+    async index(): Promise<JobAnnouncement[]>{
         return this.repo.find();
     }
 
@@ -48,7 +50,8 @@ export class JobService {
         const {tag, ...announcement} = dto
         var jobAnnouncement = { ...new JobAnnouncement(), ...announcement };
         jobAnnouncement.tags = [];
-        jobAnnouncement.owner = owner;
+        const user = await this.UsersService.findById(owner.id);
+        jobAnnouncement.owner = user;
         var seen = {};
         var tagEntity;
         for(var i = 0; i<tag.length; ++i){
@@ -71,10 +74,9 @@ export class JobService {
         const {tag, ...updateInfo} = dto;
         var tagArr = [];
         var seen = {};
-        var tagEntity;
         if(tag !== undefined){
             for(var i=0; i<tag.length; ++i){
-                tagEntity = await this.tagRepo.findOne({where:{ name: tag[i]}}).then(async (entity)=>{
+                await this.tagRepo.findOne({where:{ name: tag[i]}}).then(async (entity)=>{
                     if(seen[tag[i]] == 1) return;
                     seen[tag[i]] = 1;
                     if (entity === undefined){
