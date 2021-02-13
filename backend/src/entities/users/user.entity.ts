@@ -27,8 +27,8 @@ export class User {
     @Column()
     lastname: string;
 
-    @Column("timestamp")
-    birthDate: Timestamp;
+    @Column("date")
+    birthDate: Date;
 
     @Column()
     address: string;
@@ -42,9 +42,12 @@ export class User {
     @Column()
     telNumber: string;
 
-    @Column("timestamp",{default: null})
-    vertifyAt: Timestamp;
+    @Column("date",{default: null})
+    vertifyAt: Date;
 
     @Column({default: null})
     avatarFileId: number;
+
+    @Column({default: false})
+    isAdmin: boolean;
 }

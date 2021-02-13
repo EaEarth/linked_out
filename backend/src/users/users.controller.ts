@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post,Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post,Request, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { userInfo } from 'os';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { User } from 'src/entities/users/user.entity';
+import { createUser } from './dto/create-user.dto';
+import { updateUser } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -20,15 +22,18 @@ export class UsersController {
     }
 
     @Post()
-    create(@Body() dto: Omit<User,'id'>){
+    @UsePipes(new ValidationPipe({whitelist:true, transform: true}))
+    create(@Body() dto: createUser){
+        console.log(dto);
         return this.service.create(dto);
     }
-    
+
     @UseGuards(JwtAuthGuard)
     @Patch(':id')
+    @UsePipes(new ValidationPipe({whitelist:true, transform: true}))
     update(
         @Param('id',new ParseIntPipe()) id: number, 
-        @Body() dto: Partial<Omit<User,'id'>>,
+        @Body() dto: updateUser,
     ) {
         return this.service.update(id,dto);
     }
