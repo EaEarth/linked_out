@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToOne, CreateDateColumn, UpdateDateColumn, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToOne, CreateDateColumn, UpdateDateColumn, JoinColumn, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
+import { User } from '../users/user.entity';
 import { Tag } from './tag.entity';
 
 @Entity()
@@ -13,7 +14,7 @@ export class JobAnnouncement {
   company: string;
 
   @Column()
-  ownerId: number;
+  pictureId: number; 
 
   @Column()
   lowerSalary: number;
@@ -45,5 +46,8 @@ export class JobAnnouncement {
   @ManyToMany(() => Tag, tag => tag.jobAnnouncements)
   @JoinTable()
   tags: Tag[];
+
+  @ManyToOne(() => User, user => user.jobAnnouncements)
+  owner: User;
 
 }

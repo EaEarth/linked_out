@@ -10,6 +10,7 @@ import {
     ValidationPipe,
     UsePipes,
     UseGuards,
+    Request,
   } from '@nestjs/common';
 import { JobAnnouncement } from 'src/entities/job/jobAnnouncement.entity';
 import { createAnnouncement } from './jobDto/create-announcement.dto';
@@ -17,10 +18,6 @@ import { updateAnnouncement } from './jobDto/update-announcement.dto';
 import { JobService } from './job.service';
 import { searchAnnouncement } from './jobDto/search-announcement.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { PoliciesGuard } from 'src/policies/policy.guard';
-import { CheckPolicies } from 'src/policies/policy.decorator';
-import { AppAbility } from 'src/casl/casl-ability.factory';
-import { Action } from 'src/policies/action.enum';
 
 @Controller('job')
 export class JobController {
@@ -60,8 +57,8 @@ export class JobController {
     @Post()
     @UseGuards(JwtAuthGuard)
     @UsePipes(new ValidationPipe({whitelist:true}))
-    create(@Body() dto: createAnnouncement): Promise<JobAnnouncement> {
-      return this.service.createAnnouncement(dto);
+    create(@Request() req, @Body() dto: createAnnouncement): Promise<JobAnnouncement> {
+      return this.service.createAnnouncement(req.user,dto);
     }
     
     @Patch(':id')

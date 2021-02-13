@@ -1,5 +1,6 @@
-import { Column, Double, Entity, PrimaryColumn, PrimaryGeneratedColumn, Timestamp, Unique } from "typeorm";
+import { Column, Double, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, Timestamp, Unique } from "typeorm";
 import { IsDate, IsEmail } from 'class-validator';
+import { JobAnnouncement } from "../job/jobAnnouncement.entity";
 
 @Entity()
 @Unique(["username"])
@@ -50,4 +51,7 @@ export class User {
 
     @Column({default: false})
     isAdmin: boolean;
+
+    @OneToMany(() => JobAnnouncement, jobAnnouncement => jobAnnouncement.user)
+    jobAnnouncements: JobAnnouncement[];
 }
