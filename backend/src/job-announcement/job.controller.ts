@@ -18,6 +18,7 @@ import { updateAnnouncement } from './jobDto/update-announcement.dto';
 import { JobService } from './job.service';
 import { searchAnnouncement } from './jobDto/search-announcement.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Tag } from 'src/entities/job/tag.entity';
 
 @Controller('job')
 export class JobController {
@@ -77,5 +78,10 @@ export class JobController {
     @Delete(':id')
     delete(@Param('id', new ParseIntPipe()) id: number): Promise<JobAnnouncement> {
       return this.service.delete(id);
+    }
+
+    @Post('tag/:name')
+    createTag(@Param('name') name: string ): Promise<Tag>{
+      return this.service.createTag(name);
     }
 }

@@ -52,6 +52,6 @@ export class User {
     @Column({default: false})
     isAdmin: boolean;
 
-    @OneToMany(() => JobAnnouncement, jobAnnouncement => jobAnnouncement.user)
+    @OneToMany(() => JobAnnouncement, jobAnnouncement => jobAnnouncement.owner)
     jobAnnouncements: JobAnnouncement[];
 }

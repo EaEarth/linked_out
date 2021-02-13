@@ -47,7 +47,7 @@ export class JobAnnouncement {
   @JoinTable()
   tags: Tag[];
 
-  @ManyToOne(() => User, user => user.jobAnnouncements)
-  user: User;
+  @ManyToOne(() => User, owner => owner.jobAnnouncements)
+  owner: User;
 
 }

@@ -6,7 +6,6 @@ import { createAnnouncement } from './jobDto/create-announcement.dto';
 import { updateAnnouncement } from './jobDto/update-announcement.dto';
 import { searchAnnouncement } from './jobDto/search-announcement.dto';
 import { Tag } from 'src/entities/job/tag.entity';
-import { UsersService } from 'src/users/users.service';
 import { User } from 'src/entities/users/user.entity';
 
 @Injectable()
@@ -14,7 +13,6 @@ export class JobService {
     constructor(
         @InjectRepository(JobAnnouncement) private readonly repo: Repository<JobAnnouncement>,
         @InjectRepository(Tag) private readonly tagRepo: Repository<Tag>,
-        private usersService: UsersService
     ){}
 
     index(): Promise<JobAnnouncement[]>{
@@ -50,7 +48,7 @@ export class JobService {
         const {tag, ...announcement} = dto
         var jobAnnouncement = { ...new JobAnnouncement(), ...announcement };
         jobAnnouncement.tags = [];
-        jobAnnouncement.user = owner;
+        jobAnnouncement.owner = owner;
         var seen = {};
         var tagEntity;
         for(var i = 0; i<tag.length; ++i){
@@ -113,5 +111,14 @@ export class JobService {
             province : "province" in dto ? dto["province"] : null,
             tag : "tag" in dto ? dto["tag"] : [],
         }
+    }
+
+    async createTag(name: string): Promise<Tag>{
+        const tag = await this.tagRepo.findOne({where:{name: name}});
+        if(tag === undefined){
+            const info = {name: name};
+            return await this.tagRepo.save(info);
+        }
+        return tag;
     }
 }
