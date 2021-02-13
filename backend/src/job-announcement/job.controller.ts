@@ -9,12 +9,18 @@ import {
     Patch,
     ValidationPipe,
     UsePipes,
+    UseGuards,
   } from '@nestjs/common';
 import { JobAnnouncement } from 'src/entities/job/jobAnnouncement.entity';
 import { createAnnouncement } from './jobDto/create-announcement.dto';
 import { updateAnnouncement } from './jobDto/update-announcement.dto';
 import { JobService } from './job.service';
 import { searchAnnouncement } from './jobDto/search-announcement.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { PoliciesGuard } from 'src/policies/policy.guard';
+import { CheckPolicies } from 'src/policies/policy.decorator';
+import { AppAbility } from 'src/casl/casl-ability.factory';
+import { Action } from 'src/policies/action.enum';
 
 @Controller('job')
 export class JobController {
@@ -24,7 +30,7 @@ export class JobController {
     indexGet(): Promise<JobAnnouncement[]> {
       return this.service.index();
     }
-
+  
     @Get('search')
     @UsePipes(new ValidationPipe({whitelist:true}))
     searchGet(@Body() dto: searchAnnouncement): Promise<JobAnnouncement[]> {
@@ -50,14 +56,16 @@ export class JobController {
     findByCompany(@Param() company: string): Promise<JobAnnouncement[]> {
       return this.service.findByCompany(company);
     }
-  
+    
     @Post()
+    @UseGuards(JwtAuthGuard)
     @UsePipes(new ValidationPipe({whitelist:true}))
     create(@Body() dto: createAnnouncement): Promise<JobAnnouncement> {
       return this.service.createAnnouncement(dto);
     }
-  
+    
     @Patch(':id')
+    @UseGuards(JwtAuthGuard)
     @UsePipes(new ValidationPipe({whitelist:true}))
     update( @Param('id', new ParseIntPipe()) id: number, @Body() dto: updateAnnouncement): Promise<JobAnnouncement> {
       for (const [key, value] of Object.entries(dto)) {
@@ -67,8 +75,9 @@ export class JobController {
       }
       return this.service.update(id, dto);
     }
-  
+    
     @Delete(':id')
+    @UseGuards(JwtAuthGuard)
     delete(@Param('id', new ParseIntPipe()) id: number): Promise<JobAnnouncement> {
       return this.service.delete(id);
     }

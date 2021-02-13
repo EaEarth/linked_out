@@ -50,5 +50,6 @@ export class createUser{
     @IsEmpty()
     avatarFileId: number;
 
-
+    @IsEmpty()
+    isAdmin: boolean;
 }
