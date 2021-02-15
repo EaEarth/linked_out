@@ -1,0 +1,39 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
+@import '../../styles/variables';
+
+@include media-breakpoint-down(sm) {
+  .card {
+    border: none;
+  }
+  .card-details-column {
+    border-bottom: 1px solid $primary;
+  }
+  .image {
+    border: 1px solid rgba($color: $secondary, $alpha: 0.25) !important;
+    border-radius: 0.25em;
+  }
+}
+.image {
+  object-fit: contain;
+}
+
+.wrap-text {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.custom-badge {
+  font-size: initial;
+  margin-bottom: 0.5em;
+}
+
+.custom-a {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}
+.custom-a:hover {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}
