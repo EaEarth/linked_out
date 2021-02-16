@@ -23,23 +23,26 @@ export class UsersController {
 
     @Post()
     @UsePipes(new ValidationPipe({whitelist:true, transform: true}))
-    create(@Body() dto: createUser){
-        return this.service.create(dto);
+    async create(@Body() dto: createUser){
+        const { hashedPassword, ...output } = await this.service.create(dto);
+        return output;
     }
 
     @UseGuards(JwtAuthGuard)
     @Patch(':id')
     @UsePipes(new ValidationPipe({whitelist:true, transform: true}))
     update(
+        @Request() req,
         @Param('id',new ParseIntPipe()) id: number, 
         @Body() dto: updateUser,
     ) {
-        return this.service.update(id,dto);
+        return this.service.update(req.user,id,dto);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Delete(':id')
-    delete(@Param('id',new ParseIntPipe()) id: number){
-        return this.service.delete(id)
+    delete(@Request() req,@Param('id',new ParseIntPipe()) id: number){
+        return this.service.delete(req.user,id)
     }
 
 }

@@ -11,6 +11,8 @@ import {
     UsePipes,
     UseGuards,
     Request,
+    UseFilters,
+    ForbiddenException,
   } from '@nestjs/common';
 import { JobAnnouncement } from 'src/entities/job/jobAnnouncement.entity';
 import { createAnnouncement } from './jobDto/create-announcement.dto';
@@ -18,10 +20,13 @@ import { updateAnnouncement } from './jobDto/update-announcement.dto';
 import { JobService } from './job.service';
 import { searchAnnouncement } from './jobDto/search-announcement.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { HttpExceptionFilter } from 'src/filters/http-exception.filter';
 
 @Controller('job')
 export class JobController {
-    constructor(private readonly service: JobService) {}
+    constructor(
+      private readonly service: JobService,
+    ) {}
 
     @Get('index')
     indexGet(): Promise<JobAnnouncement[]> {
@@ -64,18 +69,18 @@ export class JobController {
     @Patch(':id')
     @UseGuards(JwtAuthGuard)
     @UsePipes(new ValidationPipe({whitelist:true}))
-    update( @Param('id', new ParseIntPipe()) id: number, @Body() dto: updateAnnouncement): Promise<JobAnnouncement> {
+    update(@Request() req, @Param('id', new ParseIntPipe()) id: number, @Body() dto: updateAnnouncement): Promise<JobAnnouncement> {
       for (const [key, value] of Object.entries(dto)) {
         if (value == null) {
             delete dto[key];
         }
       }
-      return this.service.update(id, dto);
+      return this.service.update(req.user ,id, dto);
     }
     
     @Delete(':id')
     @UseGuards(JwtAuthGuard)
-    delete(@Param('id', new ParseIntPipe()) id: number): Promise<JobAnnouncement> {
-      return this.service.delete(id);
+    delete(@Request() req,@Param('id', new ParseIntPipe()) id: number): Promise<JobAnnouncement> {
+      return this.service.delete(req.user ,id);
     }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JobAnnouncement } from 'src/entities/job/jobAnnouncement.entity';
 import { Like, Repository, MoreThanOrEqual } from 'typeorm';
@@ -8,13 +8,16 @@ import { searchAnnouncement } from './jobDto/search-announcement.dto';
 import { Tag } from 'src/entities/job/tag.entity';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/entities/users/user.entity';
+import { CaslAbilityFactory } from 'src/casl/casl-ability.factory';
+import { Action } from 'src/policies/action.enum';
 
 @Injectable()
 export class JobService {
     constructor(
         @InjectRepository(JobAnnouncement) private readonly repo: Repository<JobAnnouncement>,
         @InjectRepository(Tag) private readonly tagRepo: Repository<Tag>,
-        private usersService: UsersService
+        private usersService: UsersService,
+        private readonly caslAbilityFactory: CaslAbilityFactory
     ){}
 
     index(): Promise<JobAnnouncement[]>{
@@ -50,7 +53,7 @@ export class JobService {
         const {tag, ...announcement} = dto
         var jobAnnouncement = { ...new JobAnnouncement(), ...announcement };
         jobAnnouncement.tags = [];
-        jobAnnouncement.user = owner;
+        jobAnnouncement.owner = owner;
         var seen = {};
         var tagEntity;
         for(var i = 0; i<tag.length; ++i){
@@ -69,11 +72,12 @@ export class JobService {
         return await this.repo.save(jobAnnouncement);
     }
 
-    async update(id: number, dto: updateAnnouncement): Promise<JobAnnouncement> {
+    async update(owner : User ,id: number, dto: updateAnnouncement): Promise<JobAnnouncement> {
         const {tag, ...updateInfo} = dto;
         var tagArr = [];
         var seen = {};
         var tagEntity;
+        const ability = this.caslAbilityFactory.createForUser(owner);
         if(tag !== undefined){
             for(var i=0; i<tag.length; ++i){
                 tagEntity = await this.tagRepo.findOne({where:{ name: tag[i]}}).then(async (entity)=>{
@@ -91,7 +95,9 @@ export class JobService {
             }
         }
         var announcement, repoAnnouncement
-        await this.findById(id).then(async (entity)=>{
+        await this.repo.findOne(id,{relations:["owner"]}).then(async (entity)=>{
+            if(entity == undefined) throw new NotFoundException();
+            if(!ability.can(Action.Update,entity) && !(owner.id == entity.owner.id)) throw new UnauthorizedException();
             if(tag !== undefined ) entity.tags = tagArr;
             announcement = {...entity, ...updateInfo}
             repoAnnouncement = await this.repo.save(announcement);
@@ -99,8 +105,11 @@ export class JobService {
         return repoAnnouncement
     }
 
-    async delete(id: number): Promise<JobAnnouncement>{
-        const jobAnnouncement = await this.findById(id);
+    async delete(owner: User,id: number): Promise<JobAnnouncement>{
+        const ability = this.caslAbilityFactory.createForUser(owner);
+        const jobAnnouncement = await this.repo.findOne(id,{relations:["owner"]});
+        if(jobAnnouncement == undefined) throw new NotFoundException();
+        if(!ability.can(Action.Update,jobAnnouncement) && !(owner.id == jobAnnouncement.owner.id)) throw new UnauthorizedException();
         await this.repo.remove(jobAnnouncement);
         return jobAnnouncement;
     }
