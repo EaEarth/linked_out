@@ -20,11 +20,8 @@ import { updateAnnouncement } from './jobDto/update-announcement.dto';
 import { JobService } from './job.service';
 import { searchAnnouncement } from './jobDto/search-announcement.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-<<<<<<< HEAD
 import { HttpExceptionFilter } from 'src/filters/http-exception.filter';
-=======
 import { Tag } from 'src/entities/job/tag.entity';
->>>>>>> f7a531fa8054faf00ed69226883462fd66ae8942
 
 @Controller('job')
 export class JobController {
@@ -47,27 +44,9 @@ export class JobController {
     findById(@Param('id', new ParseIntPipe()) id: number): Promise<JobAnnouncement> {
       return this.service.findById(id);
     }
-<<<<<<< HEAD
 
-    @Get('title/:title')
-    findByTitle(@Param() title: string): Promise<JobAnnouncement[]> {
-      return this.service.findByTitle(title);
-    }
-
-    @Get('tag/:tag')
-    findByTag(@Param() tag: string): Promise<JobAnnouncement[]> {
-      return this.service.findByTag(tag);
-    }
-
-    @Get('company/:company')
-    findByCompany(@Param() company: string): Promise<JobAnnouncement[]> {
-      return this.service.findByCompany(company);
-    }
-    
-=======
   
     @UseGuards(JwtAuthGuard)
->>>>>>> f7a531fa8054faf00ed69226883462fd66ae8942
     @Post()
     @UseGuards(JwtAuthGuard)
     @UsePipes(new ValidationPipe({whitelist:true}))
