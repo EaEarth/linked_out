@@ -2,6 +2,7 @@ import Head from 'next/head';
 import React from 'react';
 import { Col, Container, Jumbotron, Row } from 'react-bootstrap';
 import DefaultLayout from '../../layouts/Default';
+import Link from 'next/link';
 
 export const Jobs = () => {
   return (
@@ -12,10 +13,11 @@ export const Jobs = () => {
       <Container>
         <Row>
           <Col>
+          <Link href="/test">Click me!</Link>
             <p>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
               elementum, sem malesuada venenatis feugiat, nunc orci efficitur
-              justo, a porttitor felis ante id odio. Cras volutpat tellus sed
+            odio. Cras volutpat tellus sed
               ligula suscipit rhoncus. Ut tempor erat vel leo commodo bibendum.
               Nam lacus lacus, eleifend quis magna et, bibendum finibus justo.
               Sed blandit laoreet dapibus. Vestibulum rhoncus ligula at
