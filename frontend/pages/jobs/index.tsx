@@ -1,10 +1,11 @@
 import Head from 'next/head';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
-import { Badge, Card, Col, Container, Row, Pagination } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Container } from 'react-bootstrap';
+import JobAnnouncementGrid from '../../components/JobAnnouncement/Grid';
+import JobPagination from '../../components/JobAnnouncement/Pagination';
+import TagList from '../../components/JobAnnouncement/TagList';
 import DefaultLayout from '../../layouts/Default';
-import style from './index.module.scss';
 
 const mockJobs = [
   {
@@ -79,119 +80,26 @@ const mockTags = [
   { name: 'บัญชี' },
 ];
 
-type JobAnnouncementCardProps = {
-  role: string;
-  companyName: string;
-  location: string;
-  createdAt: string;
-  image?: string;
-};
-
-const JobAnnouncementCard = (props: JobAnnouncementCardProps) => {
+export const Jobs: React.FC<any> = (props) => {
   const router = useRouter();
-  return (
-    <a
-      href="/test"
-      className={style['custom-a']}
-      onClick={(e) => e.preventDefault()}>
-      <Card
-        className={`mb-3 ${style['card']}`}
-        onClick={() => router.push(`/test`)}>
-        <Row noGutters className="align-items-center">
-          {/* Image */}
-          <Col xs={3} md={5}>
-            <Image
-              src={props.image || '/images/company/default.png'}
-              width="500"
-              height="500"
-              layout="responsive"
-              className={`${style['image']}`}
-            />
-          </Col>
-          {/* Content */}
-          <Col xs={9} md={7} className={`${style['card-details-column']}`}>
-            <Card.Body>
-              <h6 className="card-title mb-0">
-                <Row>
-                  <Col xs={8} md={12}>
-                    {props.role}
-                  </Col>
-                  <Col xs={4} className={`${style['wrap-text']}`}>
-                    <small className="text-muted d-md-none float-right">
-                      {props.createdAt}
-                    </small>
-                  </Col>
-                </Row>
-              </h6>
-              <p className="card-text m-0 text-primary">{props.companyName}</p>
-              <p className="card-text m-0">{props.location}</p>
-              <p className="card-text m-0 d-none d-md-block mt-md-4">
-                <small className="text-muted">{props.createdAt}</small>
-              </p>
-            </Card.Body>
-          </Col>
-        </Row>
-      </Card>
-    </a>
-  );
-};
-
-type JobAnnouncement = JobAnnouncementCardProps;
-
-type JobAnnouncementGridProps = {
-  jobs: JobAnnouncement[];
-};
-
-const JobAnnouncementGrid = ({ jobs }: JobAnnouncementGridProps) => {
-  const rows = [];
-  for (let i = 0; i < jobs.length; i += 2) {
-    rows.push(
-      <Row key={i}>
-        {i < jobs.length && (
-          <Col md={6}>
-            <JobAnnouncementCard key={i} {...jobs[i]} />
-          </Col>
-        )}
-        {i + 1 < jobs.length && (
-          <Col md={6}>
-            <JobAnnouncementCard key={i + 1} {...jobs[i + 1]} />
-          </Col>
-        )}
-      </Row>
-    );
-  }
-  return <>{rows}</>;
-};
-
-type Tag = {
-  name: string;
-};
-
-type TagListProps = {
-  tags: Tag[];
-};
-
-const TagList = ({ tags }: TagListProps) => {
-  return (
-    <Row>
-      <Col>
-        <ul className="list-inline">
-          {tags.map((tag, i) => (
-            <li key={i} className="list-inline-item">
-              <Badge className={`border border-dark ${style['custom-badge']}`}>
-                {tag.name}
-              </Badge>
-            </li>
-          ))}
-        </ul>
-      </Col>
-    </Row>
-  );
-};
-
-export const Jobs = (props) => {
-  const [tags, setTags] = useState(mockTags);
-  const [jobs, setJobs] = useState(mockJobs);
+  // Data
+  const [tags] = useState(props.tags || []);
+  const [jobs] = useState(props.jobs || []);
+  // Pagination state
+  const [pageLen, setPageLen] = useState(1);
+  const page = (Number.parseInt(router.query.page as string) || 1) - 1;
+  const perPage = 4;
+  // On page change
+  const goToPage = (e: React.MouseEvent<HTMLElement>, pageNo: number) => {
+    e.preventDefault();
+    if (pageNo >= 0 && pageNo <= pageLen)
+      router.push(`/jobs?page=${pageNo}`, undefined, { shallow: true });
+  };
+  // Update page length
+  useEffect(() => {
+    setPageLen(Math.ceil(jobs.length / perPage));
+  }, [jobs]);
+  // Render
   return (
     <DefaultLayout>
       <Head>
@@ -199,21 +107,27 @@ export const Jobs = (props) => {
       </Head>
       <Container className="mt-4">
         <TagList tags={tags} />
-        <JobAnnouncementGrid jobs={jobs} />
-        <Row>
-          <Col>
-            <Pagination className="justify-content-center">
-              <Pagination.First />
-              <Pagination.Prev />
-              <Pagination.Item>{1}</Pagination.Item>
-              <Pagination.Next />
-              <Pagination.Last />
-            </Pagination>
-          </Col>
-        </Row>
+        <JobAnnouncementGrid
+          jobs={jobs.slice(page * perPage, (page + 1) * perPage)}
+        />
+        <JobPagination
+          page={page}
+          pageLength={pageLen}
+          onPageChange={goToPage}
+        />
       </Container>
     </DefaultLayout>
   );
 };
+
+export async function getServerSideProps(context) {
+  // TODO: Fetch from backend
+  return {
+    props: {
+      jobs: mockJobs,
+      tags: mockTags,
+    },
+  };
+}
 
 export default Jobs;
