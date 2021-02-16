@@ -1,5 +1,6 @@
 import { Type } from "class-transformer";
 import { IsDate, IsDateString, IsEmail, IsInt, IsLatitude, IsLongitude, IsNotEmpty, IsNumber, IsNumberString, IsOptional, Length } from "class-validator";
+import { FileItem } from "src/entities/files/fileItem.entity";
 import { Double, Timestamp } from "typeorm";
 
 export class updateUser{
@@ -42,7 +43,6 @@ export class updateUser{
     telNumber: string;
     
     @IsOptional()
-    @IsNumber()
     avatarFileId: number;
 
     @IsOptional()

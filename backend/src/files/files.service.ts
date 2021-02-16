@@ -29,7 +29,7 @@ export class FilesService {
         const newFile = new FileItem();
         newFile.title = file.filename;
         newFile.type = file.mimetype;
-        newFile.path = `${req.protocol}//${req.headers.host}/api/files/${file.filename}`;
+        newFile.path = `${req.protocol}://${req.headers.host}/api/files/${file.filename}`;
 
         newFile.owner = req.user;
         console.log(newFile);

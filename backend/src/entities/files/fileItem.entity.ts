@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { JobAnnouncement } from "../job/jobAnnouncement.entity";
 import { User } from "../users/user.entity";
 
@@ -21,4 +21,7 @@ export class FileItem {
 
   @OneToMany(type => JobAnnouncement, jobAnnouncements => jobAnnouncements.picture)
   jobAnnouncements: JobAnnouncement[];
+
+  @OneToOne(() => User)
+  profileUser: User;
 }
