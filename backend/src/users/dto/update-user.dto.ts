@@ -20,8 +20,8 @@ export class updateUser{
     @IsOptional()
     lastname: string;
 
+    @IsOptional()
     @Type(()=>Date)
-    @IsNotEmpty()
     @IsDate()
     birthDate: Date;
 

@@ -39,4 +39,5 @@ export class createAnnouncement{
 
     @IsInt()
     readonly pictureId= 1;
+
 }
