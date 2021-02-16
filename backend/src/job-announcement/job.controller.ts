@@ -39,21 +39,6 @@ export class JobController {
     findById(@Param('id', new ParseIntPipe()) id: number): Promise<JobAnnouncement> {
       return this.service.findById(id);
     }
-
-    @Get('title/:title')
-    findByTitle(@Param() title: string): Promise<JobAnnouncement[]> {
-      return this.service.findByTitle(title);
-    }
-
-    @Get('tag/:tag')
-    findByTag(@Param() tag: string): Promise<JobAnnouncement[]> {
-      return this.service.findByTag(tag);
-    }
-
-    @Get('company/:company')
-    findByCompany(@Param() company: string): Promise<JobAnnouncement[]> {
-      return this.service.findByCompany(company);
-    }
   
     @UseGuards(JwtAuthGuard)
     @Post()
@@ -80,6 +65,7 @@ export class JobController {
       return this.service.delete(id);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Post('tag/:name')
     createTag(@Param('name') name: string ): Promise<Tag>{
       return this.service.createTag(name);

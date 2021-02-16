@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JobAnnouncement } from 'src/entities/job/jobAnnouncement.entity';
-import { Like, Repository, MoreThanOrEqual } from 'typeorm';
+import { Like, Repository, MoreThanOrEqual, In } from 'typeorm';
 import { createAnnouncement } from './jobDto/create-announcement.dto';
 import { updateAnnouncement } from './jobDto/update-announcement.dto';
 import { searchAnnouncement } from './jobDto/search-announcement.dto';
@@ -22,28 +22,44 @@ export class JobService {
     }
 
     search(dto: searchAnnouncement): Promise<JobAnnouncement[]>{
+        const info = this.prepareSearch(dto);
 
-        return this.repo.find();
+        // split search keyword
+        const search = info.search.trim().split(" ");
+
+        // for making query expression
+        const query1 = "(LOWER(title) like ";
+        const query2 =" OR LOWER(company) like ";
+        const colon = ":";
+        const end = ")";
+        var variable, queryExp, parameter;
+
+        // query
+        var qb = this.repo
+        .createQueryBuilder("jobAnnouncement")
+        .leftJoinAndSelect("jobAnnouncement.tags", "tag")
+        for(var i = 0 ; i<search.length; ++i){
+            // variable for expression
+            variable = "searchWord" + i;
+
+            // query expression
+            queryExp = query1+colon+variable+query2+colon+variable+end
+
+            // for assign value of variable in expression
+            parameter = `{ "${variable}": "%${search[i].toLowerCase()}%" }`
+
+            qb = qb.orWhere(queryExp,JSON.parse(parameter)) // search title or company that contain one of the keyword
+            qb = qb.andWhere("(:check like :isNull OR tag.name IN ( :name ))",{name: info.tag, check: "true", isNull : ("tag" in dto && dto["tag"].length >0) ? "false" : "true"}) // must contain one of tags
+            qb = qb.andWhere("province like :province", {province: `%${info.province}%`}) // must in specific province
+            qb = qb.andWhere("upperBoundSalary >= :salary", {salary: info.lowerBoundSalary}) // upperBound salary must >= specific salary
+            qb = qb.andWhere(" isPublished = 1 ") // the announcement must published
+        }
+        const result = qb.getMany();
+        return result;
     }
 
     findById(id: number): Promise<JobAnnouncement | undefined>{
         return this.repo.findOne(id);
-    }
-
-    findByTitle(title: string): Promise<JobAnnouncement[]>{
-        return this.repo.find({where:{ title: title, is_published: true }});
-    }
-
-    findByTag(tag: string): Promise<JobAnnouncement[]>{
-        return this.repo.find({where:{ tag: Like("%"+tag+"%"), is_published: true }});
-    }
-
-    findByCompany(company: string): Promise<JobAnnouncement[]>{
-        return this.repo.find({where:{ company: Like("%"+company+"%"), is_published: true }});
-    }
-
-    findBySalary(salaryMin: number): Promise<JobAnnouncement[]>{
-        return this.repo.find({where:{ lowerSalary: MoreThanOrEqual(salaryMin), is_published: true }});
     }
 
     async createAnnouncement(owner : User ,dto: createAnnouncement): Promise<JobAnnouncement>{
@@ -54,20 +70,26 @@ export class JobService {
         jobAnnouncement.owner = user;
         var seen = {};
         var tagEntity;
+
+        // create relation with tag
         for(var i = 0; i<tag.length; ++i){
+
+            // ensure that element in tag list is unique
             if(seen[tag[i]] === 1) continue;
             seen[tag[i]] = 1;
             tagEntity = await this.tagRepo.findOne({where:{ name: tag[i]}});
+
+            // if the tag doesn't exist, create new one
             if( tagEntity === undefined ){
                 const info = {name : tag[i]}
                 const tagObj = {...new Tag(), ...info};
                 await this.tagRepo.save(tagObj);
                 jobAnnouncement.tags.push(tagObj);
             }else{
-                jobAnnouncement.tags.push(tagEntity);
+                jobAnnouncement.tags.push(tagEntity); // create relation with existing tag
             }
         }
-        return await this.repo.save(jobAnnouncement);
+        return this.repo.save(jobAnnouncement);
     }
 
     async update(id: number, dto: updateAnnouncement): Promise<JobAnnouncement> {
@@ -77,15 +99,18 @@ export class JobService {
         if(tag !== undefined){
             for(var i=0; i<tag.length; ++i){
                 await this.tagRepo.findOne({where:{ name: tag[i]}}).then(async (entity)=>{
+                    // ensure that element in tag list is unique
                     if(seen[tag[i]] == 1) return;
                     seen[tag[i]] = 1;
+
+                    // if the tag doesn't exist, create new one
                     if (entity === undefined){
                         const info = {name : tag[i]}
                         const tagObj = {...new Tag(), ...info};
                         await this.tagRepo.save(tagObj);
                         tagArr.push(tagObj);
                     }else {
-                        tagArr.push(entity);
+                        tagArr.push(entity); // create relation with existing tag
                     }
                 });
             }
@@ -107,11 +132,10 @@ export class JobService {
 
     private prepareSearch(dto: searchAnnouncement){
         return{
-            title : "title" in dto ? dto["title"] : null,
-            company : "company" in dto ? dto["company"] : null,
-            lowerSalary : "lowerSalary" in dto ? dto["lowerSalary"] : 0,
-            province : "province" in dto ? dto["province"] : null,
-            tag : "tag" in dto ? dto["tag"] : [],
+            search : "search" in dto ? dto["search"] : "",
+            lowerBoundSalary : ("lowerBoundSalary" in dto && dto["lowerBoundSalary"] !== null) ? dto["lowerBoundSalary"] : 0,
+            province : ("province" in dto && dto["province"] !== null) ? dto["province"] : "",
+            tag : ( "tag" in dto && dto["tag"].length >0) ? dto["tag"] : [""],
         }
     }
 

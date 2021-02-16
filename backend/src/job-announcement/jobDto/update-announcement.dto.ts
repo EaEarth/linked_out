@@ -1,4 +1,4 @@
-import { IsInt, IsBoolean, IsNotEmpty, IsOptional, isInt } from 'class-validator';
+import { IsInt, IsBoolean, IsNotEmpty, IsOptional, isInt, IsNumber } from 'class-validator';
 
 export class updateAnnouncement{
 
@@ -24,12 +24,12 @@ export class updateAnnouncement{
     readonly province: string;
 
     @IsOptional()
-    @IsInt()
-    readonly lowerSalary: number;
+    @IsNumber()
+    readonly lowerBoundSalary: number;
 
     @IsOptional()
-    @IsInt()
-    readonly upperSalary: number;
+    @IsNumber()
+    readonly upperBoundSalary: number;
 
     @IsOptional()
     @IsBoolean()

@@ -17,10 +17,10 @@ export class JobAnnouncement {
   pictureId: number; 
 
   @Column()
-  lowerSalary: number;
+  lowerBoundSalary: number;
 
   @Column()
-  upperSalary: number;
+  upperBoundSalary: number;
 
   @Column({ default: true })
   isPublished: boolean;

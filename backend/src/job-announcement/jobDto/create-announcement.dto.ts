@@ -1,4 +1,4 @@
-import { IsInt, IsBoolean, IsNotEmpty, IsEmpty, isInt } from 'class-validator';
+import { IsInt, IsBoolean, IsNotEmpty, IsEmpty, isInt, IsNumber } from 'class-validator';
 
 export class createAnnouncement{
     @IsNotEmpty()
@@ -11,12 +11,12 @@ export class createAnnouncement{
     readonly ownerId : number;
 
     @IsNotEmpty()
-    @IsInt()
-    readonly lowerSalary: number;
+    @IsNumber()
+    readonly lowerBoundSalary: number;
 
     @IsNotEmpty()
-    @IsInt()
-    readonly upperSalary: number;
+    @IsNumber()
+    readonly upperBoundSalary: number;
 
     @IsNotEmpty()
     readonly title: string;
