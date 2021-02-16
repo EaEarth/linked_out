@@ -1,18 +1,16 @@
-import { IsInt, IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsInt, IsBoolean, IsNotEmpty, IsOptional, IsNumber, IsArray } from 'class-validator';
 
 export class searchAnnouncement{
     @IsOptional()
-    readonly tag : string;
+    readonly search : string;
 
     @IsOptional()
-    readonly company : string;
+    @IsArray()
+    readonly tag : string[];
 
     @IsOptional()
-    @IsInt()
-    readonly lowerSalary: number;
-
-    @IsOptional()
-    readonly title: string;
+    @IsNumber()
+    readonly lowerBoundSalary: number;
 
     @IsOptional()
     readonly province: string;

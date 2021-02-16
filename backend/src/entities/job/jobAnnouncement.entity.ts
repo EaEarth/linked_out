@@ -17,10 +17,10 @@ export class JobAnnouncement {
   pictureId: number; 
 
   @Column()
-  lowerSalary: number;
+  lowerBoundSalary: number;
 
   @Column()
-  upperSalary: number;
+  upperBoundSalary: number;
 
   @Column({ default: true })
   isPublished: boolean;
@@ -47,7 +47,7 @@ export class JobAnnouncement {
   @JoinTable()
   tags: Tag[];
 
-  @ManyToOne(() => User, user => user.jobAnnouncements)
+  @ManyToOne(() => User, owner => owner.jobAnnouncements)
   owner: User;
 
 }
