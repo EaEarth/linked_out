@@ -27,22 +27,28 @@ export class UsersService {
         return this.repo.findOne({username},{relations:["avatarFile"]});
     }
 
-    async create(dto: Omit<createUser, 'id'>): Promise<User>{
+    async create({password,...dto}: Omit<createUser, 'id'>): Promise<User>{
         const user = { ...new User(), ...dto};
         if (dto.avatarFileId) {
             user.avatarFile = await this.filesService.findById(dto.avatarFileId)
         }
-        user.hashedPassword = this.hash(dto.hashedPassword);
+        user.hashedPassword = this.hash(password);
         return this.repo.save(user);
     }
 
-    async update(user: User,id: number,dto: Omit<updateUser, 'id' | 'password'>): Promise<User>{
-        const updatedUser = { ...(await this.repo.findOne(id)), ...dto };
+    async update(user: User,{id,...dto}: updateUser): Promise<User>{
         const ability = this.caslAbilityFactory.createForUser(user);
+        if(id){
+            if(!ability.can(Action.Manage,'all')) throw new UnauthorizedException();
+        }
+        else {
+            id = user.id;
+        }
+        const updatedUser = { ...(await this.repo.findOne(id)), ...dto };
         if(updatedUser == undefined) throw new NotFoundException();
         if(!ability.can(Action.Update,updatedUser) && !(updatedUser.id == user.id)) throw new UnauthorizedException();
-        if (dto.hashedPassword) {
-            updatedUser.hashedPassword = this.hash(dto.hashedPassword);
+        if (dto.password) {
+            updatedUser.hashedPassword = this.hash(dto.password);
         }
         if (dto.avatarFileId) {
             updatedUser.avatarFile = await this.filesService.findById(dto.avatarFileId)
@@ -54,13 +60,13 @@ export class UsersService {
         const ability = this.caslAbilityFactory.createForUser(user);
         const deleteUser = await this.repo.findOne(id);
         if(deleteUser == undefined) throw new NotFoundException();
-        if(!ability.can(Action.Update,deleteUser)) throw new UnauthorizedException();
+        if(!ability.can(Action.Delete,deleteUser)) throw new UnauthorizedException();
 
-        deleteUser.jobAnnouncements = [];
+        deleteUser.jobAnnouncements = null;
+        deleteUser.avatarFile = null;
         this.repo.save(deleteUser);
         
-        await this.repo.remove(user);
-        return user;
+        return this.repo.remove(deleteUser);
     }
 
     hash(pwd: string): string{

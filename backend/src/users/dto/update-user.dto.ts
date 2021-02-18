@@ -4,9 +4,11 @@ import { FileItem } from "src/entities/files/fileItem.entity";
 import { Double, Timestamp } from "typeorm";
 
 export class updateUser{
-    
     @IsOptional()
-    hashedPassword: string;
+    id: number;
+
+    @IsOptional()
+    password: string;
 
     @IsOptional()
     @IsEmail()

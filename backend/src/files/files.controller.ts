@@ -1,6 +1,7 @@
-import { Controller, Get, Param, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors, Request } from '@nestjs/common';
+import { Controller, Get, Param, Post, Req, Res, UploadedFile, UseGuards, UseInterceptors, Request, Body, UsePipes, ValidationPipe } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { createFile } from './dto/create-file.dto';
 import { FilesService } from './files.service';
 
 @Controller('files')
@@ -13,9 +14,8 @@ export class FilesController {
     @UseGuards(JwtAuthGuard)
     @Post('upload')
     @UseInterceptors(FileInterceptor('file'))
-    uploadFile(@UploadedFile() file,@Request() req){
-        console.log(file);
-        return this.fileService.createFile(req,file);
+    uploadFile(@UploadedFile() file,@Body() dto:createFile,@Request() req){
+        return this.fileService.createFile(req,dto,file);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -30,15 +30,16 @@ export class FilesController {
         return this.fileService.findById(fileId);
     }
 
-    @Get(':fileId')
-    async serveFile(@Param("fileId") fileId: string, @Res() res) {
-        return this.fileService.serveStatic(fileId, res);
+    @Get(':fileName')
+    async serveFile(@Param("fileName") fileName: string, @Res() res) {
+        return this.fileService.serveStatic(fileName,res);
     }
 
     @UseGuards(JwtAuthGuard)
     @Get('title/:fileTitle')
-    async findByTitle(@Param("fileTitle") fileTitle: string) {
-        return this.fileService.findByTitle(fileTitle);
+    @UsePipes(new ValidationPipe({whitelist:true}))
+    async findByTitle(@Request() req,@Param("fileTitle") fileTitle: string) {
+        return this.fileService.findByTitle(req.user, fileTitle);
     }
 
 }
