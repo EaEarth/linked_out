@@ -7,7 +7,6 @@ import { createUser } from './dto/create-user.dto';
 import { CaslAbilityFactory } from 'src/casl/casl-ability.factory';
 import { Action } from 'src/policies/action.enum';
 import { FilesService } from 'src/files/files.service';
-import { FileItem } from 'src/entities/files/fileItem.entity';
 import { updateUser } from './dto/update-user.dto';
 
 @Injectable()

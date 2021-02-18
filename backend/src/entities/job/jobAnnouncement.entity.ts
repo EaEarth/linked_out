@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToOne, CreateDateColumn, UpdateDateColumn, JoinColumn, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
 import { User } from '../users/user.entity';
 import { Tag } from './tag.entity';
 import { FileItem } from '../files/fileItem.entity'
@@ -48,7 +48,7 @@ export class JobAnnouncement {
   @ManyToOne(() => User, owner => owner.jobAnnouncements)
   owner: User;
 
-  @ManyToOne(type => FileItem, picture => picture.jobAnnouncements)
+  @ManyToOne(() => FileItem, picture => picture.jobAnnouncements)
   picture: FileItem;
 
 }

@@ -11,8 +11,6 @@ import {
     UsePipes,
     UseGuards,
     Request,
-    UseFilters,
-    ForbiddenException,
   } from '@nestjs/common';
 import { JobAnnouncement } from 'src/entities/job/jobAnnouncement.entity';
 import { createAnnouncement } from './jobDto/create-announcement.dto';
@@ -20,7 +18,6 @@ import { updateAnnouncement } from './jobDto/update-announcement.dto';
 import { JobService } from './job.service';
 import { searchAnnouncement } from './jobDto/search-announcement.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { HttpExceptionFilter } from 'src/filters/http-exception.filter';
 import { Tag } from 'src/entities/job/tag.entity';
 
 @Controller('job')
@@ -45,7 +42,12 @@ export class JobController {
       return this.service.findById(id);
     }
 
-  
+    @Get('owner')
+    @UseGuards(JwtAuthGuard)
+    findByOwner(@Request() req): Promise<JobAnnouncement[]> {
+      return this.service.findFromOwner(req.user.id);
+    }
+
     @Post()
     @UseGuards(JwtAuthGuard)
     @UsePipes(new ValidationPipe({whitelist:true}))

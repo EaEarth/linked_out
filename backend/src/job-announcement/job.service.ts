@@ -24,8 +24,8 @@ export class JobService {
         private readonly caslAbilityFactory: CaslAbilityFactory
     ){}
 
-    async index(): Promise<JobAnnouncement[]>{
-        return this.repo.find();
+    index(): Promise<JobAnnouncement[]>{
+        return this.repo.find({relations : ["picture","tags"], where: {isPublished: true}});
     }
 
     search(dto: searchAnnouncement): Promise<JobAnnouncement[]>{
@@ -35,7 +35,7 @@ export class JobService {
         const search = info.search.trim().split(" ");
 
         // for making query expression
-        const query1 = "(LOWER(title) like ";
+        const query1 = "(LOWER(jobAnnouncement.title) like ";
         const query2 =" OR LOWER(company) like ";
         const colon = ":";
         const end = ")";
@@ -44,6 +44,7 @@ export class JobService {
         // query
         var qb = this.repo
         .createQueryBuilder("jobAnnouncement")
+        .leftJoinAndSelect("jobAnnouncement.picture", "picture")
         .leftJoinAndSelect("jobAnnouncement.tags", "tag")
         for(var i = 0 ; i<search.length; ++i){
             // variable for expression
@@ -66,7 +67,16 @@ export class JobService {
     }
 
     findById(id: number): Promise<JobAnnouncement | undefined>{
-        return this.repo.findOne(id);
+        return this.repo.findOne(id,{relations : ["picture","tags"]});
+    }
+
+    findFromOwner(userId: number): Promise<JobAnnouncement[]>{
+        return this.repo.createQueryBuilder("jobAnnouncement")
+                .leftJoinAndSelect("jobAnnouncement.picture", "picture")
+                .leftJoinAndSelect("jobAnnouncement.tags", "tag")
+                .leftJoinAndSelect("jobAnnouncement.owner", "owner")
+                .where("owner.id = :id", {id:userId})
+                .getMany()
     }
 
     async createAnnouncement(owner : User ,dto: createAnnouncement): Promise<JobAnnouncement>{

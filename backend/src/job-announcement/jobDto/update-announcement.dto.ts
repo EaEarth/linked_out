@@ -1,4 +1,4 @@
-import { IsInt, IsBoolean, IsNotEmpty, IsOptional, isInt, IsNumber } from 'class-validator';
+import { IsInt, IsBoolean, IsOptional, IsNumber } from 'class-validator';
 
 export class updateAnnouncement{
 
@@ -13,9 +13,6 @@ export class updateAnnouncement{
 
     @IsOptional()
     readonly company : string;
-
-    @IsOptional()
-    readonly position: string;
 
     @IsOptional()
     readonly address: string;

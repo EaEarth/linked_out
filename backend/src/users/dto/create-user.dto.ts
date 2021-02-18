@@ -1,6 +1,5 @@
 import { Type } from "class-transformer";
-import { IsDate, IsDateString, IsEmail, IsEmpty, IsInt, IsLatitude, IsLongitude, IsNotEmpty, IsNumber, IsNumberString, IsOptional, Length } from "class-validator";
-import { FileItem } from "src/entities/files/fileItem.entity";
+import { IsDate, IsEmail, IsEmpty, IsLatitude, IsLongitude, IsNotEmpty, IsNumberString, IsOptional, Length } from "class-validator";
 import { JobAnnouncement } from "src/entities/job/jobAnnouncement.entity";
 import { Double } from "typeorm";
 
