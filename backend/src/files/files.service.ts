@@ -4,6 +4,7 @@ import { CaslAbilityFactory } from 'src/casl/casl-ability.factory';
 import { FileItem } from 'src/entities/files/fileItem.entity';
 import { User } from 'src/entities/users/user.entity';
 import { Repository } from 'typeorm';
+import { createFile } from './dto/create-file.dto';
 
 @Injectable()
 export class FilesService {
@@ -21,18 +22,18 @@ export class FilesService {
         return this.repo.findOne(id);
     }
 
-    findByTitle(title: string): Promise<FileItem | undefined> {
-        return this.repo.findOne({title:title});
+    async findByTitle(user: User,title: string): Promise<FileItem[] | undefined> {
+        console.log(await this.repo.find({title:title, owner:user}))
+        return this.repo.find({title:title, owner:user});
     }
 
-    createFile(@Req() req,@UploadedFile() file){
+    createFile(@Req() req, dto:createFile, @UploadedFile() file){
         const newFile = new FileItem();
-        newFile.title = file.filename;
+        newFile.title = dto.title ? dto.title : file.filename;
         newFile.type = file.mimetype;
         newFile.path = `${req.protocol}://${req.headers.host}/api/files/${file.filename}`;
-
         newFile.owner = req.user;
-        console.log(newFile);
+
         return this.repo.save(newFile);
     }
 

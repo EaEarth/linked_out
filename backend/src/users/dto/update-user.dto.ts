@@ -3,9 +3,11 @@ import { IsDate, IsEmail, IsLatitude, IsLongitude, IsNumberString, IsOptional, L
 import { Double } from "typeorm";
 
 export class updateUser{
-    
     @IsOptional()
-    hashedPassword: string;
+    id: number;
+
+    @IsOptional()
+    password: string;
 
     @IsOptional()
     @IsEmail()

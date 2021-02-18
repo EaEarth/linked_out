@@ -9,7 +9,7 @@ export class createUser{
     username: string;
 
     @IsNotEmpty()
-    hashedPassword: string;
+    password: string;
 
     @IsNotEmpty()
     @IsEmail()

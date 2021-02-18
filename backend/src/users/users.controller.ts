@@ -10,13 +10,15 @@ export class UsersController {
 
     @UseGuards(JwtAuthGuard)
     @Get('profile')
-    getProfile(@Request() req) {
-        return this.service.findById(req.user.id);
+    async getProfile(@Request() req) {
+        const { hashedPassword, ...output } = await this.service.findById(req.user.id);
+        return output;
     }
     
     @Get(':id')
-    findById(@Param('id',new ParseIntPipe()) id: number){
-        return this.service.findById(id)
+    async findById(@Param('id',new ParseIntPipe()) id: number){
+        const { hashedPassword, ...output } = await this.service.findById(id);
+        return output;
     }
 
     @Post()
@@ -27,14 +29,13 @@ export class UsersController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Patch(':id')
+    @Patch()
     @UsePipes(new ValidationPipe({whitelist:true, transform: true}))
     update(
-        @Request() req,
-        @Param('id',new ParseIntPipe()) id: number, 
+        @Request() req, 
         @Body() dto: updateUser,
     ) {
-        return this.service.update(req.user,id,dto);
+        return this.service.update(req.user,dto);
     }
 
     @UseGuards(JwtAuthGuard)
