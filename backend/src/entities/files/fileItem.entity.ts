@@ -1,4 +1,5 @@
-import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { JobAnnouncement } from "../job/jobAnnouncement.entity";
 import { User } from "../users/user.entity";
 
 @Entity()
@@ -15,8 +16,11 @@ export class FileItem {
   @Column()
   path: string;
 
-  @ManyToOne(() => User, user => user.files)
+  @ManyToOne(() => User, user => user.avatarFiles)
   owner: User;
+
+  @OneToMany(type => JobAnnouncement, jobAnnouncements => jobAnnouncements.picture)
+  jobAnnouncements: JobAnnouncement[];
 
   @OneToOne(() => User)
   profileUser: User;

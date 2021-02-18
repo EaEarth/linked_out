@@ -9,7 +9,7 @@ export const MulterImport = MulterModule.register({
       filename: (req, file, cb) => {
         return cb(
           null,
-          `${new Date().toISOString()}${extname(file.originalname)}`
+          `${new Date().toISOString().replace(/:/g, '-')}${extname(file.originalname)}`
         );
       }
     })

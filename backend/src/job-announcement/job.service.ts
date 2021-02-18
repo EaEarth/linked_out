@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JobAnnouncement } from 'src/entities/job/jobAnnouncement.entity';
-import { Like, Repository, MoreThanOrEqual, In } from 'typeorm';
+import { Repository } from 'typeorm';
 import { createAnnouncement } from './jobDto/create-announcement.dto';
 import { updateAnnouncement } from './jobDto/update-announcement.dto';
 import { searchAnnouncement } from './jobDto/search-announcement.dto';
@@ -10,13 +10,17 @@ import { User } from 'src/entities/users/user.entity';
 import { CaslAbilityFactory } from 'src/casl/casl-ability.factory';
 import { Action } from 'src/policies/action.enum';
 import { UsersService } from 'src/users/users.service';
+import { FilesService } from 'src/files/files.service';
+import { FileItem } from 'src/entities/files/fileItem.entity';
 
 @Injectable()
 export class JobService {
     constructor(
         @InjectRepository(JobAnnouncement) private readonly repo: Repository<JobAnnouncement>,
         @InjectRepository(Tag) private readonly tagRepo: Repository<Tag>,
+        @InjectRepository(FileItem) private readonly fileRepo: Repository<FileItem>,
         private usersService: UsersService,
+        private filesService: FilesService,
         private readonly caslAbilityFactory: CaslAbilityFactory
     ){}
 
@@ -66,13 +70,17 @@ export class JobService {
     }
 
     async createAnnouncement(owner : User ,dto: createAnnouncement): Promise<JobAnnouncement>{
-        const {tag, ...announcement} = dto
+        const {tag, pictureId, ...announcement} = dto
         var jobAnnouncement = { ...new JobAnnouncement(), ...announcement };
         jobAnnouncement.tags = [];
         const user = await this.usersService.findById(owner.id);
         jobAnnouncement.owner = user;
         var seen = {};
         var tagEntity;
+
+        const picture = await this.filesService.findById(pictureId);
+        if (picture == undefined) throw new NotFoundException();
+        jobAnnouncement.picture = picture
 
         // create relation with tag
         for(var i = 0; i<tag.length; ++i){
@@ -96,10 +104,9 @@ export class JobService {
     }
 
     async update(owner : User ,id: number, dto: updateAnnouncement): Promise<JobAnnouncement> {
-        const {tag, ...updateInfo} = dto;
+        const {tag,pictureId, ...updateInfo} = dto;
         var tagArr = [];
         var seen = {};
-        var tagEntity;
         const ability = this.caslAbilityFactory.createForUser(owner);
         if(tag !== undefined){
             for(var i=0; i<tag.length; ++i){
@@ -125,6 +132,11 @@ export class JobService {
             if(entity == undefined) throw new NotFoundException();
             if(!ability.can(Action.Update,entity) && !(owner.id == entity.owner.id)) throw new UnauthorizedException();
             if(tag !== undefined ) entity.tags = tagArr;
+            if(pictureId !== undefined){
+                const picture = await this.fileRepo.findOne(pictureId)
+                if( picture === undefined ) throw new NotFoundException();
+                entity.picture = picture;
+            }
             announcement = {...entity, ...updateInfo}
             repoAnnouncement = await this.repo.save(announcement);
         })

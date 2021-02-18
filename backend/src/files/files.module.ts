@@ -10,6 +10,7 @@ import { FilesService } from './files.service';
   imports: [TypeOrmModule.forFeature([FileItem]),MulterImport,CaslModule],
   controllers: [FilesController],
   providers: [FilesService],
+  exports: [FilesService]
 })
 
 export class FilesModule {}

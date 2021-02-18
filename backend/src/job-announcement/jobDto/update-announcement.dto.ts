@@ -41,5 +41,5 @@ export class updateAnnouncement{
 
     @IsOptional()
     @IsInt()
-    readonly pictureId= 1;
+    readonly pictureId: number;
 }

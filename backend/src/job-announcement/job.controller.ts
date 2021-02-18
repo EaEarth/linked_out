@@ -20,6 +20,7 @@ import { updateAnnouncement } from './jobDto/update-announcement.dto';
 import { JobService } from './job.service';
 import { searchAnnouncement } from './jobDto/search-announcement.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { HttpExceptionFilter } from 'src/filters/http-exception.filter';
 import { Tag } from 'src/entities/job/tag.entity';
 
 @Controller('job')
@@ -45,7 +46,6 @@ export class JobController {
     }
 
   
-    @UseGuards(JwtAuthGuard)
     @Post()
     @UseGuards(JwtAuthGuard)
     @UsePipes(new ValidationPipe({whitelist:true}))

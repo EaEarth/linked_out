@@ -58,6 +58,9 @@ export class User {
     jobAnnouncements: JobAnnouncement[];
 
     @OneToMany(() => FileItem, FileItem => FileItem.owner)
+    avatarFiles: FileItem[];
+
+    @OneToMany(() => FileItem, FileItem => FileItem.owner)
     files: FileItem[];
 
 }
