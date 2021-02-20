@@ -9,13 +9,18 @@ import { JobModule } from './job-announcement/job.module';
 import { CaslModule } from './casl/casl.module';
 import { FilesModule } from './files/files.module';
 import 'reflect-metadata';
+import { ConfigModule } from '@nestjs/config';
 
 
 @Module({
-  imports: [TypeOrmModule.forRoot(),AuthModule,UsersModule, JobModule, CaslModule, FilesModule],
+  imports: [
+    ConfigModule.forRoot({
+      port: 4000,
+    }),
+    TypeOrmModule.forRoot(), AuthModule, UsersModule, JobModule, CaslModule, FilesModule],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {
-  constructor(private readonly connection: Connection) {}
+  constructor(private readonly connection: Connection) { }
 }
