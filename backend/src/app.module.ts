@@ -10,14 +10,11 @@ import { CaslModule } from './casl/casl.module';
 import { FilesModule } from './files/files.module';
 import 'reflect-metadata';
 import { ConfigModule } from '@nestjs/config';
+import configuration from 'configuration';
 
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      port: 4000,
-    }),
-    TypeOrmModule.forRoot(), AuthModule, UsersModule, JobModule, CaslModule, FilesModule],
+  imports: [TypeOrmModule.forRoot(), AuthModule, UsersModule, JobModule, CaslModule, FilesModule],
   controllers: [AppController],
   providers: [AppService],
 })

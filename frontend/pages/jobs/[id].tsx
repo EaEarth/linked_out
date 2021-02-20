@@ -52,48 +52,52 @@ export const JobDetails = (props) => {
       <Head>
         <title>Job Detail - {jobDetails.company}</title>
       </Head>
-    
+
       <Container className="my-4">
         <Row>
-          <Col md={{span: 5, offset: 1}} className = ''>
+          <Col md={{ span: 5, offset: 1 }} className=''>
             <h1 className='text-center'>Programmer</h1>
-            <Image src={jobDetails.image} className='d-block w-75 mx-auto'rounded />
+            <Image src={jobDetails.image} className='d-block w-75 mx-auto' rounded />
           </Col>
           <Col md={6} className='mx-auto mt-5'>
             <h4>Location:</h4>
             <p>
-                <address>
+              <address>
                 {jobDetails.address}
-                </address>
+              </address>
             </p>
 
             <h4>อัตราค่าจ้าง:</h4>
             <p>
-            {jobDetails.salary}
+              {jobDetails.salary}
             </p>
 
             <h4>คุณสมบัติ:</h4>
             <p>
-            {jobDetails.requirement}
+              {jobDetails.requirement}
             </p>
-         </Col> 
+          </Col>
         </Row>
-        <Row className = "">
-            <Col md={{span: 5, offset: 1}} className = 'd-flex justify-content-center'>
-                <Link href='/test'>
-                <button type="button" className="my-2 btn btn-primary">Apply</button>
-                </Link>
-            </Col>
+        <Row className="">
+          <Col md={{ span: 5, offset: 1 }} className='d-flex justify-content-center'>
+            <Link href='/test'>
+              <button type="button" className="my-2 btn btn-primary">Apply</button>
+            </Link>
+          </Col>
         </Row>
       </Container>
-      
+
     </DefaultLayout>
   );
 };
 
 export async function getServerSideProps({ params }) {
-  const id = Number(params.id)-1
-  const details = mockDetails[id]
+  const jid = Number(params.id)
+  const details = await axios.get('/api/job/index/:id', {
+    params: {
+      id: { jid }
+    }
+  });
   return {
     props: {
       jobDetails: details
