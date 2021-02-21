@@ -23,7 +23,7 @@ export const NavBarBottom = (props) => {
         style={{ bottom: '2.75rem' }}>
         <img
           role="button"
-          src="images/search.svg"
+          src="/images/search.svg"
           width="64px"
           height="64px"
           className="stretched-link"
