@@ -5,6 +5,7 @@ import { Card, Col, Row } from 'react-bootstrap';
 import style from './index.module.scss';
 
 export type JobAnnouncementCardProps = {
+  id?: number;
   role: string;
   companyName: string;
   location: string;
@@ -18,12 +19,14 @@ export const JobAnnouncementCard: React.FC<JobAnnouncementCardProps> = (
   const router = useRouter();
   return (
     <a
-      href="/test"
+      href={props.id ? `/jobs/${props.id}` : undefined}
       className={style['custom-a']}
       onClick={(e) => e.preventDefault()}>
       <Card
         className={`mb-3 ${style['card']}`}
-        onClick={() => router.push(`/test`)}>
+        onClick={() => {
+          if (props.id) router.push(`/jobs/${props.id}`);
+        }}>
         <Row noGutters className="align-items-center">
           {/* Image */}
           <Col xs={3} md={5}>
