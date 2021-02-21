@@ -9,6 +9,7 @@ import DefaultLayout from '../../layouts/Default';
 
 const mockJobs = [
   {
+    id: 1,
     role: 'Programmer',
     createdAt: '1 day ago',
     location: 'Bangkok, Thailand',
@@ -16,6 +17,7 @@ const mockJobs = [
     image: '/images/company/wongnai.jpg',
   },
   {
+    id: 1,
     role: 'Full-stack Developer',
     createdAt: '4 hours ago',
     location: 'Bangkok, Thailand',
@@ -23,6 +25,7 @@ const mockJobs = [
     image: '/images/company/wongnai.jpg',
   },
   {
+    id: 2,
     role: 'Programmer',
     createdAt: '3 weeks ago',
     location: 'Bangkok, Thailand',
@@ -30,6 +33,7 @@ const mockJobs = [
     image: '/images/company/thinknet.jpg',
   },
   {
+    id: 4,
     role: 'Programmer',
     createdAt: '5 days ago',
     location: 'Bangkok, Thailand',
