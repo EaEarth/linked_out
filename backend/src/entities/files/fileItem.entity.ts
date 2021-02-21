@@ -19,7 +19,7 @@ export class FileItem {
   @ManyToOne(() => User, user => user.files)
   owner: User;
 
-  @OneToMany(type => JobAnnouncement, jobAnnouncements => jobAnnouncements.picture)
+  @OneToMany(() => JobAnnouncement, jobAnnouncements => jobAnnouncements.picture)
   jobAnnouncements: JobAnnouncement[];
 
   @OneToOne(() => User)

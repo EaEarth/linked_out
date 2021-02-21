@@ -1,7 +1,5 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post,Request, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { userInfo } from 'os';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { User } from 'src/entities/users/user.entity';
 import { createUser } from './dto/create-user.dto';
 import { updateUser } from './dto/update-user.dto';
 import { UsersService } from './users.service';
