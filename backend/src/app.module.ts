@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AppService } from 'src/app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { Connection } from 'typeorm';
@@ -9,8 +9,6 @@ import { JobModule } from './job-announcement/job.module';
 import { CaslModule } from './casl/casl.module';
 import { FilesModule } from './files/files.module';
 import 'reflect-metadata';
-import { ConfigModule } from '@nestjs/config';
-import configuration from 'configuration';
 
 
 @Module({

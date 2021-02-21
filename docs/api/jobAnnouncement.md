@@ -171,6 +171,32 @@ Get all job announcements
 
 ---
 
+## `GET` api/job/tag/index
+
+---
+
+**Description**
+
+```js
+Get all tags
+```
+
+**Response**
+
+```json
+[
+    {
+ 
+        "id": "tagId",
+        "name": "tagname"
+    },
+    ...
+]
+```
+
+
+---
+
 ## `GET` api/job/owner
 
 ---

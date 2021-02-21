@@ -8,56 +8,20 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router'
 
-const mockDetails = [
-  {
-    id: 1,
-    address: '8 อาคารทีวัน ชั้น 26, 27  ซอยสุขุมวิท 40 แขวงพระโขนง เขตคลองเตย กรุงเทพมหานคร 10110',
-    salary: '54000-70000',
-    requirement: 'ประสบการณ์ทำงาน 50 ปี รู้ภาษาในการเขียนโปรแกรม 10 ภาษาขึ้นไป',
-    company: 'Wongnai',
-    image: '/images/company/wongnai.jpg',
-  },
-  {
-    id: 2,
-    address: 'เลขที่ 114/3 ถนนซุปเปอร์ไฮเวย์ ซอยโพธาราม 1 ตำบลช้างเผือก อำเภอเมืองเชียงใหม่ เชียงใหม่ 50300',
-    salary: '9000-10000',
-    requirement: 'ประสบการณ์ทำงาน 50 ปี รู้ภาษาในการเขียนโปรแกรม 10 ภาษาขึ้นไป',
-    company: 'Thinknet',
-    image: '/images/company/thinknet.jpg',
-  },
-  {
-    id: 3,
-    address: '323 อาคารยูไนเต็ดเซ็นเตอร์ ชั้น 6 ห้อง 601 ถนนสีลม แขวงสีลม เขตบางรัก กทม. 10500 โทร. 02 353 6900',
-    salary: '5000-100000',
-    requirement: 'Poonpipat',
-    company: 'Thinknet',
-    image: '/images/company/thinknet.jpg',
-  },
-  {
-    id: 4,
-    address: '51 Naradhiwas Rajanagarindra Rd, Silom, Bang Rak, Bangkok 10500',
-    salary: '50000-100000',
-    requirement: 'Tanapong',
-    company: 'Bluebik',
-    image: '/images/company/bluebik.jpg',
-  },
-]
-
-
 export const JobDetails = (props) => {
   const jobDetails = props.jobDetails
 
   return (
     <DefaultLayout>
       <Head>
-        <title>Job Detail - {jobDetails.company}</title>
+        <title>Job Detail - {jobDetails.company} - {jobDetails.title}</title>
       </Head>
 
       <Container className="my-4">
         <Row>
           <Col md={{ span: 5, offset: 1 }} className=''>
-            <h1 className='text-center'>Programmer</h1>
-            <Image src={jobDetails.image} className='d-block w-75 mx-auto' rounded />
+            <h1 className='text-center'>{jobDetails.title}</h1>
+            <Image src={jobDetails.picture.path} className='d-block w-75 mx-auto' rounded />
           </Col>
           <Col md={6} className='mx-auto mt-5'>
             <h4>Location:</h4>
@@ -67,14 +31,19 @@ export const JobDetails = (props) => {
               </address>
             </p>
 
-            <h4>อัตราค่าจ้าง:</h4>
+            <h4>Wage:</h4>
             <p>
-              {jobDetails.salary}
+              {jobDetails.lowerBoundSalary} - {jobDetails.upperBoundSalary}
             </p>
 
-            <h4>คุณสมบัติ:</h4>
+            <h4>Description:</h4>
             <p>
-              {jobDetails.requirement}
+              {jobDetails.description}
+            </p>
+
+            <h4>Amount Require:</h4>
+            <p>
+              {jobDetails.amountRequired}
             </p>
           </Col>
         </Row>
@@ -92,15 +61,10 @@ export const JobDetails = (props) => {
 };
 
 export async function getServerSideProps({ params }) {
-  const jid = Number(params.id)
-  const details = await axios.get('/api/job/index/:id', {
-    params: {
-      id: { jid }
-    }
-  });
+  const details = await axios.get(`http://localhost:8000/api/job/index/${params.id}`);
   return {
     props: {
-      jobDetails: details
+      jobDetails: details.data
     }
   }
 }

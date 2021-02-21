@@ -10,6 +10,7 @@ import {
   NavDropdown,
 } from 'react-bootstrap';
 import styles from './NavBar.module.scss';
+import { BrowseModal } from '../browse/modal';
 
 // Default navigation bar title
 const DEFAULT_NAVBAR_TITLE = 'LinkedOut';
@@ -25,6 +26,7 @@ export const NavBar = (props) => {
   const router = useRouter();
   // Navigation bar title for mobile screen
   const [navBarTitle, setNavBarTitle] = useState(DEFAULT_NAVBAR_TITLE);
+  const [modalShow, setModalShow] = useState(false);
   // Hook on route change
   useEffect(() => {
     if (router.pathname in navBarTitleMapping)
@@ -80,7 +82,8 @@ export const NavBar = (props) => {
         </Nav>
         <Form inline className="d-none d-md-flex">
           <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-          <Button variant="outline-success">Search</Button>
+          <Button variant="outline-success primary" onClick={() => setModalShow(true)}>Search</Button>
+          <BrowseModal show={modalShow} onHide={() => setModalShow(false)} />
         </Form>
       </Navbar.Collapse>
     </Navbar>
