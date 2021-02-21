@@ -5,6 +5,10 @@
     "username": "solus",
     "password": "solus",
     "database": "solus",
-    "entities": ["dist/**/*.entity{.ts,.js}"],
-    "synchronize": true
+    "entities": [
+      "dist/**/*.entity{.ts,.js}"
+    ],
+    "synchronize": true,
+    "seeds": ["src/seeds/**/*{.ts,.js}"],
+    "factories": ["src/factories/**/*{.ts,.js}"]
   }

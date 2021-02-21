@@ -18,6 +18,10 @@ export class UsersService {
         private readonly filesService: FilesService,
         private readonly caslAbilityFactory: CaslAbilityFactory
     ){}
+
+    async index(): Promise<any> {
+        return this.repo.find({relations:["avatarFile"]});
+    }
     
     async findById(id: number): Promise<User | undefined> {
         return this.repo.findOne(id,{relations:["avatarFile"]});
