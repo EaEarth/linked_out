@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AllExceptionFilter } from './filters/all-exception.filter';
 import * as helmet from 'helmet';
-import fastifyCookie from 'fastify-cookie';
 import * as cookieParser from 'cookie-parser';
 import { NestExpressApplication } from '@nestjs/platform-express';
 

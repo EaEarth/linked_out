@@ -23,7 +23,7 @@ export class JobAnnouncement {
   @Column({ default: true })
   isPublished: boolean;
 
-  @Column()
+  @Column("longtext")
   description: string;
 
   @Column()
