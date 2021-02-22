@@ -16,7 +16,7 @@ export class FileItem {
   @Column()
   path: string;
 
-  @ManyToOne(() => User, user => user.avatarFiles)
+  @ManyToOne(() => User, user => user.files)
   owner: User;
 
   @OneToMany(() => JobAnnouncement, jobAnnouncements => jobAnnouncements.picture)

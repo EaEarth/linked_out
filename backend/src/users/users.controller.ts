@@ -15,6 +15,11 @@ export class UsersController {
         return output;
     }
     
+    @Get()
+    async index(){
+        return this.service.index();
+    }
+
     @Get(':id')
     async findById(@Param('id',new ParseIntPipe()) id: number){
         const { hashedPassword, ...output } = await this.service.findById(id);

@@ -10,7 +10,6 @@ import { CaslModule } from './casl/casl.module';
 import { FilesModule } from './files/files.module';
 import 'reflect-metadata';
 
-
 @Module({
   imports: [TypeOrmModule.forRoot(), AuthModule, UsersModule, JobModule, CaslModule, FilesModule],
   controllers: [AppController],
