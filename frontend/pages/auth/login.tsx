@@ -11,6 +11,7 @@ export const login = (props) => {
     const [state, setState] = useState({
         username: "",
         password: "",
+        error: null
     })
 
     useEffect(() => {
@@ -40,14 +41,17 @@ export const login = (props) => {
                         ...prevState,
                     }))
                     router.push('/');
-                } else if (response.status === 401) {
-                    props.showError("Username and password do not match");
-                } else {
-                    console.log("Some error ocurred");
+                    // } else if (response.status === 401) {
+                    //     console.log("Username and password do not match");
+                    // } else {
+                    //     console.log("Some error ocurred");
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                setState(prevState => ({
+                    ...prevState,
+                    error: "Username or password is incorrect."
+                }))
             });
     }
     return (
@@ -68,6 +72,10 @@ export const login = (props) => {
                             <Form.Group>
                                 <Form.Control type="password" id="password" value={state.password} placeholder="Password" onChange={handleChange} />
                             </Form.Group>
+
+                            <div>
+                                <p className="text-danger">{state.error}</p>
+                            </div>
 
                             <Link href="/test">
                                 <a className="">forget password?</a>

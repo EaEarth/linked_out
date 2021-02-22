@@ -60,7 +60,7 @@ export const Register = (props) => {
                         setState(prevState => ({
                             ...prevState,
                         }))
-                        router.push("/test");
+                        router.push("/auth/successfulRegister");
                     } else {
                         console.log("some error occur");
                     }
