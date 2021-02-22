@@ -5,13 +5,14 @@ import { FileItem } from 'src/entities/files/fileItem.entity';
 import { JobAnnouncement } from 'src/entities/job/jobAnnouncement.entity';
 import { Tag } from 'src/entities/job/tag.entity';
 import { FilesModule } from 'src/files/files.module';
+import { CreateAll } from 'src/seeds/createAll.seed';
 import { UsersModule } from 'src/users/users.module';
 import { JobController } from './job.controller';
 import { JobService } from './job.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([JobAnnouncement, Tag, FileItem]),CaslModule,UsersModule,FilesModule],
-  providers: [JobService],
+  providers: [JobService, CreateAll],
   controllers: [JobController]
 })
 export class JobModule {}
