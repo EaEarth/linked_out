@@ -11,6 +11,9 @@ import {
 } from 'react-bootstrap';
 import styles from './NavBar.module.scss';
 import { BrowseModal } from '../browse/modal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 // Default navigation bar title
 const DEFAULT_NAVBAR_TITLE = 'LinkedOut';
@@ -20,6 +23,8 @@ const navBarTitleMapping: Record<string, string> = {
   '/test': 'Test',
   '/': 'Home',
   '/jobs': 'Job Announcements',
+  '/auth/login': 'Login',
+  '/auth/register': 'Register',
 };
 
 export const NavBar = (props) => {
@@ -67,24 +72,36 @@ export const NavBar = (props) => {
               Jobs
             </Nav.Link>
           </Link>
-
-          <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.2">
-              Another action
-            </NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-            <NavDropdown.Divider />
-            <NavDropdown.Item href="#action/3.4">
-              Separated link
-            </NavDropdown.Item>
-          </NavDropdown>
         </Nav>
         <Form inline className="d-none d-md-flex">
-          <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-          <Button variant="outline-success primary" onClick={() => setModalShow(true)}>Search</Button>
+          <Button
+            variant="primary"
+            style={{ backgroundColor: '#61DCD5' }}
+            onClick={() => setModalShow(true)}>
+            <FontAwesomeIcon icon={faSearch} /> Search
+          </Button>
           <BrowseModal show={modalShow} onHide={() => setModalShow(false)} />
         </Form>
+        <Nav>
+          <NavDropdown
+            title={
+              <>
+                <FontAwesomeIcon icon={faUserCircle} size="lg" /> Guest
+              </>
+            }
+            id="basic-nav-dropdown"
+            active={router.pathname.match(/\/auth\/.+/) !== null}
+            className={styles['user-menu']}>
+            <Link href="/auth/login">
+              <NavDropdown.Item href="/auth/login">Login</NavDropdown.Item>
+            </Link>
+            <Link href="/auth/register">
+              <NavDropdown.Item href="/auth/register">
+                Register
+              </NavDropdown.Item>
+            </Link>
+          </NavDropdown>
+        </Nav>
       </Navbar.Collapse>
     </Navbar>
   );

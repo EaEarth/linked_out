@@ -9,3 +9,10 @@
 .navbar-brand-mobile {
   margin-left: 1rem;
 }
+
+.user-menu {
+  & > div {
+    right: 0;
+    left: auto;
+  }
+}
