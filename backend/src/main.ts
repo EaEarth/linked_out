@@ -5,13 +5,15 @@ import { AllExceptionFilter } from './filters/all-exception.filter';
 import * as helmet from 'helmet';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    cors: {
+      origin: ['http://localhost:3000'],
+      credentials: true
+    }
+  });
   //app.useGlobalPipes(new ValidationPipe({whitelist:true}));
   app.setGlobalPrefix('api');
   //app.useGlobalFilters(new AllExceptionFilter());
-  app.enableCors({
-    credentials: true
-  });
   app.use(helmet())
   await app.listen(8000);
 }
