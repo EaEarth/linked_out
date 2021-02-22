@@ -9,6 +9,7 @@ import PhoneInput from 'react-phone-input-2';
 import { symlink } from 'fs/promises';
 
 export const Register = (props) => {
+    const router = useRouter();
     const [state, setState] = useState({
         username: "",
         firstname: "",
@@ -58,9 +59,8 @@ export const Register = (props) => {
                     if (response.status === 201) {
                         setState(prevState => ({
                             ...prevState,
-                            'successMessage': 'Registration successful. Redirecting to home page..'
                         }))
-                        window.location.href = "/test";
+                        router.push("/test");
                     } else {
                         console.log("some error occur");
                     }
