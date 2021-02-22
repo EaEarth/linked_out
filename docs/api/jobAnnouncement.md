@@ -107,7 +107,7 @@ Create a new tag
 **Parameters**
 
 ```js
-Param
+Path Variable
 [
     "name": "string"
 ]
@@ -306,7 +306,7 @@ Get job announcements by id
 **Parameters**
 
 ```js
-Param
+Path Variable
 [
     "id" : "required | Integer" // job announcement id
 ]
@@ -367,7 +367,7 @@ update a job announcement
 **Parameters**
 
 ```js
-Param
+Path Variable
 [
     'id': "required | Interger"
 ]
@@ -457,7 +457,7 @@ Delete a job announcement
 **Parameters**
 
 ```js
-Param
+Path Variable
 [
     'id': "required | Interger"
 ]
