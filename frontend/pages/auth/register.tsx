@@ -11,18 +11,19 @@ import { symlink } from 'fs/promises';
 
 
 export const Register = (props) => {
-  const [state, setState] = useState({
-    username: '',
-    firstname: '',
-    lastname: '',
-    email: '',
-    address: '',
-    phone: '',
-    birthDate: '',
-    password: '',
-    confirmPassword: '',
-    successMessage: null,
-  });
+    const router = useRouter();
+    const [state, setState] = useState({
+        username: "",
+        firstname: "",
+        lastname: "",
+        email: "",
+        address: "",
+        phone: "",
+        birthDate: "",
+        password: "",
+        confirmPassword: "",
+        successMessage: null
+    })
 
   const [required, setRequired] = useState({
     username: '',
@@ -134,12 +135,12 @@ export const Register = (props) => {
     } else {
       console.log('Please enter valid username and password');
     }
-  };
-  return (
-    <DefaultLayout>
-      <Head>
-        <title>Register</title>
-      </Head>
+  }
+    return (
+        <DefaultLayout>
+            <Head>
+                <title>Register</title>
+            </Head>
 
       <Container className="my-4">
         <Row>
@@ -256,20 +257,20 @@ export const Register = (props) => {
                 <p style={{color:'red'}}>{required.confirmPassword}</p>
               </Form.Group>
 
-              <Link href="/test">
-                <button
-                  type="button"
-                  className="my-2 btn btn-primary"
-                  onClick={handleSubmitClick}>
-                  Register
+                            <Link href="/test">
+                                <button
+                                    type="button"
+                                    className="my-2 btn btn-primary"
+                                    onClick={handleSubmitClick}>
+                                    Register
                 </button>
-              </Link>
-            </Form>
-          </Col>
-        </Row>
-      </Container>
-    </DefaultLayout>
-  );
+                            </Link>
+                        </Form>
+                    </Col>
+                </Row>
+            </Container>
+        </DefaultLayout>
+    );
 };
 
 

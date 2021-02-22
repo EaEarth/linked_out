@@ -80,7 +80,7 @@ export const BrowseModal = (props) => {
                 <Link href="/test">
                   <img
                     role="button"
-                    src="images/search.svg"
+                    src="/images/search.svg"
                     width="64px"
                     height="64px"
                     className="my-2 stretched-link mx-auto d-block"
