@@ -7,7 +7,7 @@ import { jwtConstants } from '../constants';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([ExtractJwt.fromAuthHeaderAsBearerToken(),cookieExtractor]),
       ignoreExpiration: false,
       secretOrKey: jwtConstants.secret,
     });
@@ -17,3 +17,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return { id: payload.sub, username: payload.username, isAdmin: payload.isAdmin };
   }
 }
+
+const cookieExtractor = function(req) {
+  var token = null;
+  if (req && req.signedCookies) {
+      token = req.signedCookies['jwt'];
+  }
+  return token;
+};
