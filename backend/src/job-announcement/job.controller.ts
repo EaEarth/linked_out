@@ -11,6 +11,8 @@ import {
     UsePipes,
     UseGuards,
     Request,
+    UseFilters,
+    ForbiddenException,
   } from '@nestjs/common';
 import { JobAnnouncement } from 'src/entities/job/jobAnnouncement.entity';
 import { createAnnouncement } from './jobDto/create-announcement.dto';
@@ -40,12 +42,6 @@ export class JobController {
     @Get('index/:id')
     findById(@Param('id', new ParseIntPipe()) id: number): Promise<JobAnnouncement> {
       return this.service.findById(id);
-    }
-
-    @Get('owner')
-    @UseGuards(JwtAuthGuard)
-    findByOwner(@Request() req): Promise<JobAnnouncement[]> {
-      return this.service.findFromOwner(req.user.id);
     }
 
     @Post()
