@@ -60,8 +60,8 @@ export const JobDetails = (props) => {
   );
 };
 
-export async function getServerSideProps({ params }) {
-  const details = await axios.get(`http://localhost:8000/api/job/index/${params.id}`);
+export async function getServerSideProps(context) {
+  const details = await axios.get(`http://localhost:8000/api/job/index/${context.params.id}`);
   return {
     props: {
       jobDetails: details.data

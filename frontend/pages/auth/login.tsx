@@ -1,17 +1,23 @@
 import Head from 'next/head';
-import { useRouter } from 'next/router';
+import { Router, useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Jumbotron, Row, Form } from 'react-bootstrap';
 import DefaultLayout from '../../layouts/Default';
 import Link from 'next/link';
 import axios from 'axios';
 
-export const job = (props) => {
+export const login = (props) => {
+    const router = useRouter();
     const [state, setState] = useState({
         username: "",
         password: "",
-        successMessage: null
     })
+
+    useEffect(() => {
+        if (props.cookie.hasOwnProperty('jwt')) {
+            router.push('/');
+        }
+    });
 
     const handleChange = (e) => {
         const { id, value } = e.target
@@ -32,10 +38,8 @@ export const job = (props) => {
                 if (response.status === 201) {
                     setState(prevState => ({
                         ...prevState,
-                        'successMessage': 'Registration successful. Redirecting to home page..'
                     }))
-                    //localStorage.setItem(ACCESS_TOKEN_NAME,response.data.token);
-                    //redirectToHome();
+                    router.push('/');
                 } else if (response.status === 401) {
                     props.showError("Username and password do not match");
                 } else {
@@ -66,8 +70,10 @@ export const job = (props) => {
                             </Form.Group>
 
                             <Link href="/test">
-                                <button type="button" className="my-2 btn btn-primary" onClick={handleSubmitClick}>Login</button>
+                                <a className="">forget password?</a>
                             </Link>
+
+                            <button type="button" className="my-2 btn btn-primary" onClick={handleSubmitClick}>Login</button>
                         </Form>
                     </Col>
                 </Row>
@@ -77,4 +83,13 @@ export const job = (props) => {
     );
 };
 
-export default job;
+export async function getServerSideProps(context) {
+    const cookies = context.req.cookies;
+    return {
+        props: {
+            cookie: cookies
+        }
+    }
+}
+
+export default login;
