@@ -32,6 +32,16 @@ export class JobController {
     indexGet(): Promise<JobAnnouncement[]> {
       return this.service.index();
     }
+
+    @Get('indexAll')
+    indexGetAll(): Promise<JobAnnouncement[]> {
+      return this.service.indexAll();
+    }
+
+    @Get('tag/index')
+    indexTag(): Promise<Tag[]> {
+      return this.service.indexTag();
+    }
   
     @Get('search')
     @UsePipes(new ValidationPipe({whitelist:true}))
@@ -56,7 +66,7 @@ export class JobController {
     @UsePipes(new ValidationPipe({whitelist:true}))
     update(@Request() req, @Param('id', new ParseIntPipe()) id: number, @Body() dto: updateAnnouncement): Promise<JobAnnouncement> {
       for (const [key, value] of Object.entries(dto)) {
-        if (value == null) {
+        if (value == null || value === '') {
             delete dto[key];
         }
       }
