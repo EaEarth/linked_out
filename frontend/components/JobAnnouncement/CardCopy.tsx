@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import style from './index.module.scss';
-import { Link } from "react-router-dom";
 import Jobs from '../../pages/jobs';
 
 export type JobAnnouncementCardProps = {
