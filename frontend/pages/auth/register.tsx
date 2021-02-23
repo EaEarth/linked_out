@@ -82,7 +82,7 @@ export const Register = (props) => {
                 <Row>
                     <Col md={{ span: 5, offset: 1 }} className=''>
                         <Form>
-                            <Form.Group className="">
+                            <Form.Group>
                                 <i className="bi bi-person-fill"></i>
                                 <Form.Control type="text" id="username" value={state.username} placeholder="Username" onChange={handleChange} />
                             </Form.Group>
