@@ -107,21 +107,21 @@ export const RegisterJobAnnouncement = (props) => {
 
       <Container className="my-4">
         <Row>
-          <Col md={{ span: 5, offset: 1 }} >
-            <Row>
+          <Col md={{ span: 5, offset: 1 }} className="d-flex flex-column">
+            <Row className="mt-4">
               <Image
                 src="/images/user/User.svg"
                 className="d-block w-30 mx-auto"
                 rounded
               />
             </Row>
-            <Row className="d-flex justify-content-center">
+            <Row className="d-flex justify-content-center mt-3">
             <button type="button" className="my-2 btn btn-primary">
                 Add Picture
               </button>
             </Row>
             <Row>
-                <Form>
+                <Form className="w-100 p-3">
                     <Form.Group>
                     <Form.Label className={styles.label}>Title</Form.Label>
                     <Form.Control
@@ -141,8 +141,8 @@ export const RegisterJobAnnouncement = (props) => {
                     <Form.Label className={styles.label}>Description</Form.Label>
                     <Form.Control
                         id="description"
-                        className="form-control"
-                        type="text"
+                        rows={5}
+                        as="textarea"
                         placeholder="description"
                         onChange={(e) => setDescription(e.target.value)}
                         isInvalid={!!errors.description}
@@ -157,7 +157,7 @@ export const RegisterJobAnnouncement = (props) => {
 
           <Col md={{ span: 5, offset: 1 }} >
             <Row>
-              <Form>
+              <Form className="w-100 p-3">
                 <label className={styles.label}>Tag</label>
                 <Select
                     isMulti
