@@ -9,6 +9,7 @@ import PhoneInput from 'react-phone-input-2';
 import { symlink } from 'fs/promises';
 
 export const Register = (props) => {
+    const router = useRouter();
     const [state, setState] = useState({
         username: "",
         firstname: "",
@@ -58,9 +59,8 @@ export const Register = (props) => {
                     if (response.status === 201) {
                         setState(prevState => ({
                             ...prevState,
-                            'successMessage': 'Registration successful. Redirecting to home page..'
                         }))
-                        window.location.href = "/test";
+                        router.push("/auth/successfulRegister");
                     } else {
                         console.log("some error occur");
                     }
@@ -71,7 +71,7 @@ export const Register = (props) => {
         } else {
             console.log('Please enter valid username and password')
         }
-    }
+    };
     return (
         <DefaultLayout>
             <Head>
@@ -80,62 +80,124 @@ export const Register = (props) => {
 
             <Container className="my-4">
                 <Row>
-                    <Col md={{ span: 5, offset: 1 }} className=''>
+                    <Col md={{ span: 5, offset: 1 }} className="d-flex flex-column">
                         <Form>
                             <Form.Group>
                                 <i className="bi bi-person-fill"></i>
-                                <Form.Control type="text" id="username" value={state.username} placeholder="Username" onChange={handleChange} />
+                                <Form.Control
+                                    type="text"
+                                    id="username"
+                                    value={state.username}
+                                    placeholder="Username"
+                                    onChange={handleChange}
+                                />
                             </Form.Group>
 
                             <Form.Group>
-                                <Form.Control type="text" id="firstname" value={state.firstname} placeholder="Firstname" onChange={handleChange} />
+                                <Form.Control
+                                    type="text"
+                                    id="firstname"
+                                    value={state.firstname}
+                                    placeholder="Firstname"
+                                    onChange={handleChange}
+                                />
                             </Form.Group>
 
                             <Form.Group>
-                                <Form.Control type="text" id="lastname" value={state.lastname} placeholder="Lastname" onChange={handleChange} />
+                                <Form.Control
+                                    type="text"
+                                    id="lastname"
+                                    value={state.lastname}
+                                    placeholder="Lastname"
+                                    onChange={handleChange}
+                                />
                             </Form.Group>
 
                             <Form.Group>
                                 <i className="bi bi-envelope-fill"></i>
-                                <Form.Control type="email" id="email" value={state.email} placeholder="Email" onChange={handleChange} />
+                                <Form.Control
+                                    type="email"
+                                    id="email"
+                                    value={state.email}
+                                    placeholder="Email"
+                                    onChange={handleChange}
+                                />
                             </Form.Group>
 
                             <Form.Group>
                                 <i className="bi bi-geo-alt-fill"></i>
-                                <Form.Control type="text" id="address" value={state.address} placeholder="Address" onChange={handleChange} />
+                                <Form.Control
+                                    type="text"
+                                    id="address"
+                                    value={state.address}
+                                    placeholder="Address"
+                                    onChange={handleChange}
+                                />
                             </Form.Group>
 
                             <Form.Group>
                                 <i className="bi bi-telephone-fill"></i>
-                                {/* <PhoneInput country={'th'} placeholder="Phone Number" onChange={(value) => setPhoneNumber(value)}/> */}
-                                <Form.Control type="text" id="phone" value={state.phone} placeholder="Phone" onChange={handleChange} />
+                                {/* {
+                                    <PhoneInput
+                                        country={'th'}
+                                        placeholder="Phone Number"
+                                        onChange={(value) => setPhoneNumber(value)}
+                                    />
+                                } */}
+                                <Form.Control
+                                    type="text"
+                                    id="phone"
+                                    value={state.phone}
+                                    placeholder="Phone"
+                                    onChange={handleChange}
+                                />
                             </Form.Group>
 
                             <Form.Group>
                                 <Form.Label>Birthdate</Form.Label>
-                                <Form.Control type="date" id="birthDate" value={state.birthDate} onChange={handleChange} />
+                                <Form.Control
+                                    type="date"
+                                    id="birthDate"
+                                    value={state.birthDate}
+                                    onChange={handleChange}
+                                />
                             </Form.Group>
 
                             <Form.Group>
                                 <i className="bi bi-key-fill"></i>
-                                <Form.Control type="password" id="password" value={state.password} placeholder="Password" onChange={handleChange} />
+                                <Form.Control
+                                    type="password"
+                                    id="password"
+                                    value={state.password}
+                                    placeholder="Password"
+                                    onChange={handleChange}
+                                />
                             </Form.Group>
 
                             <Form.Group>
-                                <Form.Control type="password" id="confirmPassword" value={state.confirmPassword} placeholder="Confirm Password" onChange={handleChange} />
+                                <Form.Control
+                                    type="password"
+                                    id="confirmPassword"
+                                    value={state.confirmPassword}
+                                    placeholder="Confirm Password"
+                                    onChange={handleChange}
+                                />
                             </Form.Group>
 
                             <Link href="/test">
-                                <button type="button" className="my-2 btn btn-primary" onClick={handleSubmitClick}>Register</button>
+                                <button
+                                    type="button"
+                                    className="my-2 btn btn-primary"
+                                    onClick={handleSubmitClick}>
+                                    Register
+                </button>
                             </Link>
                         </Form>
                     </Col>
                 </Row>
             </Container>
-
         </DefaultLayout>
     );
 };
 
 export default Register;
-

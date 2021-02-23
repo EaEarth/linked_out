@@ -62,8 +62,7 @@ export const Home = () => {
             <h2>Heading</h2>
             <p>
               Playing ping pong all night long, everything's all neon and hazy.
-              Yeah, she's so in demand. She's sweet as pie but if you break her
-              heart. But down to earth. It's time to face the music I'm no
+          heart. But down to earth. It's time to face the music I'm no
               longer your muse. I guess that I forgot I had a choice.
             </p>
             <p>

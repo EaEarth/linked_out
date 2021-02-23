@@ -1,17 +1,24 @@
 import Head from 'next/head';
-import { useRouter } from 'next/router';
+import { Router, useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Jumbotron, Row, Form } from 'react-bootstrap';
 import DefaultLayout from '../../layouts/Default';
 import Link from 'next/link';
 import axios from 'axios';
 
-export const job = (props) => {
+export const login = (props) => {
+    const router = useRouter();
     const [state, setState] = useState({
         username: "",
         password: "",
-        successMessage: null
+        error: null
     })
+
+    useEffect(() => {
+        if (props.cookie.hasOwnProperty('jwt')) {
+            router.push('/');
+        }
+    });
 
     const handleChange = (e) => {
         const { id, value } = e.target
@@ -32,18 +39,19 @@ export const job = (props) => {
                 if (response.status === 201) {
                     setState(prevState => ({
                         ...prevState,
-                        'successMessage': 'Registration successful. Redirecting to home page..'
                     }))
-                    //localStorage.setItem(ACCESS_TOKEN_NAME,response.data.token);
-                    //redirectToHome();
-                } else if (response.status === 401) {
-                    props.showError("Username and password do not match");
-                } else {
-                    console.log("Some error ocurred");
+                    router.push('/');
+                    // } else if (response.status === 401) {
+                    //     console.log("Username and password do not match");
+                    // } else {
+                    //     console.log("Some error ocurred");
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                setState(prevState => ({
+                    ...prevState,
+                    error: "Username or password is incorrect."
+                }))
             });
     }
     return (
@@ -65,9 +73,15 @@ export const job = (props) => {
                                 <Form.Control type="password" id="password" value={state.password} placeholder="Password" onChange={handleChange} />
                             </Form.Group>
 
+                            <div>
+                                <p className="text-danger">{state.error}</p>
+                            </div>
+
                             <Link href="/test">
-                                <button type="button" className="my-2 btn btn-primary" onClick={handleSubmitClick}>Login</button>
+                                <a className="">forget password?</a>
                             </Link>
+
+                            <button type="button" className="my-2 btn btn-primary" onClick={handleSubmitClick}>Login</button>
                         </Form>
                     </Col>
                 </Row>
@@ -77,4 +91,13 @@ export const job = (props) => {
     );
 };
 
-export default job;
+export async function getServerSideProps(context) {
+    const cookies = context.req.cookies;
+    return {
+        props: {
+            cookie: cookies
+        }
+    }
+}
+
+export default login;
