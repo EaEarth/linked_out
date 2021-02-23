@@ -43,7 +43,7 @@ export class JobController {
     findById(@Param('id', new ParseIntPipe()) id: number): Promise<JobAnnouncement> {
       return this.service.findById(id);
     }
-
+    
     @Post()
     @UseGuards(JwtAuthGuard)
     @UsePipes(new ValidationPipe({whitelist:true}))
@@ -60,6 +60,7 @@ export class JobController {
             delete dto[key];
         }
       }
+      console.log("HELLO")
       return this.service.update(req.user ,id, dto);
     }
     

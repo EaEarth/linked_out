@@ -16,7 +16,7 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe({whitelist:true}));
   app.setGlobalPrefix('api');
-  app.useGlobalFilters(new AllExceptionFilter());
+  //app.useGlobalFilters(new AllExceptionFilter());
   app.use(helmet())
   app.use(cookieParser("superDuperSecretCookieKey"))
   //app.set('trust proxy', 1);
