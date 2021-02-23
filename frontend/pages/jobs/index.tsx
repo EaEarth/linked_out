@@ -6,83 +6,9 @@ import JobAnnouncementGrid from '../../components/JobAnnouncement/Grid';
 import JobPagination from '../../components/JobAnnouncement/Pagination';
 import TagList from '../../components/JobAnnouncement/TagList';
 import DefaultLayout from '../../layouts/Default';
-
-const mockJobs = [
-  {
-    id: 1,
-    role: 'Programmer',
-    createdAt: '1 day ago',
-    location: 'Bangkok, Thailand',
-    companyName: 'Wongnai',
-    image: '/images/company/wongnai.jpg',
-  },
-  {
-    id: 1,
-    role: 'Full-stack Developer',
-    createdAt: '4 hours ago',
-    location: 'Bangkok, Thailand',
-    companyName: 'Wongnai',
-    image: '/images/company/wongnai.jpg',
-  },
-  {
-    id: 2,
-    role: 'Programmer',
-    createdAt: '3 weeks ago',
-    location: 'Bangkok, Thailand',
-    companyName: 'Thinknet',
-    image: '/images/company/thinknet.jpg',
-  },
-  {
-    id: 4,
-    role: 'Programmer',
-    createdAt: '5 days ago',
-    location: 'Bangkok, Thailand',
-    companyName: 'Bluebik',
-    image: '/images/company/bluebik.jpg',
-  },
-  {
-    role: 'Software Engineer',
-    createdAt: '11 hours ago',
-    location: 'Bangkok, Thailand',
-    companyName: 'Bitkub',
-    image: '/images/company/bitkub.jpg',
-  },
-  {
-    role: 'Programmer',
-    createdAt: '11 hours ago',
-    location: 'Bangkok, Thailand',
-    companyName: 'SCG',
-    image: '/images/company/scg.jpg',
-  },
-  {
-    role: 'Programmer',
-    createdAt: '11 hours ago',
-    location: 'Bangkok, Thailand',
-    companyName: 'KBTG',
-    image: '/images/company/kbtg.png',
-  },
-  {
-    role: 'Programmer',
-    createdAt: '11 hours ago',
-    location: 'Bangkok, Thailand',
-    companyName: 'Central',
-    image: '/images/company/central.png',
-  },
-  {
-    role: 'Web Developer',
-    createdAt: '11 hours ago',
-    location: 'Bangkok, Thailand',
-    companyName: 'Skooldio',
-    image: '/images/company/skooldio.png',
-  },
-];
-
-const mockTags = [
-  { name: 'โปรแกรมเมอร์' },
-  { name: 'แพทย์' },
-  { name: 'การตลาด' },
-  { name: 'บัญชี' },
-];
+import axios from 'axios';
+import JobAnnouncement from '../../models/job/JobAnnouncement';
+import { GetServerSidePropsContext } from 'next';
 
 export const Jobs: React.FC<any> = (props) => {
   const router = useRouter();
@@ -97,7 +23,13 @@ export const Jobs: React.FC<any> = (props) => {
   const goToPage = (e: React.MouseEvent<HTMLElement>, pageNo: number) => {
     e.preventDefault();
     if (pageNo >= 0 && pageNo <= pageLen)
-      router.push(`/jobs?page=${pageNo}`, undefined, { shallow: true });
+      router.push(
+        { href: '/jobs', query: { ...router.query, page: pageNo } },
+        undefined,
+        {
+          shallow: true,
+        }
+      );
   };
   // Update page length
   useEffect(() => {
@@ -124,12 +56,22 @@ export const Jobs: React.FC<any> = (props) => {
   );
 };
 
-export async function getServerSideProps(context) {
-  // TODO: Fetch from backend
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { data } = await axios.get<JobAnnouncement[]>(
+    'http://localhost:8000/api/job/index'
+  );
+  let tagQuery = context.query.tags || '';
+  if (!Array.isArray(tagQuery) && typeof tagQuery === 'string') {
+    tagQuery = tagQuery.split(',');
+  }
+  const tags = [];
+  for (const tag of tagQuery) {
+    tags.push({ name: tag });
+  }
   return {
     props: {
-      jobs: mockJobs,
-      tags: mockTags,
+      jobs: data,
+      tags: tags,
     },
   };
 }
