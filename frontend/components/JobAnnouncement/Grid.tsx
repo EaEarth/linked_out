@@ -1,11 +1,10 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
-import JobAnnouncementCard, { JobAnnouncementCardProps } from './Card';
-
-export type JobAnnouncement = JobAnnouncementCardProps;
+import JobAnnouncement from '../../models/job/JobAnnouncement';
+import JobAnnouncementCard from './Card';
 
 export type JobAnnouncementGridProps = {
-  jobs: JobAnnouncement[];
+  jobs: Partial<JobAnnouncement>[];
 };
 
 export const JobAnnouncementGrid: React.FC<JobAnnouncementGridProps> = ({
