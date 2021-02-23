@@ -8,6 +8,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Select from 'react-select';
+import Jobs from '../../pages/jobs';
 
 export const EditJobDetails = (props) => {
     const [title, setTitle] = useState('');

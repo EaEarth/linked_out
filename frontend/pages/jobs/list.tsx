@@ -7,10 +7,10 @@ import JobPagination from '../../components/JobAnnouncement/Pagination';
 import TagList from '../../components/JobAnnouncement/TagList';
 import DefaultLayout from '../../layouts/Default';
 import { Col, Row } from 'react-bootstrap';
-
+import { Link } from "react-router-dom";
 const mockJobs = [
     {
-        id: 1,
+        id: 0,
         role: 'Programmer',
         createdAt: '1 day ago',
         location: 'Bangkok, Thailand',
@@ -82,7 +82,10 @@ export const lists: React.FC<any> = (props) => {
                         <TagList tags={tags} />
                     </Col>
                     <Col md={1}>
-                        <button type="button" className="my-2 btn btn-primary">Create</button>
+                        <button type="button" className="my-2 btn btn-primary"
+                            onClick={() => { router.push('/editJobDetail/' + props.jobs.length.toString()) }}>
+                            Create
+                        </button>
                     </Col>
 
                 </Row>

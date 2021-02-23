@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import style from './index.module.scss';
+import { Link } from "react-router-dom";
+import Jobs from '../../pages/jobs';
 
 export type JobAnnouncementCardProps = {
   id?: number;
@@ -13,13 +15,27 @@ export type JobAnnouncementCardProps = {
   image?: string;
 };
 
+
 export const JobAnnouncementCard: React.FC<JobAnnouncementCardProps> = (
   props
 ) => {
+  const DEFAULT_NAVBAR_TITLE = 'LinkedOut';
   const router = useRouter();
+  const navBarTitleMapping: Record<string, string> = {
+    '/test': 'Test',
+    '/': 'Home',
+    '/jobs': 'Job Announcements',
+    '/auth/login': 'Login',
+    '/auth/register': 'Register',
+  };
   const divider = {
     width: "5px"
   }
+  function handleEdit(e) {
+
+    props
+  }
+
   return (
     <a
       href={props.id ? `/jobs/${props.id}` : undefined}
@@ -64,8 +80,9 @@ export const JobAnnouncementCard: React.FC<JobAnnouncementCardProps> = (
             </Card.Body>
 
             <Col >
-              <button type="button" className="my-2 btn btn-primary" >Edit</button>
+              <button type="button" className="my-2 btn btn-primary" onClick={() => { router.push('/editJobDetail/' + props.id.toString()) }}>Edit</button>
               <button type="button" className="my-2 btn btn-primary">Delete</button>
+
             </Col>
 
 
