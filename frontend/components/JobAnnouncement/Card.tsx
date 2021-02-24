@@ -43,7 +43,7 @@ export const JobAnnouncementCard: React.FC<JobAnnouncementCardProps> = (
                   </Col>
                   <Col xs={4} className={`${style['wrap-text']}`}>
                     <small className="text-muted d-md-none float-right">
-                      {props.createdAt}
+                      {dayjs(props.createdAt).fromNow()}
                     </small>
                   </Col>
                 </Row>
