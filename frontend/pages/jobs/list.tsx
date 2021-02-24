@@ -10,7 +10,7 @@ import { Col, Row } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 const mockJobs = [
     {
-        id: 0,
+        id: 1,
         role: 'Programmer',
         createdAt: '1 day ago',
         location: 'Bangkok, Thailand',
@@ -18,7 +18,7 @@ const mockJobs = [
         image: '/images/company/wongnai.jpg',
     },
     {
-        id: 1,
+        id: 2,
         role: 'Full-stack Developer',
         createdAt: '4 hours ago',
         location: 'Bangkok, Thailand',
@@ -26,7 +26,7 @@ const mockJobs = [
         image: '/images/company/wongnai.jpg',
     },
     {
-        id: 2,
+        id: 3,
         role: 'Backend Developer',
         createdAt: '3 weeks ago',
         location: 'Bangkok, Thailand',
@@ -35,7 +35,7 @@ const mockJobs = [
     },
 
     {
-        id: 3,
+        id: 4,
         role: 'Web Developer',
         createdAt: '11 hours ago',
         location: 'Bangkok, Thailand',
@@ -83,7 +83,7 @@ export const lists: React.FC<any> = (props) => {
                     </Col>
                     <Col md={1}>
                         <button type="button" className="my-2 btn btn-primary"
-                            onClick={() => { router.push('/editJobDetail/' + props.jobs.length.toString()) }}>
+                            onClick={() => { router.push('/jobs/register')}}>
                             Create
                         </button>
                     </Col>

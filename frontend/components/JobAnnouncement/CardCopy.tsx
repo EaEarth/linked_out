@@ -41,10 +41,7 @@ export const JobAnnouncementCard: React.FC<JobAnnouncementCardProps> = (
       className={style['custom-a']}
       onClick={(e) => e.preventDefault()}>
       <Card
-        className={`mb-3 ${style['card']}`}
-        onClick={() => {
-          if (props.id) router.push(`/jobs/${props.id}`);
-        }}>
+        className={`mb-3 ${style['card']}`}>
         <Row noGutters className="align-items-center">
           {/* Image */}
           <Col xs={3} md={5}>
@@ -79,7 +76,7 @@ export const JobAnnouncementCard: React.FC<JobAnnouncementCardProps> = (
             </Card.Body>
 
             <Col >
-              <button type="button" className="my-2 btn btn-primary" onClick={() => { router.push('/editJobDetail/' + props.id.toString()) }}>Edit</button>
+              <button type="button" className="my-2 mx-2 btn btn-primary" onClick={() => { router.push('/jobs/editJobDetail/' + props.id.toString()) }}>Edit</button>
               <button type="button" className="my-2 btn btn-primary">Delete</button>
 
             </Col>
