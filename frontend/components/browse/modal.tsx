@@ -11,15 +11,20 @@ export const BrowseModal = (props) => {
   const [jobTypes, setJobTypes] = useState<Array<String>>([]);
   const [location, setLocation] = useState(null);
   const [wage, setWage] = useState(null);
-
   const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
-    { value: 'cookie', label: 'Cookies' },
-    { value: 'trash', label: 'Trash' },
+    { value: 'programer', label: 'Programer' },
+    { value: 'police', label: 'Police' },
+    { value: 'king', label: 'King' },
+    { value: 'queen', label: 'Queen' },
+    { value: 'prince', label: 'Prince' },
   ];
-
+  const province = [
+    { value: 'bangkok', label: 'Bangkok' },
+    { value: 'udonthani', label: 'Udonthani' },
+    { value: 'chaingmai', label: 'Chaingmai' },
+    { value: 'rayong', label: 'Rayong' },
+    { value: 'phuket', label: 'Phuket' },
+  ];
   return (
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered>
       <Modal.Header
@@ -47,7 +52,7 @@ export const BrowseModal = (props) => {
                   <Form.Label className={styles.label}>Location</Form.Label>
                   <Select
                     value={location}
-                    options={options}
+                    options={province}
                     className="basic-multi-select"
                     classNamePrefix="select"
                     onChange={(e) => setLocation(e)}
