@@ -18,14 +18,26 @@ export const EditJobDetails = (props) => {
   const [company, setCompany] = useState(props.jobDetail.company);
   const [location, setLocation] = useState(props.jobDetail.address);
   const [publish, setPublish] = useState(props.jobDetail.isPublished);
-  const [minWage, setMinWage] = useState(props.jobDetail.lowerBoundSalary);
-  const [maxWage, setMaxWage] = useState(props.jobDetail.upperBoundSalary);
-  const [amount, setAmount] = useState(props.jobDetail.amountRequired);
+  const [minWage, setMinWage] = useState(props.jobDetail.lowerBoundSalary.toString());
+  const [maxWage, setMaxWage] = useState(props.jobDetail.upperBoundSalary.toString());
+  const [amount, setAmount] = useState(props.jobDetail.amountRequired.toString());
   const [province, setProvince] = useState(props.jobDetail.province);
   const [successMessage, setMessage] = useState(null);
   const [file, setFile] = useState(null);
   const [fileURL, setFileURL] = useState(props.jobDetail.picture.path);
   const inputFile = useRef(null);
+
+  const [required, setRequired] = useState({
+    title: '',
+    description: '',
+    tag: '',
+    company: '',
+    address: '',
+    province: '',
+    minSalary: '',
+    maxSalary: '',
+    amount: ''
+  })
 
   const options = [
     { value: 'chocolate', label: 'Chocolate' },
@@ -62,7 +74,63 @@ export const EditJobDetails = (props) => {
   let tagArr=[]
 
   const handleSubmitClick = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    let allInfo = true;
+    if(title === null || !title.length){
+      setRequired((prevRequired) => ({ ...prevRequired, title: "*required" }));
+      allInfo = false;
+    }else{
+      setRequired((prevRequired) => ({ ...prevRequired, title: "" }));
+    }
+    if(description === null || !description.length){
+      setRequired((prevRequired) => ({ ...prevRequired, description: "*required" }));
+      allInfo = false;
+    }else{
+      setRequired((prevRequired) => ({ ...prevRequired, description: "" }));
+    }
+    if(!jobTag.length){
+      setRequired((prevRequired) => ({ ...prevRequired, tag: "*required" }));
+      allInfo = false;
+    }else{
+      setRequired((prevRequired) => ({ ...prevRequired, tag: "" }));
+    }
+    if(location === null || !location.length){
+      setRequired((prevRequired) => ({ ...prevRequired, address: "*required" }));
+      allInfo = false;
+    }else{
+      setRequired((prevRequired) => ({ ...prevRequired, address: "" }));
+    }
+    if(company === null || !company.length){
+      setRequired((prevRequired) => ({ ...prevRequired, company: "*required" }));
+      allInfo = false;
+    }else{
+      setRequired((prevRequired) => ({ ...prevRequired, company: "" }));
+    }
+    if(maxWage === null || !maxWage.length){
+      setRequired((prevRequired) => ({ ...prevRequired, maxSalary: "*required" }));
+      allInfo = false;
+    }else{
+      setRequired((prevRequired) => ({ ...prevRequired, maxSalary: "" }));
+    }
+    if(minWage === null || !minWage.length){
+      setRequired((prevRequired) => ({ ...prevRequired, minSalary: "*required" }));
+      allInfo = false;
+    }else{
+      setRequired((prevRequired) => ({ ...prevRequired, minSalary: "" }));
+    }
+    if(province === null){
+      setRequired((prevRequired) => ({ ...prevRequired, province: "*required" }));
+      allInfo = false;
+    }else{
+      setRequired((prevRequired) => ({ ...prevRequired, province: "" }));
+    }
+    if(amount === null || !amount.length){
+      setRequired((prevRequired) => ({ ...prevRequired, amount: "*required" }));
+      allInfo = false;
+    }else{
+      setRequired((prevRequired) => ({ ...prevRequired, amount: "" }));
+    }
+    if(!allInfo) return;
     let fileEntity = null;
     if(file !== null){
       let formData = new FormData()
@@ -71,11 +139,6 @@ export const EditJobDetails = (props) => {
         file,
         file.name
       )
-      const config = {
-        headers: {
-            'content-type': 'multipart/form-data'
-        }
-      }
       fileEntity = await axios.post('http://localhost:8000/api/files/upload', formData)
     }
     for(let i = 0; i<jobTag.length; ++i){
@@ -150,6 +213,7 @@ export const EditJobDetails = (props) => {
                       placeholder="Title"
                       onChange={(e) => setTitle(e.target.value)}
                     />
+                    <p style={{ color: 'red' }}>{required.title}</p>
                   </Form.Group>
                   <Form.Group>
                     <Form.Label className={styles.label}>Description</Form.Label>
@@ -160,6 +224,7 @@ export const EditJobDetails = (props) => {
                       placeholder="Description"
                       onChange={(e) => setDescription(e.target.value)}
                     />
+                    <p style={{ color: 'red' }}>{required.description}</p>
                   </Form.Group>
                   <Form.Group>
                   <Form.Label>Job Tag</Form.Label>
@@ -174,6 +239,7 @@ export const EditJobDetails = (props) => {
                     onChange={(e) => {setJobTag(e)}}
                     isMulti
                   />
+                  <p style={{ color: 'red' }}>{required.tag}</p>
                 </Form.Group>
               </Form>
             </Row>
@@ -190,6 +256,7 @@ export const EditJobDetails = (props) => {
                     defaultValue={props.jobDetail.company}
                     onChange={(e) => setCompany(e.target.value)}
                   />
+                  <p style={{ color: 'red' }}>{required.company}</p>
                 </Form.Group>
                 <Form.Group>
                   <Form.Label className={styles.label}>Address</Form.Label>
@@ -200,6 +267,7 @@ export const EditJobDetails = (props) => {
                     placeholder="Address"
                     onChange={(e) => setLocation(e.target.value)}
                   />
+                  <p style={{ color: 'red' }}>{required.address}</p>
                 </Form.Group>
                 <Form.Group>
                   <Form.Label className={styles.label}>Province</Form.Label>
@@ -211,6 +279,7 @@ export const EditJobDetails = (props) => {
                     classNamePrefix="select"
                     onChange={(e) => setProvince(e)}
                   />
+                  <p style={{ color: 'red' }}>{required.province}</p>
                 </Form.Group>
                 <Form.Group>
                   <Form.Label className={styles.label}>Minimum salary per month</Form.Label>
@@ -222,6 +291,7 @@ export const EditJobDetails = (props) => {
                       setMinWage(e.target.value);
                     }}
                   />
+                  <p style={{ color: 'red' }}>{required.minSalary}</p>
                 </Form.Group>
                 <Form.Group>
                   <Form.Label className={styles.label}>Maximum salary per month</Form.Label>
@@ -233,6 +303,7 @@ export const EditJobDetails = (props) => {
                       setMaxWage(e.target.value);
                     }}
                   />
+                  <p style={{ color: 'red' }}>{required.maxSalary}</p>
                 </Form.Group>
                 <Form.Group>
                   <Form.Label className={styles.label}>
@@ -246,6 +317,7 @@ export const EditJobDetails = (props) => {
                       setAmount(e.target.value);
                     }}
                   />
+                  <p style={{ color: 'red' }}>{required.amount}</p>
                 </Form.Group>
                 <Form.Group>
                   <Form.Check 
