@@ -28,6 +28,10 @@ export class JobService {
         return this.repo.find({ relations: ["picture", "tags"], where: { isPublished: true } });
     }
 
+    indexAll(): Promise<JobAnnouncement[]> {
+        return this.repo.find({ relations: ["picture", "tags","owner"], where: { isPublished: true } });
+    }
+
     indexTag(): Promise<Tag[]> {
         return this.tagRepo.find();
     }

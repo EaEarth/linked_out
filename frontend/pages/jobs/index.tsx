@@ -13,8 +13,8 @@ import { GetServerSidePropsContext } from 'next';
 export const Jobs: React.FC<any> = (props) => {
   const router = useRouter();
   // Data
-  const [tags] = useState(props.tags || []);
-  const [jobs] = useState(props.jobs || []);
+  const [tags, setTags] = useState(props.tags || []);
+  const [jobs, setJobs] = useState(props.jobs || []);
   // Pagination state
   const [pageLen, setPageLen] = useState(1);
   const page = (Number.parseInt(router.query.page as string) || 1) - 1;
@@ -31,6 +31,12 @@ export const Jobs: React.FC<any> = (props) => {
         }
       );
   };
+
+  useEffect(() => {
+    setJobs(props.jobs);
+    setTags(props.tags || []);
+  }, [router.asPath]);
+
   // Update page length
   useEffect(() => {
     setPageLen(Math.ceil(jobs.length / perPage));
@@ -57,17 +63,41 @@ export const Jobs: React.FC<any> = (props) => {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { data } = await axios.get<JobAnnouncement[]>(
-    'http://localhost:8000/api/job/index'
-  );
-  let tagQuery = context.query.tags || '';
+  let searchQuery = context.query.search || '';
+  let lowerBoundSalaryQuery = Number(context.query.lowerBoundSalary) || 0;
+  let provinceQuery = context.query.province || '';
+  let tagQuery = context.query.tags || [];
   if (!Array.isArray(tagQuery) && typeof tagQuery === 'string') {
     tagQuery = tagQuery.split(',');
   }
+
   const tags = [];
   for (const tag of tagQuery) {
     tags.push({ name: tag });
   }
+  if (context.query.browse) {
+    const { data } = await axios.get<JobAnnouncement[]>(
+      'http://localhost:8000/api/job/search',
+      {
+        data: {
+          search: searchQuery,
+          lowerBoundSalary: lowerBoundSalaryQuery,
+          province: provinceQuery,
+          tag: tagQuery
+        }
+      }
+    )
+    return {
+      props: {
+        jobs: data,
+        tags: tags,
+      },
+    };
+  }
+  const { data } = await axios.get<JobAnnouncement[]>(
+    'http://localhost:8000/api/job/index'
+  );
+
   return {
     props: {
       jobs: data,
