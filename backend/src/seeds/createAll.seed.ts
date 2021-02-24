@@ -42,6 +42,8 @@ export class CreateAll implements Seeder {
         return user;
       })
       .createMany(10);
+
+    await factory(User)().create({isAdmin:true});
   };
 
 }

@@ -11,14 +11,14 @@ export const login = (props) => {
     const [state, setState] = useState({
         username: "",
         password: "",
-        error: null
+        error: ""
     })
 
-    useEffect(() => {
-        if (props.cookie.hasOwnProperty('jwt')) {
-            router.push('/');
-        }
-    });
+    // useEffect(() => {
+    //     if (props.cookies.hasOwnProperty('jwt')) {
+    //         router.push('/');
+    //     }
+    // });
 
     const handleChange = (e) => {
         const { id, value } = e.target
@@ -50,7 +50,7 @@ export const login = (props) => {
             .catch(function (error) {
                 setState(prevState => ({
                     ...prevState,
-                    error: "Username or password is incorrect."
+                    error: "username or password is incorrect."
                 }))
             });
     }
@@ -61,41 +61,43 @@ export const login = (props) => {
             </Head>
 
             <Container className="">
-                <Row className="justify-content-center">
-                    <Col md={{ span: 5 }}>
-                        <h3>Link Out</h3>
+                <Row className="d-flex justify-content-center my-5">
+                    <Col md={{ span: 4 }}>
+                        <h2 className="text-center my-3">Login</h2>
                         <Form>
                             <Form.Group className="">
+                                <Form.Label>Username</Form.Label>
                                 <Form.Control type="text" id="username" value={state.username} placeholder="Username" onChange={handleChange} />
                             </Form.Group>
 
                             <Form.Group>
+                                <Form.Label>Password</Form.Label>
                                 <Form.Control type="password" id="password" value={state.password} placeholder="Password" onChange={handleChange} />
+                                <p className=" text-danger d-block text-start ml-2">{state.error}</p>
                             </Form.Group>
 
-                            <div>
-                                <p className="text-danger">{state.error}</p>
-                            </div>
+                            <Row className="d-flex justify-content-center">
+                                <button type="button" className="my-2 btn btn-primary" onClick={handleSubmitClick}>Login</button>
+                            </Row>
 
                             <Link href="/test">
-                                <a className="">forget password?</a>
+                                <a className="d-block text-center ">forget password?</a>
                             </Link>
 
-                            <button type="button" className="my-2 btn btn-primary" onClick={handleSubmitClick}>Login</button>
                         </Form>
                     </Col>
                 </Row>
             </Container>
 
-        </DefaultLayout>
+        </DefaultLayout >
     );
 };
 
 export async function getServerSideProps(context) {
-    const cookies = context.req.cookies;
+    const cookie = context.req.cookies;
     return {
         props: {
-            cookie: cookies
+            cookies: cookie
         }
     }
 }
