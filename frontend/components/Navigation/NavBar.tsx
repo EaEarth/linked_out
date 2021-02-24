@@ -1,19 +1,14 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import {
-  Button,
-  Form,
-  FormControl,
-  Nav,
-  Navbar,
-  NavDropdown,
-} from 'react-bootstrap';
+import { Button, Form, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import styles from './NavBar.module.scss';
 import { BrowseModal } from '../browse/modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCircle } from '@fortawesome/free-regular-svg-icons';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { useRootStore } from '../../stores/stores';
+import { observer } from 'mobx-react-lite';
 
 // Default navigation bar title
 const DEFAULT_NAVBAR_TITLE = 'LinkedOut';
@@ -27,8 +22,9 @@ const navBarTitleMapping: Record<string, string> = {
   '/auth/register': 'Register',
 };
 
-export const NavBar = (props) => {
+export const NavBar = observer((props) => {
   const router = useRouter();
+  const authStore = useRootStore().authStore;
   // Navigation bar title for mobile screen
   const [navBarTitle, setNavBarTitle] = useState(DEFAULT_NAVBAR_TITLE);
   const [modalShow, setModalShow] = useState(false);
@@ -86,25 +82,35 @@ export const NavBar = (props) => {
           <NavDropdown
             title={
               <>
-                <FontAwesomeIcon icon={faUserCircle} size="lg" /> Guest
+                <FontAwesomeIcon icon={faUserCircle} size="lg" />{' '}
+                {authStore.username}
               </>
             }
             id="basic-nav-dropdown"
             active={router.pathname.match(/\/auth\/.+/) !== null}
             className={styles['user-menu']}>
-            <Link href="/auth/login">
-              <NavDropdown.Item href="/auth/login">Login</NavDropdown.Item>
-            </Link>
-            <Link href="/auth/register">
-              <NavDropdown.Item href="/auth/register">
-                Register
+            {!authStore.isLoggedIn && (
+              <Link href="/auth/login">
+                <NavDropdown.Item href="/auth/login">Login</NavDropdown.Item>
+              </Link>
+            )}
+            {authStore.isLoggedIn && (
+              <NavDropdown.Item onClick={() => authStore.logout()}>
+                Logout
               </NavDropdown.Item>
-            </Link>
+            )}
+            {!authStore.isLoggedIn && (
+              <Link href="/auth/register">
+                <NavDropdown.Item href="/auth/register">
+                  Register
+                </NavDropdown.Item>
+              </Link>
+            )}
           </NavDropdown>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
   );
-};
+});
 
 export default NavBar;

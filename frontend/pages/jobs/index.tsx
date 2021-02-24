@@ -9,6 +9,7 @@ import DefaultLayout from '../../layouts/Default';
 import axios from 'axios';
 import JobAnnouncement from '../../models/job/JobAnnouncement';
 import { GetServerSidePropsContext } from 'next';
+import { makeServerAxios } from '../../utils/request';
 
 export const Jobs: React.FC<any> = (props) => {
   const router = useRouter();
@@ -56,10 +57,10 @@ export const Jobs: React.FC<any> = (props) => {
   );
 };
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { data } = await axios.get<JobAnnouncement[]>(
-    'http://localhost:8000/api/job/index'
-  );
+export async function getServerSideProps(
+  context: GetServerSidePropsContext
+): Promise<any> {
+  const { data } = await axios.get<JobAnnouncement[]>('/job/index');
   let tagQuery = context.query.tags || '';
   if (!Array.isArray(tagQuery) && typeof tagQuery === 'string') {
     tagQuery = tagQuery.split(',');
