@@ -1,17 +1,24 @@
 import Head from 'next/head';
-import { useRouter } from 'next/router';
+import { Router, useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Jumbotron, Row, Form } from 'react-bootstrap';
 import DefaultLayout from '../../layouts/Default';
 import Link from 'next/link';
 import axios from 'axios';
 
-export const job = (props) => {
+export const login = (props) => {
+    const router = useRouter();
     const [state, setState] = useState({
         username: "",
         password: "",
-        successMessage: null
+        error: ""
     })
+
+    // useEffect(() => {
+    //     if (props.cookies.hasOwnProperty('jwt')) {
+    //         router.push('/');
+    //     }
+    // });
 
     const handleChange = (e) => {
         const { id, value } = e.target
@@ -32,18 +39,19 @@ export const job = (props) => {
                 if (response.status === 201) {
                     setState(prevState => ({
                         ...prevState,
-                        'successMessage': 'Registration successful. Redirecting to home page..'
                     }))
-                    //localStorage.setItem(ACCESS_TOKEN_NAME,response.data.token);
-                    //redirectToHome();
-                } else if (response.status === 401) {
-                    props.showError("Username and password do not match");
-                } else {
-                    console.log("Some error ocurred");
+                    router.push('/');
+                    // } else if (response.status === 401) {
+                    //     console.log("Username and password do not match");
+                    // } else {
+                    //     console.log("Some error ocurred");
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                setState(prevState => ({
+                    ...prevState,
+                    error: "username or password is incorrect."
+                }))
             });
     }
     return (
@@ -53,28 +61,45 @@ export const job = (props) => {
             </Head>
 
             <Container className="">
-                <Row className="justify-content-center">
-                    <Col md={{ span: 5 }}>
-                        <h3>Link Out</h3>
+                <Row className="d-flex justify-content-center my-5">
+                    <Col md={{ span: 4 }}>
+                        <h2 className="text-center my-3">Login</h2>
                         <Form>
                             <Form.Group className="">
+                                <Form.Label>Username</Form.Label>
                                 <Form.Control type="text" id="username" value={state.username} placeholder="Username" onChange={handleChange} />
                             </Form.Group>
 
                             <Form.Group>
+                                <Form.Label>Password</Form.Label>
                                 <Form.Control type="password" id="password" value={state.password} placeholder="Password" onChange={handleChange} />
+                                <p className=" text-danger d-block text-start ml-2">{state.error}</p>
                             </Form.Group>
 
-                            <Link href="/test">
+                            <Row className="d-flex justify-content-center">
                                 <button type="button" className="my-2 btn btn-primary" onClick={handleSubmitClick}>Login</button>
+                            </Row>
+
+                            <Link href="/test">
+                                <a className="d-block text-center ">forget password?</a>
                             </Link>
+
                         </Form>
                     </Col>
                 </Row>
             </Container>
 
-        </DefaultLayout>
+        </DefaultLayout >
     );
 };
 
-export default job;
+export async function getServerSideProps(context) {
+    const cookie = context.req.cookies;
+    return {
+        props: {
+            cookies: cookie
+        }
+    }
+}
+
+export default login;

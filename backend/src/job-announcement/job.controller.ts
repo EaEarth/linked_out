@@ -11,6 +11,8 @@ import {
   UsePipes,
   UseGuards,
   Request,
+  UseFilters,
+  ForbiddenException,
 } from '@nestjs/common';
 import { JobAnnouncement } from 'src/entities/job/jobAnnouncement.entity';
 import { createAnnouncement } from './jobDto/create-announcement.dto';
@@ -22,13 +24,22 @@ import { Tag } from 'src/entities/job/tag.entity';
 
 @Controller('job')
 export class JobController {
-  constructor(
-    private readonly service: JobService,
-  ) { }
+  constructor(private readonly service: JobService) {}
 
   @Get('index')
   indexGet(): Promise<JobAnnouncement[]> {
     return this.service.index();
+  }
+
+  @Get('indexAll')
+  indexGetAll(): Promise<JobAnnouncement[]> {
+    return this.service.indexAll();
+  }
+
+  @Get('owner')
+  @UseGuards(JwtAuthGuard)
+  indexFromOwner(@Request() req): Promise<JobAnnouncement[]> {
+    return this.service.findFromOwner(req.user.id);
   }
 
   @Get('tag/index')
@@ -42,39 +53,45 @@ export class JobController {
     return this.service.search(dto);
   }
 
-  @Get('index/:id')
-  findById(@Param('id', new ParseIntPipe()) id: number): Promise<JobAnnouncement> {
-    return this.service.findById(id);
-  }
-
-  @Get('owner')
-  @UseGuards(JwtAuthGuard)
-  findByOwner(@Request() req): Promise<JobAnnouncement[]> {
-    return this.service.findFromOwner(req.user.id);
-  }
-
   @Post()
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe({ whitelist: true }))
-  create(@Request() req, @Body() dto: createAnnouncement): Promise<JobAnnouncement> {
+  create(
+    @Request() req,
+    @Body() dto: createAnnouncement,
+  ): Promise<JobAnnouncement> {
     return this.service.createAnnouncement(req.user, dto);
   }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe({ whitelist: true }))
-  update(@Request() req, @Param('id', new ParseIntPipe()) id: number, @Body() dto: updateAnnouncement): Promise<JobAnnouncement> {
+  update(
+    @Request() req,
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() dto: updateAnnouncement,
+  ): Promise<JobAnnouncement> {
     for (const [key, value] of Object.entries(dto)) {
-      if (value == null) {
+      if (value == null || value === '') {
         delete dto[key];
       }
     }
     return this.service.update(req.user, id, dto);
   }
 
+  @Get('index/:id')
+  findById(
+    @Param('id', new ParseIntPipe()) id: number,
+  ): Promise<JobAnnouncement> {
+    return this.service.findById(id);
+  }
+
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  delete(@Request() req, @Param('id', new ParseIntPipe()) id: number): Promise<JobAnnouncement> {
+  delete(
+    @Request() req,
+    @Param('id', new ParseIntPipe()) id: number,
+  ): Promise<JobAnnouncement> {
     return this.service.delete(req.user, id);
   }
 

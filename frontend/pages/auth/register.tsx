@@ -8,8 +8,24 @@ import axios from 'axios';
 import PhoneInput from 'react-phone-input-2';
 import { symlink } from 'fs/promises';
 
+
+
 export const Register = (props) => {
+  const router = useRouter();
   const [state, setState] = useState({
+    username: "",
+    firstname: "",
+    lastname: "",
+    email: "",
+    address: "",
+    phone: "",
+    birthDate: "",
+    password: "",
+    confirmPassword: "",
+    successMessage: null
+  })
+
+  const [required, setRequired] = useState({
     username: '',
     firstname: '',
     lastname: '',
@@ -19,8 +35,7 @@ export const Register = (props) => {
     birthDate: '',
     password: '',
     confirmPassword: '',
-    successMessage: null,
-  });
+  })
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -32,12 +47,59 @@ export const Register = (props) => {
 
   const handleSubmitClick = (e) => {
     e.preventDefault();
+    let allInfo = true;
+    if (!state.username.length) {
+      setRequired((prevRequired) => ({ ...prevRequired, username: "*required" }));
+      allInfo = false;
+    } else setRequired((prevRequired) => ({ ...prevRequired, username: "" }));
+
+    if (!state.firstname.length) {
+      setRequired((prevRequired) => ({ ...prevRequired, firstname: "*required" }));
+      allInfo = false;
+    } else setRequired((prevRequired) => ({ ...prevRequired, firstname: "" }));
+
+    if (!state.lastname.length) {
+      setRequired((prevRequired) => ({ ...prevRequired, lastname: "*required" }));
+      allInfo = false;
+    } else setRequired((prevRequired) => ({ ...prevRequired, lastname: "" }));
+
+    if (!state.address.length) {
+      setRequired((prevRequired) => ({ ...prevRequired, address: "*required" }));
+      allInfo = false;
+    } else setRequired((prevRequired) => ({ ...prevRequired, address: "" }));
+
+    if (!state.email.length) {
+      setRequired((prevRequired) => ({ ...prevRequired, email: "*required" }));
+      allInfo = false;
+    } else setRequired((prevRequired) => ({ ...prevRequired, email: "" }));
+
+    if (!state.birthDate.length) {
+      setRequired((prevRequired) => ({ ...prevRequired, birthDate: "*required" }));
+      allInfo = false;
+    } else setRequired((prevRequired) => ({ ...prevRequired, birthDate: "" }));
+
+    if (!state.password.length) {
+      setRequired((prevRequired) => ({ ...prevRequired, password: "*required" }));
+      allInfo = false;
+    } else setRequired((prevRequired) => ({ ...prevRequired, password: "" }));
+
+    if (!state.confirmPassword.length) {
+      setRequired((prevRequired) => ({ ...prevRequired, confirmPassword: "*required" }));
+      allInfo = false;
+    } else setRequired((prevRequired) => ({ ...prevRequired, confirmPassword: "" }));
+
+    if (!state.phone.length) {
+      setRequired((prevRequired) => ({ ...prevRequired, phone: "*required" }));
+      allInfo = false;
+    } else setRequired((prevRequired) => ({ ...prevRequired, phone: "" }));
+
     if (state.password === state.confirmPassword) {
-      sendDetailsToServer();
+      if (allInfo) sendDetailsToServer();
     } else {
-      console.log('incorrect password');
+      setRequired((prevRequired) => ({ ...prevRequired, confirmPassword: "Password not match" }));
     }
   };
+
   const sendDetailsToServer = () => {
     if (state.email.length && state.password.length) {
       const payload = {
@@ -73,7 +135,7 @@ export const Register = (props) => {
     } else {
       console.log('Please enter valid username and password');
     }
-  };
+  }
   return (
     <DefaultLayout>
       <Head>
@@ -81,8 +143,9 @@ export const Register = (props) => {
       </Head>
 
       <Container className="my-4">
-        <Row>
-          <Col md={{ span: 5, offset: 1 }} className="d-flex flex-column">
+        <Row className="d-flex justify-content-center">
+          <Col md={{ span: 5 }} className="d-flex flex-column">
+            <h2 className="text-center">Register</h2>
             <Form>
               <Form.Group className="">
                 <i className="bi bi-person-fill"></i>
@@ -93,6 +156,7 @@ export const Register = (props) => {
                   placeholder="Username"
                   onChange={handleChange}
                 />
+                <p style={{ color: 'red' }}>{required.username}</p>
               </Form.Group>
 
               <Form.Group>
@@ -103,6 +167,7 @@ export const Register = (props) => {
                   placeholder="Firstname"
                   onChange={handleChange}
                 />
+                <p style={{ color: 'red' }}>{required.firstname}</p>
               </Form.Group>
 
               <Form.Group>
@@ -113,6 +178,7 @@ export const Register = (props) => {
                   placeholder="Lastname"
                   onChange={handleChange}
                 />
+                <p style={{ color: 'red' }}>{required.lastname}</p>
               </Form.Group>
 
               <Form.Group>
@@ -124,6 +190,7 @@ export const Register = (props) => {
                   placeholder="Email"
                   onChange={handleChange}
                 />
+                <p style={{ color: 'red' }}>{required.email}</p>
               </Form.Group>
 
               <Form.Group>
@@ -135,17 +202,18 @@ export const Register = (props) => {
                   placeholder="Address"
                   onChange={handleChange}
                 />
+                <p style={{ color: 'red' }}>{required.address}</p>
               </Form.Group>
 
               <Form.Group>
                 <i className="bi bi-telephone-fill"></i>
-                {
+                {/* {
                   <PhoneInput
                     country={'th'}
                     placeholder="Phone Number"
                     onChange={(value) => setPhoneNumber(value)}
                   />
-                }
+                } */}
                 <Form.Control
                   type="text"
                   id="phone"
@@ -153,6 +221,7 @@ export const Register = (props) => {
                   placeholder="Phone"
                   onChange={handleChange}
                 />
+                <p style={{ color: 'red' }}>{required.phone}</p>
               </Form.Group>
 
               <Form.Group>
@@ -163,6 +232,7 @@ export const Register = (props) => {
                   value={state.birthDate}
                   onChange={handleChange}
                 />
+                <p style={{ color: 'red' }}>{required.birthDate}</p>
               </Form.Group>
 
               <Form.Group>
@@ -174,6 +244,7 @@ export const Register = (props) => {
                   placeholder="Password"
                   onChange={handleChange}
                 />
+                <p style={{ color: 'red' }}>{required.password}</p>
               </Form.Group>
 
               <Form.Group>
@@ -184,16 +255,17 @@ export const Register = (props) => {
                   placeholder="Confirm Password"
                   onChange={handleChange}
                 />
+                <p style={{ color: 'red' }}>{required.confirmPassword}</p>
               </Form.Group>
 
-              <Link href="/test">
+              <Row className="d-flex justify-content-center">
                 <button
                   type="button"
                   className="my-2 btn btn-primary"
                   onClick={handleSubmitClick}>
                   Register
                 </button>
-              </Link>
+              </Row>
             </Form>
           </Col>
         </Row>
@@ -201,5 +273,7 @@ export const Register = (props) => {
     </DefaultLayout>
   );
 };
+
+
 
 export default Register;
