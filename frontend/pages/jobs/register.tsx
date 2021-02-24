@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { Router, useRouter } from 'next/router';
 import Select from 'react-select';
 import { profile } from 'console';
+import { check } from 'prettier';
 
 type tempErrors = {
   title: string | null;
@@ -20,6 +21,7 @@ type tempErrors = {
   lowerBoundSalary: string | null;
   upperBoundSalary: string | null;
   amount: string | null;
+  province: string | null;
   profilePic: string | null;
 }
 
@@ -35,18 +37,12 @@ export const RegisterJobAnnouncement = (props) => {
   const [lowerBoundSalary, setLowerBoundSalary] = useState(0);
   const [upperBoundSalary, setUpperBoundSalary] = useState(0);
   const [amount, setAmount] = useState(0);
-  const [province, setProvince] = useState(0);
+  const [province, setProvince] = useState('');
   const [profilePic, setProfile] = useState(null);
   const [urlPicture, setURLPicture] = useState(null);
   const [errors, setError] = useState({title:null,description:null,jobTag:null,company:null,address:null,publish:null,lowerBoundSalary:null,upperBoundSalary:null ,amount:null});
 
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
-    { value: 'cookie', label: 'Cookies' },
-    { value: 'trash', label: 'Trash' },
-  ];
+  const options = props.jobTag
   const choices = [
     { value: 'yes', label: 'Yes' },
     { value: 'no', label: 'No' },
@@ -61,7 +57,7 @@ export const RegisterJobAnnouncement = (props) => {
   },[profilePic])
 
   const createJobDetailsToServer = async () => {
-      let temp_errors: tempErrors | null = {title:null,description:null,jobTag:null,company:null,address:null,publish:null,lowerBoundSalary:null,upperBoundSalary:null ,amount:null, profilePic:null};; 
+      let temp_errors: tempErrors | null = {title:null,description:null,jobTag:null,company:null,address:null,publish:null,lowerBoundSalary:null,upperBoundSalary:null ,amount:null, profilePic:null,province:null}; 
       let checkError = false;
       if(!title.length){
         temp_errors.title = "The title is required";
@@ -95,6 +91,10 @@ export const RegisterJobAnnouncement = (props) => {
         temp_errors.amount = "The amount is required"
         checkError = true;
       }
+      if(!province.length){
+        temp_errors.province = "The province is required"
+        checkError = true;
+      }
       setError(temp_errors);
       if(checkError){
         return
@@ -104,13 +104,13 @@ export const RegisterJobAnnouncement = (props) => {
       for(let i=0;i<jobTag.length;i++){
           tags.push(jobTag[i]['value']);
       }
-
+    
       const payload = {
           title: title,
           description: description,
           lowerBoundSalary: Number(lowerBoundSalary),
           upperBoundSalary: Number(upperBoundSalary),
-          province: "กรุงเทพ",
+          province: province['value'],
           tag: tags,
           company: company,
           address: address,
@@ -125,7 +125,7 @@ export const RegisterJobAnnouncement = (props) => {
         .then((response) => {
           if(response.status == 201) {
             payload['pictureId'] = Number(response.data.id)
-  
+
           } else{
             console.log("There is an error in uploaded picture")
           }
@@ -151,6 +151,8 @@ export const RegisterJobAnnouncement = (props) => {
   const fileChangedHandler = (e) => {
       setProfile(e.target.files[0])
   }
+
+  
   
   return (
     <DefaultLayout>
@@ -258,6 +260,19 @@ export const RegisterJobAnnouncement = (props) => {
                       {errors.address}
                     </Form.Control.Feedback>
                 </Form.Group>
+                <label className={styles.label}>Province</label>
+                <Select
+                    isMulti
+                    value={province}
+                    options={provinceList}
+                    name="colors"
+                    isSearchable="true"
+                    maxMenuHeight={200}
+                    className="basic-select mb-3"
+                    classNamePrefix="select"
+                    onChange={ (e) => setProvince(e)}
+                    />
+                <small className="text-danger">{errors.jobTag}</small>
                 <Form.Group>
                   <Form.Label className={styles.label}>Lowerbound salary per month</Form.Label>
                   <Form.Control
@@ -329,5 +344,26 @@ export const RegisterJobAnnouncement = (props) => {
     </DefaultLayout>
   );
 };
+
+export async function getServerSideProps(context) {
+  const detail =  await axios.get('http://localhost:8000/api/job/tag/index')
+  let jobTags = []
+  let tags = detail.data;
+  for(const tag of tags){
+    jobTags.push({
+      value : tag.name,
+      label: tag.name
+    })
+  }
+  console.log(tags)
+  return {
+    props: {
+      jobTag: jobTags
+    }
+  }
+}
+
+const provinceList = [{'label': 'นครราชสีมา', 'value': 'นครราชสีมา'}, {'label': 'เชียงใหม่', 'value': 'เชียงใหม่'}, {'label': 'กาญจนบุรี', 'value': 'กาญจนบุรี'}, {'label': 'ตาก', 'value': 'ตาก'}, {'label': 'อุบลราชธานี', 'value': 'อุบลราชธานี'}, {'label': 'สุราษฎร์ธานี', 'value': 'สุราษฎร์ธานี'}, {'label': 'ชัยภูมิ', 'value': 'ชัยภูมิ'}, {'label': 'แม่ฮ่องสอน', 'value': 'แม่ฮ่องสอน'}, {'label': 'เพชรบูรณ์', 'value': 'เพชรบูรณ์'}, {'label': 'ลำปาง', 'value': 'ลำปาง'}, {'label': 'อุดรธานี', 'value': 'อุดรธานี'}, {'label': 'เชียงราย', 'value': 'เชียงราย'}, {'label': 'น่าน', 'value': 'น่าน'}, {'label': 'เลย', 'value': 'เลย'}, {'label': 'ขอนแก่น', 'value': 'ขอนแก่น'}, {'label': 'พิษณุโลก', 'value': 'พิษณุโลก'}, {'label': 'บุรีรัมย์', 'value': 'บุรีรัมย์'}, {'label': 'นครศรีธรรมราช', 'value': 'นครศรีธรรมราช'}, {'label': 'สกลนคร', 'value': 'สกลนคร'}, {'label': 'นครสวรรค์', 'value': 'นครสวรรค์'}, {'label': 'ศรีสะเกษ', 'value': 'ศรีสะเกษ'}, {'label': 'กำแพงเพชร', 'value': 'กำแพงเพชร'}, {'label': 'ร้อยเอ็ด', 'value': 'ร้อยเอ็ด'}, {'label': 'สุรินทร์', 'value': 'สุรินทร์'}, {'label': 'อุตรดิตถ์', 'value': 'อุตรดิตถ์'}, {'label': 'สงขลา', 'value': 'สงขลา'}, {'label': 'สระแก้ว', 'value': 'สระแก้ว'}, {'label': 'กาฬสินธุ์', 'value': 'กาฬสินธุ์'}, {'label': 'อุทัยธานี', 'value': 'อุทัยธานี'}, {'label': 'สุโขทัย', 'value': 'สุโขทัย'}, {'label': 'แพร่', 'value': 'แพร่'}, {'label': 'ประจวบคีรีขันธ์', 'value': 'ประจวบคีรีขันธ์'}, {'label': 'จันทบุรี', 'value': 'จันทบุรี'}, {'label': 'พะเยา', 'value': 'พะเยา'}, {'label': 'เพชรบุรี', 'value': 'เพชรบุรี'}, {'label': 'ลพบุรี', 'value': 'ลพบุรี'}, {'label': 'ชุมพร', 'value': 'ชุมพร'}, {'label': 'นครพนม', 'value': 'นครพนม'}, {'label': 'สุพรรณบุรี', 'value': 'สุพรรณบุรี'}, {'label': 'ฉะเชิงเทรา', 'value': 'ฉะเชิงเทรา'}, {'label': 'มหาสารคาม', 'value': 'มหาสารคาม'}, {'label': 'ราชบุรี', 'value': 'ราชบุรี'}, {'label': 'ตรัง', 'value': 'ตรัง'}, {'label': 'ปราจีนบุรี', 'value': 'ปราจีนบุรี'}, {'label': 'กระบี่', 'value': 'กระบี่'}, {'label': 'พิจิตร', 'value': 'พิจิตร'}, {'label': 'ยะลา', 'value': 'ยะลา'}, {'label': 'ลำพูน', 'value': 'ลำพูน'}, {'label': 'นราธิวาส', 'value': 'นราธิวาส'}, {'label': 'ชลบุรี', 'value': 'ชลบุรี'}, {'label': 'มุกดาหาร', 'value': 'มุกดาหาร'}, {'label': 'บึงกาฬ', 'value': 'บึงกาฬ'}, {'label': 'พังงา', 'value': 'พังงา'}, {'label': 'ยโสธร', 'value': 'ยโสธร'}, {'label': 'หนองบัวลำภู', 'value': 'หนองบัวลำภู'}, {'label': 'สระบุรี', 'value': 'สระบุรี'}, {'label': 'ระยอง', 'value': 'ระยอง'}, {'label': 'พัทลุง', 'value': 'พัทลุง'}, {'label': 'ระนอง', 'value': 'ระนอง'}, {'label': 'อำนาจเจริญ', 'value': 'อำนาจเจริญ'}, {'label': 'หนองคาย', 'value': 'หนองคาย'}, {'label': 'ตราด', 'value': 'ตราด'}, {'label': 'พระนครศรีอยุธยา', 'value': 'พระนครศรีอยุธยา'}, {'label': 'สตูล', 'value': 'สตูล'}, {'label': 'ชัยนาท', 'value': 'ชัยนาท'}, {'label': 'นครปฐม', 'value': 'นครปฐม'}, {'label': 'นครนายก', 'value': 'นครนายก'}, {'label': 'ปัตตานี', 'value': 'ปัตตานี'}, {'label': 'กรุงเทพมหานคร', 'value': 'กรุงเทพมหานคร'}, {'label': 'ปทุมธานี', 'value': 'ปทุมธานี'}, {'label': 'สมุทรปราการ', 'value': 'สมุทรปราการ'}, {'label': 'อ่างทอง', 'value': 'อ่างทอง'}, {'label': 'สมุทรสาคร', 'value': 'สมุทรสาคร'}, {'label': 'สิงห์บุรี', 'value': 'สิงห์บุรี'}, {'label': 'นนทบุรี', 'value': 'นนทบุรี'}, {'label': 'ภูเก็ต', 'value': 'ภูเก็ต'}, {'label': 'สมุทรสงคราม', 'value': 'สมุทรสงคราม'}]
+
 
 export default RegisterJobAnnouncement;
