@@ -35,10 +35,12 @@ export class CreateAll implements Seeder {
           file.jobAnnouncements = [announcement]
           return announcement
         }).createMany(3);
-
+      
         return user;
       })
       .createMany(10);
+
+    await factory(User)().create({isAdmin:true});
   };
 
 }

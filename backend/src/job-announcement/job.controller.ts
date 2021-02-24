@@ -33,6 +33,7 @@ export class JobController {
     return this.service.index();
   }
 
+<<<<<<< HEAD
   @Get('search')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   searchGet(@Body() dto: searchAnnouncement): Promise<JobAnnouncement[]> {
@@ -58,7 +59,69 @@ export class JobController {
     for (const [key, value] of Object.entries(dto)) {
       if (value == null) {
         delete dto[key];
+||||||| merged common ancestors
+    @Get('index/:id')
+    findById(@Param('id', new ParseIntPipe()) id: number): Promise<JobAnnouncement> {
+      return this.service.findById(id);
+    }
+
+    @Post()
+    @UseGuards(JwtAuthGuard)
+    @UsePipes(new ValidationPipe({whitelist:true}))
+    create(@Request() req, @Body() dto: createAnnouncement): Promise<JobAnnouncement> {
+      return this.service.createAnnouncement(req.user,dto);
+    }
+    
+    @Patch(':id')
+    @UseGuards(JwtAuthGuard)
+    @UsePipes(new ValidationPipe({whitelist:true}))
+    update(@Request() req, @Param('id', new ParseIntPipe()) id: number, @Body() dto: updateAnnouncement): Promise<JobAnnouncement> {
+      for (const [key, value] of Object.entries(dto)) {
+        if (value == null) {
+            delete dto[key];
+        }
+=======
+    @Get('index/:id')
+    findById(@Param('id', new ParseIntPipe()) id: number): Promise<JobAnnouncement> {
+      return this.service.findById(id);
+    }
+    
+    @Post()
+    @UseGuards(JwtAuthGuard)
+    @UsePipes(new ValidationPipe({whitelist:true}))
+    create(@Request() req, @Body() dto: createAnnouncement): Promise<JobAnnouncement> {
+      return this.service.createAnnouncement(req.user,dto);
+    }
+    
+    @Patch(':id')
+    @UseGuards(JwtAuthGuard)
+    @UsePipes(new ValidationPipe({whitelist:true}))
+    update(@Request() req, @Param('id', new ParseIntPipe()) id: number, @Body() dto: updateAnnouncement): Promise<JobAnnouncement> {
+      for (const [key, value] of Object.entries(dto)) {
+        if (value == null) {
+            delete dto[key];
+        }
+>>>>>>> 31a1ad2403fe3788e2bd330f91643e68ebbad634
       }
+<<<<<<< HEAD
+||||||| merged common ancestors
+      return this.service.update(req.user ,id, dto);
+    }
+    
+    @Delete(':id')
+    @UseGuards(JwtAuthGuard)
+    delete(@Request() req,@Param('id', new ParseIntPipe()) id: number): Promise<JobAnnouncement> {
+      return this.service.delete(req.user ,id);
+=======
+      console.log("HELLO")
+      return this.service.update(req.user ,id, dto);
+    }
+    
+    @Delete(':id')
+    @UseGuards(JwtAuthGuard)
+    delete(@Request() req,@Param('id', new ParseIntPipe()) id: number): Promise<JobAnnouncement> {
+      return this.service.delete(req.user ,id);
+>>>>>>> 31a1ad2403fe3788e2bd330f91643e68ebbad634
     }
     return this.service.update(req.user, id, dto);
   }

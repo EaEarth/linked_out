@@ -10,16 +10,17 @@ import { Router, useRouter } from 'next/router';
 import Select from 'react-select';
 
 export const RegisterJobAnnouncement = (props) => {
+  const router = useRouter();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [jobTag, setJobTag] = useState( Array<String>() );
   const [company, setCompany] = useState('');
   const [address, setAddress] = useState('');
   const [publish, setPublish] = useState(false);
-  const [wage, setWage] = useState(null);
+  const [lowerBoundSalary, setLowerBoundSalary] = useState(0);
+  const [upperBoundSalary, setUpperBoundSalary] = useState(0);
   const [amount, setAmount] = useState(null);
-  const [errors, setError] = useState({title:null,description:null,jobTag:null,company:null,address:null,publish:null,wage:null,amount:null});
-  const [tagMessage , setTagMessage] = useState(null)
+  const [errors, setError] = useState({title:null,description:null,jobTag:null,company:null,address:null,publish:null,lowerBoundSalary:null,upperBoundSalary:null ,amount:null});
   const [successMessage, setMessage] = useState(null)
 
   const options = [
@@ -39,7 +40,6 @@ export const RegisterJobAnnouncement = (props) => {
 
       if(!title.length){
         temp_errors.title = "The title is required";
-        console.log(temp_errors.title);
       }
       if(!description.length){
         temp_errors.description = "The description is required"
@@ -53,8 +53,11 @@ export const RegisterJobAnnouncement = (props) => {
       if(!address.length){
         temp_errors.address = "The address is required"
       }
-      if(wage<=0){
-        temp_errors.wage = "The salary is required"
+      if(lowerBoundSalary<=0){
+        temp_errors.lowerBoundSalary = "The lowerbound salary is required"
+      }
+      if(upperBoundSalary<=0){
+        temp_errors.upperBoundSalary = "The upperbound salary is required"
       }
       if(amount<=0){
         temp_errors.amount = "The amount is required"
@@ -63,27 +66,37 @@ export const RegisterJobAnnouncement = (props) => {
       if(Object.keys(temp_errors).length){
         return
       }
+  
+      let tags = [];
+      for(let i=0;i<jobTag.length;i++){
+          tags.push(jobTag[i]['value']);
+      }
+      console.log(tags)
       const payload = {
           title: title,
           description: description,
-          jobTag: jobTag,
+          lowerBoundSalary: Number(lowerBoundSalary),
+          upperBoundSalary: Number(upperBoundSalary),
+          province: "กรุงเทพ",
+          tag: tags,
           company: company,
-          location: location,
-          publish: publish,
-          wage: wage,
-          amount: amount
+          address: address,
+          isPublished: publish,
+          amountRequired: Number(amount)
       }
-      axios.post('http://localhost:8000/api/users',payload)
+      axios.post('http://localhost:8000/api/job',payload)
         .then(function (response){
-            if(response.status == 201) {
-                setMessage('Registration successful. Redirecting to job page..');
-                const router = useRouter();
-                router.push("/jobs");
-            } else{
-                console.log("There is an Error")
-            }
+          if(response.status == 201) {
+              setMessage('Registration successful. Redirecting to job page..');
+              router.push("/jobs");
+          } else{
+              console.log("There is an Error")
+          }
         })
-      
+        .catch(function (error){
+            console.log(error)
+        });
+        
   }
   
   return (
@@ -94,21 +107,21 @@ export const RegisterJobAnnouncement = (props) => {
 
       <Container className="my-4">
         <Row>
-          <Col md={{ span: 5, offset: 1 }} >
-            <Row>
+          <Col md={{ span: 5, offset: 1 }} className="d-flex flex-column">
+            <Row className="mt-4">
               <Image
                 src="/images/user/User.svg"
                 className="d-block w-30 mx-auto"
                 rounded
               />
             </Row>
-            <Row className="d-flex justify-content-center">
+            <Row className="d-flex justify-content-center mt-3">
             <button type="button" className="my-2 btn btn-primary">
                 Add Picture
               </button>
             </Row>
             <Row>
-                <Form>
+                <Form className="w-100 p-3">
                     <Form.Group>
                     <Form.Label className={styles.label}>Title</Form.Label>
                     <Form.Control
@@ -128,23 +141,23 @@ export const RegisterJobAnnouncement = (props) => {
                     <Form.Label className={styles.label}>Description</Form.Label>
                     <Form.Control
                         id="description"
-                        className="form-control"
-                        type="text"
+                        rows={5}
+                        as="textarea"
                         placeholder="description"
                         onChange={(e) => setDescription(e.target.value)}
                         isInvalid={!!errors.description}
                     />
                     <Form.Control.Feedback type="invalid">
-                        {errors.title}
+                        {errors.description}
                         </Form.Control.Feedback>
                       </Form.Group>
                 </Form>
             </Row>
-
           </Col>
+
           <Col md={{ span: 5, offset: 1 }} >
             <Row>
-              <Form>
+              <Form className="w-100 p-3">
                 <label className={styles.label}>Tag</label>
                 <Select
                     isMulti
@@ -156,12 +169,12 @@ export const RegisterJobAnnouncement = (props) => {
                     isSearchable="true"
                     maxMenuHeight={200}
                     noOptionsMessage={()=>"You could only assign 3 tags to Job Announcement"}
-                    className="basic-multi-select mb-3"
+                    className="basic-multi-select"
                     classNamePrefix="select"
                     onChange={ (e) => setJobTag(e)}
                     />
                 <small className="text-danger">{errors.jobTag}</small>
-                <Form.Group>
+                <Form.Group className="mt-3">
                   <Form.Label className={styles.label}>Company</Form.Label>
                   <Form.Control
                     className="form-control"
@@ -188,21 +201,33 @@ export const RegisterJobAnnouncement = (props) => {
                     </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group>
-                  <Form.Check type="checkbox" label="Publish" onClick={()=>setPublish(!publish)}/>
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label className={styles.label}>Salary per month</Form.Label>
+                  <Form.Label className={styles.label}>Lowerbound salary per month</Form.Label>
                   <Form.Control
                     type="number"
-                    placeholder="salary"
+                    placeholder="Lowerbound salary"
                     onChange={(e) => {
-                      setWage(e.target.value);
+                      setUpperBoundSalary(e.target.value);
                     }}
                     step={10}
-                    isInvalid={!!errors.wage}
+                    isInvalid={!!errors.lowerBoundSalary}
                   />
                   <Form.Control.Feedback type="invalid">
-                      {errors.wage}
+                      {errors.lowerBoundSalary}
+                    </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label className={styles.label}>Upperbound salary per month</Form.Label>
+                  <Form.Control
+                    type="number"
+                    placeholder="Upperbound salary"
+                    onChange={(e) => {
+                      setLowerBoundSalary(e.target.value);
+                    }}
+                    step={10}
+                    isInvalid={!!errors.upperBoundSalary}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                      {errors.upperBoundSalary}
                     </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group>
@@ -221,6 +246,9 @@ export const RegisterJobAnnouncement = (props) => {
                       {errors.wage}
                     </Form.Control.Feedback>
                 </Form.Group>
+                <Form.Group>
+                  <Form.Check type="checkbox" label="Publish" onClick={()=>setPublish(!publish)}/>
+                </Form.Group>
               </Form>
             </Row>
           </Col>
@@ -230,7 +258,9 @@ export const RegisterJobAnnouncement = (props) => {
                 <button type="button" className="mr-5 btn btn-primary" onClick={createJobDetailsToServer}>
                   Create
                 </button>
-                <button type="button" className="ml-5 btn btn-primary">
+                <button type="button" className="ml-5 btn btn-primary" onClick={()=>{
+                  router.push('/jobs')
+                }}>
                   Cancel
                 </button>
               </Col>
