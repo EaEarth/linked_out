@@ -11,19 +11,19 @@ import { symlink } from 'fs/promises';
 
 
 export const Register = (props) => {
-  const router = useRouter();
-  const [state, setState] = useState({
-    username: "",
-    firstname: "",
-    lastname: "",
-    email: "",
-    address: "",
-    phone: "",
-    birthDate: "",
-    password: "",
-    confirmPassword: "",
-    successMessage: null
-  })
+    const router = useRouter();
+    const [state, setState] = useState({
+        username: "",
+        firstname: "",
+        lastname: "",
+        email: "",
+        address: "",
+        phone: "",
+        birthDate: "",
+        password: "",
+        confirmPassword: "",
+        successMessage: null
+    })
 
   const [required, setRequired] = useState({
     username: '',
@@ -48,58 +48,58 @@ export const Register = (props) => {
   const handleSubmitClick = (e) => {
     e.preventDefault();
     let allInfo = true;
-    if (!state.username.length) {
-      setRequired((prevRequired) => ({ ...prevRequired, username: "*required" }));
+    if( !state.username.length ){
+      setRequired((prevRequired)=>({...prevRequired, username : "*required"}));
       allInfo = false;
-    } else setRequired((prevRequired) => ({ ...prevRequired, username: "" }));
+    } else setRequired((prevRequired)=>({...prevRequired, username : ""}));
 
-    if (!state.firstname.length) {
-      setRequired((prevRequired) => ({ ...prevRequired, firstname: "*required" }));
+    if( !state.firstname.length ){
+      setRequired((prevRequired)=>({...prevRequired, firstname : "*required"}));
       allInfo = false;
-    } else setRequired((prevRequired) => ({ ...prevRequired, firstname: "" }));
+    } else setRequired((prevRequired)=>({...prevRequired, firstname : ""}));
 
-    if (!state.lastname.length) {
-      setRequired((prevRequired) => ({ ...prevRequired, lastname: "*required" }));
+    if( !state.lastname.length ){
+      setRequired((prevRequired)=>({...prevRequired, lastname : "*required"}));
       allInfo = false;
-    } else setRequired((prevRequired) => ({ ...prevRequired, lastname: "" }));
+    } else setRequired((prevRequired)=>({...prevRequired, lastname : ""}));
 
-    if (!state.address.length) {
-      setRequired((prevRequired) => ({ ...prevRequired, address: "*required" }));
+    if( !state.address.length ){
+      setRequired((prevRequired)=>({...prevRequired, address : "*required"}));
       allInfo = false;
-    } else setRequired((prevRequired) => ({ ...prevRequired, address: "" }));
+    }else setRequired((prevRequired)=>({...prevRequired, address : ""}));
 
-    if (!state.email.length) {
-      setRequired((prevRequired) => ({ ...prevRequired, email: "*required" }));
+    if( !state.email.length ){
+      setRequired((prevRequired)=>({...prevRequired, email : "*required"}));
       allInfo = false;
-    } else setRequired((prevRequired) => ({ ...prevRequired, email: "" }));
+    } else setRequired((prevRequired)=>({...prevRequired, email : ""}));
 
-    if (!state.birthDate.length) {
-      setRequired((prevRequired) => ({ ...prevRequired, birthDate: "*required" }));
+    if( !state.birthDate.length ){
+      setRequired((prevRequired)=>({...prevRequired, birthDate : "*required"})); 
       allInfo = false;
-    } else setRequired((prevRequired) => ({ ...prevRequired, birthDate: "" }));
+    } else setRequired((prevRequired)=>({...prevRequired, birthDate : ""}));
 
-    if (!state.password.length) {
-      setRequired((prevRequired) => ({ ...prevRequired, password: "*required" }));
+    if( !state.password.length ){
+      setRequired((prevRequired)=>({...prevRequired, password : "*required"}));
       allInfo = false;
-    } else setRequired((prevRequired) => ({ ...prevRequired, password: "" }));
+    } else setRequired((prevRequired)=>({...prevRequired, password : ""}));
 
-    if (!state.confirmPassword.length) {
-      setRequired((prevRequired) => ({ ...prevRequired, confirmPassword: "*required" }));
+    if( !state.confirmPassword.length ){
+      setRequired((prevRequired)=>({...prevRequired, confirmPassword : "*required"}));
       allInfo = false;
-    } else setRequired((prevRequired) => ({ ...prevRequired, confirmPassword: "" }));
+    } else setRequired((prevRequired)=>({...prevRequired, confirmPassword : ""}));
 
-    if (!state.phone.length) {
-      setRequired((prevRequired) => ({ ...prevRequired, phone: "*required" }));
+    if( !state.phone.length ){
+      setRequired((prevRequired)=>({...prevRequired, phone : "*required"}));
       allInfo = false;
-    } else setRequired((prevRequired) => ({ ...prevRequired, phone: "" }));
+    } else setRequired((prevRequired)=>({...prevRequired, phone : ""}));
 
     if (state.password === state.confirmPassword) {
-      if (allInfo) sendDetailsToServer();
+      if(allInfo) sendDetailsToServer();
     } else {
-      setRequired((prevRequired) => ({ ...prevRequired, confirmPassword: "Password not match" }));
+      setRequired((prevRequired)=>({...prevRequired, confirmPassword : "Password not match"}));
     }
   };
-
+  
   const sendDetailsToServer = () => {
     if (state.email.length && state.password.length) {
       const payload = {
@@ -136,16 +136,15 @@ export const Register = (props) => {
       console.log('Please enter valid username and password');
     }
   }
-  return (
-    <DefaultLayout>
-      <Head>
-        <title>Register</title>
-      </Head>
+    return (
+        <DefaultLayout>
+            <Head>
+                <title>Register</title>
+            </Head>
 
       <Container className="my-4">
-        <Row className="d-flex justify-content-center">
-          <Col md={{ span: 5 }} className="d-flex flex-column">
-            <h2 className="text-center">Register</h2>
+        <Row>
+          <Col md={{ span: 5, offset: 1 }} className="d-flex flex-column">
             <Form>
               <Form.Group className="">
                 <i className="bi bi-person-fill"></i>
@@ -156,7 +155,7 @@ export const Register = (props) => {
                   placeholder="Username"
                   onChange={handleChange}
                 />
-                <p style={{ color: 'red' }}>{required.username}</p>
+                <p style={{color:'red'}}>{required.username}</p>
               </Form.Group>
 
               <Form.Group>
@@ -167,7 +166,7 @@ export const Register = (props) => {
                   placeholder="Firstname"
                   onChange={handleChange}
                 />
-                <p style={{ color: 'red' }}>{required.firstname}</p>
+                <p style={{color:'red'}}>{required.firstname}</p>
               </Form.Group>
 
               <Form.Group>
@@ -178,7 +177,7 @@ export const Register = (props) => {
                   placeholder="Lastname"
                   onChange={handleChange}
                 />
-                <p style={{ color: 'red' }}>{required.lastname}</p>
+                <p style={{color:'red'}}>{required.lastname}</p>
               </Form.Group>
 
               <Form.Group>
@@ -190,7 +189,7 @@ export const Register = (props) => {
                   placeholder="Email"
                   onChange={handleChange}
                 />
-                <p style={{ color: 'red' }}>{required.email}</p>
+                <p style={{color:'red'}}>{required.email}</p>
               </Form.Group>
 
               <Form.Group>
@@ -202,7 +201,7 @@ export const Register = (props) => {
                   placeholder="Address"
                   onChange={handleChange}
                 />
-                <p style={{ color: 'red' }}>{required.address}</p>
+                <p style={{color:'red'}}>{required.address}</p>
               </Form.Group>
 
               <Form.Group>
@@ -221,7 +220,7 @@ export const Register = (props) => {
                   placeholder="Phone"
                   onChange={handleChange}
                 />
-                <p style={{ color: 'red' }}>{required.phone}</p>
+                <p style={{color:'red'}}>{required.phone}</p>
               </Form.Group>
 
               <Form.Group>
@@ -232,7 +231,7 @@ export const Register = (props) => {
                   value={state.birthDate}
                   onChange={handleChange}
                 />
-                <p style={{ color: 'red' }}>{required.birthDate}</p>
+                <p style={{color:'red'}}>{required.birthDate}</p>
               </Form.Group>
 
               <Form.Group>
@@ -244,7 +243,7 @@ export const Register = (props) => {
                   placeholder="Password"
                   onChange={handleChange}
                 />
-                <p style={{ color: 'red' }}>{required.password}</p>
+                <p style={{color:'red'}}>{required.password}</p>
               </Form.Group>
 
               <Form.Group>
@@ -255,23 +254,23 @@ export const Register = (props) => {
                   placeholder="Confirm Password"
                   onChange={handleChange}
                 />
-                <p style={{ color: 'red' }}>{required.confirmPassword}</p>
+                <p style={{color:'red'}}>{required.confirmPassword}</p>
               </Form.Group>
 
-              <Row className="d-flex justify-content-center">
-                <button
-                  type="button"
-                  className="my-2 btn btn-primary"
-                  onClick={handleSubmitClick}>
-                  Register
+                            <Link href="/test">
+                                <button
+                                    type="button"
+                                    className="my-2 btn btn-primary"
+                                    onClick={handleSubmitClick}>
+                                    Register
                 </button>
-              </Row>
-            </Form>
-          </Col>
-        </Row>
-      </Container>
-    </DefaultLayout>
-  );
+                            </Link>
+                        </Form>
+                    </Col>
+                </Row>
+            </Container>
+        </DefaultLayout>
+    );
 };
 
 

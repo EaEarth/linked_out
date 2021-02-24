@@ -79,7 +79,7 @@ export const JobAnnouncementCard: React.FC<JobAnnouncementCardProps> = (
             </Card.Body>
 
             <Col >
-              <button type="button" className="my-2 btn btn-primary" onClick={() => { router.push('/editJobDetail/' + props.id.toString()) }}>Edit</button>
+              <button type="button" className="my-2 btn btn-primary" onClick={() => { router.push('/jobs/editJobDetail/' + props.id.toString()) }}>Edit</button>
               <button type="button" className="my-2 btn btn-primary">Delete</button>
 
             </Col>
