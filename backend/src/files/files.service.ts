@@ -29,6 +29,7 @@ export class FilesService {
 
     createFile(@Req() req, dto:createFile, @UploadedFile() file){
         const newFile = new FileItem();
+        
         newFile.title = dto.title ? dto.title : file.filename;
         newFile.type = file.mimetype;
         newFile.path = `${req.protocol}://${req.headers.host}/api/files/${file.filename}`;
