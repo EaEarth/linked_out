@@ -9,6 +9,7 @@ import DefaultLayout from '../../layouts/Default';
 import axios from 'axios';
 import JobAnnouncement from '../../models/job/JobAnnouncement';
 import { GetServerSidePropsContext } from 'next';
+import { makeServerAxios } from '../../utils/request';
 
 export const Jobs: React.FC<any> = (props) => {
   const router = useRouter();
@@ -83,10 +84,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
           search: searchQuery,
           lowerBoundSalary: lowerBoundSalaryQuery,
           province: provinceQuery,
-          tag: tagQuery
-        }
+          tag: tagQuery,
+        },
       }
-    )
+    );
     return {
       props: {
         jobs: data,
