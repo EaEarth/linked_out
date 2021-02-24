@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import React, { useState, useEffect } from 'react';
-import { Col, Container, Jumbotron, Row, Form } from 'react-bootstrap';
+import { Col, Container, Jumbotron, Row, Form, Button } from 'react-bootstrap';
 import DefaultLayout from '../../layouts/Default';
 import Image from 'react-bootstrap/Image';
 import styles from './job_detail.module.scss';
@@ -8,6 +8,21 @@ import axios from 'axios';
 import Link from 'next/link';
 import { Router, useRouter } from 'next/router';
 import Select from 'react-select';
+import { profile } from 'console';
+
+type tempErrors = {
+  title: string | null;
+  description: string | null;
+  jobTag: string | null;
+  company: string | null;
+  address: string | null;
+  publish: string | null;
+  lowerBoundSalary: string | null;
+  upperBoundSalary: string | null;
+  amount: string | null;
+  profilePic: string | null;
+}
+
 
 export const RegisterJobAnnouncement = (props) => {
   const router = useRouter();
@@ -19,9 +34,11 @@ export const RegisterJobAnnouncement = (props) => {
   const [publish, setPublish] = useState(false);
   const [lowerBoundSalary, setLowerBoundSalary] = useState(0);
   const [upperBoundSalary, setUpperBoundSalary] = useState(0);
-  const [amount, setAmount] = useState(null);
+  const [amount, setAmount] = useState(0);
+  const [province, setProvince] = useState(0);
+  const [profilePic, setProfile] = useState(null);
+  const [urlPicture, setURLPicture] = useState(null);
   const [errors, setError] = useState({title:null,description:null,jobTag:null,company:null,address:null,publish:null,lowerBoundSalary:null,upperBoundSalary:null ,amount:null});
-  const [successMessage, setMessage] = useState(null)
 
   const options = [
     { value: 'chocolate', label: 'Chocolate' },
@@ -35,35 +52,51 @@ export const RegisterJobAnnouncement = (props) => {
     { value: 'no', label: 'No' },
   ];
 
-  const createJobDetailsToServer = () => {
-      const temp_errors = {}
+  useEffect(() =>{
+    if(profilePic==null) return
+    const url = URL.createObjectURL(profilePic)
+    setURLPicture(url)
 
+    return () => URL.revokeObjectURL(url)
+  },[profilePic])
+
+  const createJobDetailsToServer = async () => {
+      let temp_errors: tempErrors | null = {title:null,description:null,jobTag:null,company:null,address:null,publish:null,lowerBoundSalary:null,upperBoundSalary:null ,amount:null, profilePic:null};; 
+      let checkError = false;
       if(!title.length){
         temp_errors.title = "The title is required";
+        checkError = true;
       }
       if(!description.length){
         temp_errors.description = "The description is required"
+        checkError = true;
       }
       if(!jobTag.length){
         temp_errors.jobTag = "The tags are required to be at least 1"
+        checkError = true;
       }
       if(!company.length){
         temp_errors.company = "The company is required"
+        checkError = true;
       }
       if(!address.length){
         temp_errors.address = "The address is required"
+        checkError = true;
       }
       if(lowerBoundSalary<=0){
         temp_errors.lowerBoundSalary = "The lowerbound salary is required"
+        checkError = true;
       }
       if(upperBoundSalary<=0){
         temp_errors.upperBoundSalary = "The upperbound salary is required"
+        checkError = true;
       }
       if(amount<=0){
         temp_errors.amount = "The amount is required"
+        checkError = true;
       }
       setError(temp_errors);
-      if(Object.keys(temp_errors).length){
+      if(checkError){
         return
       }
   
@@ -71,7 +104,7 @@ export const RegisterJobAnnouncement = (props) => {
       for(let i=0;i<jobTag.length;i++){
           tags.push(jobTag[i]['value']);
       }
-      console.log(tags)
+
       const payload = {
           title: title,
           description: description,
@@ -82,12 +115,28 @@ export const RegisterJobAnnouncement = (props) => {
           company: company,
           address: address,
           isPublished: publish,
-          amountRequired: Number(amount)
+          amountRequired: Number(amount),
+          pictureId: 1
       }
-      axios.post('http://localhost:8000/api/job',payload)
+      if(profilePic){
+        let formData = new FormData()
+        formData.append('file',profilePic,profilePic.name)
+        await axios.post('http://localhost:8000/api/files/upload',formData)
+        .then((response) => {
+          if(response.status == 201) {
+            payload['pictureId'] = Number(response.data.id)
+  
+          } else{
+            console.log("There is an error in uploaded picture")
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+      }
+      await axios.post('http://localhost:8000/api/job',payload)
         .then(function (response){
           if(response.status == 201) {
-              setMessage('Registration successful. Redirecting to job page..');
               router.push("/jobs");
           } else{
               console.log("There is an Error")
@@ -97,6 +146,10 @@ export const RegisterJobAnnouncement = (props) => {
             console.log(error)
         });
         
+  }
+
+  const fileChangedHandler = (e) => {
+      setProfile(e.target.files[0])
   }
   
   return (
@@ -109,19 +162,24 @@ export const RegisterJobAnnouncement = (props) => {
         <Row>
           <Col md={{ span: 5, offset: 1 }} className="d-flex flex-column">
             <Row className="mt-4">
+              {!profilePic ?
               <Image
                 src="/images/user/User.svg"
-                className="d-block w-30 mx-auto"
+                className="d-block w-50 mx-auto"
+                rounded
+              />:
+              <Image
+                className="d-block w-75 mx-auto"
+                src={urlPicture}
                 rounded
               />
-            </Row>
-            <Row className="d-flex justify-content-center mt-3">
-            <button type="button" className="my-2 btn btn-primary">
-                Add Picture
-              </button>
+              }
             </Row>
             <Row>
                 <Form className="w-100 p-3">
+                    <Form.Group>
+                    <Form.File className="d-flex justify-content-center w-75 mx-auto mb-3" label={!urlPicture?  "Profile picture": "Success upload"} data-browse="Add profile" onChange={fileChangedHandler} custom/>
+                    </Form.Group>
                     <Form.Group>
                     <Form.Label className={styles.label}>Title</Form.Label>
                     <Form.Control
@@ -206,7 +264,7 @@ export const RegisterJobAnnouncement = (props) => {
                     type="number"
                     placeholder="Lowerbound salary"
                     onChange={(e) => {
-                      setUpperBoundSalary(e.target.value);
+                      setLowerBoundSalary(Number(e.target.value));
                     }}
                     step={10}
                     isInvalid={!!errors.lowerBoundSalary}
@@ -221,7 +279,7 @@ export const RegisterJobAnnouncement = (props) => {
                     type="number"
                     placeholder="Upperbound salary"
                     onChange={(e) => {
-                      setLowerBoundSalary(e.target.value);
+                      setUpperBoundSalary(Number(e.target.value));
                     }}
                     step={10}
                     isInvalid={!!errors.upperBoundSalary}
@@ -238,12 +296,12 @@ export const RegisterJobAnnouncement = (props) => {
                     placeholder="amount"
                     type="number"
                     onChange={(e) => {
-                      setAmount(e.target.value);
+                      setAmount(Number(e.target.value));
                     }}
-                    isInvalid={!!errors.wage}
+                    isInvalid={!!errors.amount}
                   />
                   <Form.Control.Feedback type="invalid">
-                      {errors.wage}
+                      {errors.amount}
                     </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group>

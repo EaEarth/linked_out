@@ -9,6 +9,7 @@ export class CreateAll implements Seeder {
   
   tagEntity = []
   async run(factory: Factory): Promise<any> {
+    await factory(FileItem)().create()
     for(let i = 0; i< 10 ; i++){
       this.tagEntity.push(await factory(Tag)().create())
     }
