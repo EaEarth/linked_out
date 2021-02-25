@@ -50,8 +50,8 @@ export const login = observer((props) => {
 
       <Container className="">
         <Row className="justify-content-center">
-          <Col md={{ span: 5 }}>
-            <h3>Link Out</h3>
+          <Col md={{ span: 4 }}>
+            <h2 className="text-center my-3">Login</h2>
             <Form>
               <Form.Group className="">
                 <Form.Control
@@ -71,22 +71,22 @@ export const login = observer((props) => {
                   placeholder="Password"
                   onChange={handleChange}
                 />
+                <p className="text-danger d-block text-start ml-2">
+                  {authStore.loginError}
+                </p>
               </Form.Group>
 
-              <div>
-                <p className="text-danger">{authStore.loginError}</p>
-              </div>
-
+              <Row className="d-flex justify-content-center">
+                <button
+                  type="button"
+                  className="my-2 btn btn-primary"
+                  onClick={handleSubmitClick}>
+                  Login
+                </button>
+              </Row>
               <Link href="/test">
-                <a className="">forget password?</a>
+                <a className="d-block text-center ">forget password?</a>
               </Link>
-
-              <button
-                type="button"
-                className="my-2 btn btn-primary"
-                onClick={handleSubmitClick}>
-                Login
-              </button>
             </Form>
           </Col>
         </Row>

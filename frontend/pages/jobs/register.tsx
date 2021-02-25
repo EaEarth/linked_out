@@ -262,7 +262,6 @@ export const RegisterJobAnnouncement = (props) => {
                 </Form.Group>
                 <label className={styles.label}>Province</label>
                 <Select
-                    isMulti
                     value={province}
                     options={provinceList}
                     name="colors"
