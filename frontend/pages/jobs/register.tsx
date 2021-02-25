@@ -37,10 +37,10 @@ export const RegisterJobAnnouncement = (props) => {
   const [lowerBoundSalary, setLowerBoundSalary] = useState(0);
   const [upperBoundSalary, setUpperBoundSalary] = useState(0);
   const [amount, setAmount] = useState(0);
-  const [province, setProvince] = useState('');
+  const [province, setProvince] = useState(null);
   const [profilePic, setProfile] = useState(null);
   const [urlPicture, setURLPicture] = useState(null);
-  const [errors, setError] = useState({title:null,description:null,jobTag:null,company:null,address:null,publish:null,lowerBoundSalary:null,upperBoundSalary:null ,amount:null});
+  const [errors, setError] = useState({title:null,description:null,jobTag:null,company:null,address:null,province:null,publish:null,lowerBoundSalary:null,upperBoundSalary:null ,amount:null});
 
   const options = props.jobTag
   const choices = [
@@ -91,12 +91,11 @@ export const RegisterJobAnnouncement = (props) => {
         temp_errors.amount = "The amount is required"
         checkError = true;
       }
-      if(!province.length){
+      if(!province){
         temp_errors.province = "The province is required"
         checkError = true;
       }
-
-      setError(temp_errors);
+      setError(temp_errors)
       if(checkError){
         return
       }
@@ -104,13 +103,12 @@ export const RegisterJobAnnouncement = (props) => {
       for(let i=0;i<jobTag.length;i++){
           tags.push(jobTag[i]['value']);
       }
-    
       const payload = {
           title: title,
           description: description,
           lowerBoundSalary: Number(lowerBoundSalary),
           upperBoundSalary: Number(upperBoundSalary),
-          province: province[0]['value'],
+          province: province.value,
           tag: tags,
           company: company,
           address: address,
@@ -125,7 +123,6 @@ export const RegisterJobAnnouncement = (props) => {
         .then((response) => {
           if(response.status == 201) {
             payload['pictureId'] = Number(response.data.id)
-
           } else{
             console.log("There is an error in uploaded picture")
           }
@@ -271,7 +268,7 @@ export const RegisterJobAnnouncement = (props) => {
                     classNamePrefix="select"
                     onChange={ (e) => setProvince(e)}
                     />
-                <small className="text-danger">{errors.jobTag}</small>
+                <small className="text-danger">{errors.province}</small>
                 <Form.Group>
                   <Form.Label className={styles.label}>Lowerbound salary per month</Form.Label>
                   <Form.Control
