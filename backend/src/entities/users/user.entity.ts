@@ -2,6 +2,7 @@ import { Column, Double, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn,
 import { IsDate, IsEmail } from 'class-validator';
 import { JobAnnouncement } from "../job/jobAnnouncement.entity";
 import { FileItem } from "../files/fileItem.entity";
+import { JobApplication } from "../job/jobApplication.entity";
 
 @Entity()
 @Unique(["username"])
@@ -59,5 +60,8 @@ export class User {
 
     @OneToMany(() => FileItem, FileItem => FileItem.owner)
     files: FileItem[];
+    
+    @OneToMany(() => JobApplication, jobApplication => jobApplication.applicant)
+    jobApplication: JobApplication[];
 
 }

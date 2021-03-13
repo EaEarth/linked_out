@@ -8,10 +8,11 @@ import { Connection } from 'typeorm';
 import { JobModule } from './job-announcement/job.module';
 import { CaslModule } from './casl/casl.module';
 import { FilesModule } from './files/files.module';
+import { JobApplicationModule } from './job-application/job-application.module';
 import 'reflect-metadata';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), AuthModule, UsersModule, JobModule, CaslModule, FilesModule],
+  imports: [TypeOrmModule.forRoot(), AuthModule, UsersModule, JobModule, CaslModule, FilesModule, JobApplicationModule],
   controllers: [AppController],
   providers: [AppService],
 })

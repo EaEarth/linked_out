@@ -1,10 +1,11 @@
 import { Ability, AbilityBuilder, AbilityClass, ExtractSubjectType, InferSubjects } from "@casl/ability";
 import { Injectable } from "@nestjs/common";
 import { JobAnnouncement } from "src/entities/job/jobAnnouncement.entity";
+import { JobApplication } from "src/entities/job/jobApplication.entity";
 import { User } from "src/entities/users/user.entity";
 import { Action } from "src/policies/action.enum";
 
-type Subjects = InferSubjects<typeof JobAnnouncement | typeof User> | 'all';
+type Subjects = InferSubjects<typeof JobAnnouncement |typeof JobApplication| typeof User> | 'all';
 
 export type AppAbility = Ability<[Action, Subjects]>;
 
