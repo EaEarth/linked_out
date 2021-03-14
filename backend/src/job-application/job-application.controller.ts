@@ -16,6 +16,7 @@ export class JobApplicationController {
   }
 
   @Get('index/:id')
+  @UseGuards(JwtAuthGuard)
   async findById(
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<JobApplication> {

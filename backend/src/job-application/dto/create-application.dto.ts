@@ -12,11 +12,12 @@ export class createApplication{
     readonly feedback= "";
 
     @IsInt()
+    @Min(1)
     readonly status= 1;
 
     @IsNotEmpty()
     @IsInt()
-    @Min(0)
+    @Min(1)
     readonly jobAnnouncementId: number;
 
     @IsOptional()

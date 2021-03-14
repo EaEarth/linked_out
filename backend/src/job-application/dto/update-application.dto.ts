@@ -15,9 +15,9 @@ export class updateApplication{
     @IsInt()
     readonly status= 1;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsInt()
-    @Min(0)
+    @Min(1)
     readonly jobAnnouncementId: number;
 
     @IsOptional()
