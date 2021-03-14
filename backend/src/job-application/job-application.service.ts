@@ -23,13 +23,24 @@ export class JobApplicationService {
     ) {}
 
     index(): Promise<JobApplication[]>{
-        return this.repo.find({ relations: ["jobAnnouncement", "applicant", "resume", "transcript", "coverLetter"]});
+        //return this.repo.find({ relations: ["jobAnnouncement", "applicant", "resume", "transcript", "coverLetter"]});
+        return this.getApplicationBuilder()
+        .leftJoinAndSelect("jobApplication.resume", "resume")
+        .leftJoinAndSelect("jobApplication.coverLetter", "coverLetter")
+        .leftJoinAndSelect("jobApplication.transcript", "transcript")
+        .getMany()
     }
 
     async findById(id: number): Promise<JobApplication>{
-        const application = await this.repo.findOne(id, { relations: ["jobAnnouncement", "applicant", "resume", "transcript", "coverLetter"]});
-        if(application === undefined) throw new NotFoundException("Job announcement not found")
-        return application
+        // const application = await this.repo.findOne(id, { relations: ["jobAnnouncement", "applicant", "resume", "transcript", "coverLetter"]});
+        // if(application === undefined) throw new NotFoundException("Job announcement not found")
+        // return application
+        return this.getApplicationBuilder()
+            .where("jobApplication.id = :id", { id: id })
+            .leftJoinAndSelect("jobApplication.resume", "resume")
+            .leftJoinAndSelect("jobApplication.coverLetter", "coverLetter")
+            .leftJoinAndSelect("jobApplication.transcript", "transcript")
+            .getOne()
     }
 
     findFromApplicant(userId: number): Promise<JobApplication[]> {
@@ -54,6 +65,7 @@ export class JobApplicationService {
     private getApplicationBuilder() {
         return this.repo.createQueryBuilder("jobApplication")
         .leftJoinAndSelect("jobApplication.jobAnnouncement", "announcement")
+        .leftJoinAndSelect("announcement.picture", "picture")
         .leftJoinAndSelect("jobApplication.applicant", "applicant")
     }
 
