@@ -7,15 +7,14 @@ import JobPagination from '../../components/JobAnnouncement/Pagination';
 import TagList from '../../components/JobAnnouncement/TagList';
 import DefaultLayout from '../../layouts/Default';
 import axios from 'axios';
-import JobAnnouncement from '../../models/job/JobAnnouncement';
+import ApplicationForm from '../../models/ApplicationForm/ApplicationForm';
 import { GetServerSidePropsContext } from 'next';
-import { makeServerAxios } from '../../utils/request';
 
-export const Jobs: React.FC<any> = (props) => {
+
+export const ApplicationList: React.FC<any> = (props) => {
     const router = useRouter();
     // Data
-    const [tags, setTags] = useState(props.tags || []);
-    const [jobs, setJobs] = useState(props.jobs || []);
+    const [application, setApplication] = useState(props.application || []);
     // Pagination state
     const [pageLen, setPageLen] = useState(1);
     const page = (Number.parseInt(router.query.page as string) || 1) - 1;
@@ -25,7 +24,7 @@ export const Jobs: React.FC<any> = (props) => {
         e.preventDefault();
         if (pageNo >= 0 && pageNo <= pageLen)
             router.push(
-                { href: '/jobs', query: { ...router.query, page: pageNo } },
+                { href: '/apply', query: { ...router.query, page: pageNo } },
                 undefined,
                 {
                     shallow: true,
@@ -34,14 +33,13 @@ export const Jobs: React.FC<any> = (props) => {
     };
 
     useEffect(() => {
-        setJobs(props.jobs);
-        setTags(props.tags || []);
+        setApplication(props.application);
     }, [router.asPath]);
 
     // Update page length
     useEffect(() => {
-        setPageLen(Math.ceil(jobs.length / perPage));
-    }, [jobs]);
+        setPageLen(Math.ceil(application.length / perPage));
+    }, [application]);
     // Render
     return (
         <DefaultLayout>
@@ -49,9 +47,8 @@ export const Jobs: React.FC<any> = (props) => {
                 <title>Apply List</title>
             </Head>
             <Container className="mt-4">
-                <TagList tags={tags} />
                 <JobApplyGrid
-                    applications={jobs.slice(page * perPage, (page + 1) * perPage)}
+                    applications={application.slice(page * perPage, (page + 1) * perPage)}
                 />
                 <JobPagination
                     page={page}
@@ -64,47 +61,21 @@ export const Jobs: React.FC<any> = (props) => {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-    let searchQuery = context.query.search || '';
-    let lowerBoundSalaryQuery = Number(context.query.lowerBoundSalary) || 0;
-    let provinceQuery = context.query.province || '';
-    let tagQuery = context.query.tags || [];
-    if (!Array.isArray(tagQuery) && typeof tagQuery === 'string') {
-        tagQuery = tagQuery.split(',');
-    }
-
-    const tags = [];
-    for (const tag of tagQuery) {
-        tags.push({ name: tag });
-    }
-    if (context.query.browse) {
-        const { data } = await axios.get<JobAnnouncement[]>(
-            'http://localhost:8000/api/job/search',
-            {
-                data: {
-                    search: searchQuery,
-                    lowerBoundSalary: lowerBoundSalaryQuery,
-                    province: provinceQuery,
-                    tag: tagQuery,
-                },
-            }
-        );
-        return {
-            props: {
-                jobs: data,
-                tags: tags,
+    const cookie = context.req.cookies;
+    const { data } = await axios.get<ApplicationForm[]>(
+        '/job-application/applicant',
+        {
+            headers: {
+                Cookie: `jwt=${cookie['jwt']}`,
             },
-        };
-    }
-    const { data } = await axios.get<JobAnnouncement[]>(
-        'http://localhost:8000/api/job/index'
+        }
     );
 
     return {
         props: {
-            jobs: data,
-            tags: tags,
+            application: data,
         },
     };
 }
 
-export default Jobs;
+export default ApplicationList;

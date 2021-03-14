@@ -7,12 +7,14 @@ import {
 } from 'mobx';
 import RootStore from './RootStore';
 import axios, { AxiosError } from 'axios';
-import { truncate } from 'node:fs';
 
 export class ApplicationStore {
     private rootStore: RootStore;
+    @observable
     resumeId: number | null;
+    @observable
     coverLetterId: number | null;
+    @observable
     transcriptId: number | null;
     @observable
     show: boolean;
@@ -52,12 +54,12 @@ export class ApplicationStore {
         try {
             const response = await axios.post('/job-application',
                 payload
-            );
+            )
             runInAction(() => {
                 if (response.status === 201) {
                     this.show = true;
                 }
-            });
+            })
         } catch (err) {
             runInAction(() => {
                 console.log(err);

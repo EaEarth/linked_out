@@ -29,7 +29,7 @@ export const appForm = (props) => {
         education: '',
         resume: null,
         coverLetter: null,
-        tranScript: null,
+        transcript: null,
     });
     const handleChange = (e) => {
         const { id, value } = e.target;
@@ -47,7 +47,7 @@ export const appForm = (props) => {
             [id]: file,
         }));
     };
-    const handleSubmitClick = (e) => {
+    const handleSubmitClick = async (e) => {
         e.preventDefault();
         const payload = {
             experience: state.experience,
@@ -58,16 +58,18 @@ export const appForm = (props) => {
             coverLetterId: null
         }
         if (state.resume) {
-            applicationStore.uploadFile(state.resume, 'resume');
+            await applicationStore.uploadFile(state.resume, 'resume');
             payload['resumeId'] = applicationStore.resumeId;
         }
         if (state.coverLetter) {
-            payload['coverLetterId'] = applicationStore.uploadFile(state.coverLetter, 'coverLetter');
+            await applicationStore.uploadFile(state.coverLetter, 'coverLetter');
+            payload['coverLetterId'] = applicationStore.coverLetterId;
         }
-        if (state.tranScript) {
-            payload['transcriptId'] = applicationStore.uploadFile(state.tranScript, 'transcript');
+        if (state.transcript) {
+            await applicationStore.uploadFile(state.transcript, 'transcript');
+            payload['transcriptId'] = applicationStore.transcriptId;
         }
-        applicationStore.apply(payload);
+        await applicationStore.apply(payload);
         setModalShow(applicationStore.show);
     };
 
@@ -175,7 +177,7 @@ export const appForm = (props) => {
                             <Form.Group>
                                 <Form.File
                                     className="w-75  mb-3"
-                                    label='Resume'
+                                    label='Resume (Optional)'
                                     id='resume'
                                     onChange={handleFileChange} />
                             </Form.Group>
