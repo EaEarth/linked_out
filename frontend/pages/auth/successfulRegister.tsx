@@ -25,7 +25,7 @@ export const SuccessfulRegister = () => {
           <button
             type="button"
             className="my-2 mx-auto btn btn-primary"
-            onClick={() => router.push('/')}>
+            onClick={() => router.push('/auth/login')}>
             Welcome to LinkedOut
           </button>
         </Col>

@@ -33,7 +33,7 @@ export const JobDetails = (props) => {
 
             <h4>Wage:</h4>
             <p>
-              {jobDetails.lowerBoundSalary} - {jobDetails.upperBoundSalary}
+              {jobDetails.lowerBoundSalary} - {jobDetails.upperBoundSalary} Baht/month
             </p>
 
             <h4>Description:</h4>
@@ -49,19 +49,19 @@ export const JobDetails = (props) => {
         </Row>
         <Row className="">
           <Col md={{ span: 5, offset: 1 }} className='d-flex justify-content-center'>
-            <Link href='/test'>
+            <Link href={`/apply/${jobDetails.id}`}>
               <button type="button" className="my-2 btn btn-primary">Apply</button>
             </Link>
           </Col>
         </Row>
       </Container>
 
-    </DefaultLayout>
+    </DefaultLayout >
   );
 };
 
 export async function getServerSideProps(context) {
-  const details = await axios.get(`http://localhost:8000/api/job/index/${context.params.id}`);
+  const details = await axios.get(`/job/index/${context.params.id}`);
   return {
     props: {
       jobDetails: details.data

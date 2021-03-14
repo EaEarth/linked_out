@@ -14,7 +14,7 @@ export const lists: React.FC<any> = (props) => {
   const router = useRouter();
   // Data
   //const [tags] = useState(props.tags || []);
-  const [jobs] = useState(props.jobs || []);
+  const [jobs, setJobs] = useState(props.jobs || []);
   // Pagination state
   const [pageLen, setPageLen] = useState(1);
   const page = (Number.parseInt(router.query.page as string) || 1) - 1;
@@ -25,6 +25,9 @@ export const lists: React.FC<any> = (props) => {
     if (pageNo >= 0 && pageNo <= pageLen)
       router.push(`/jobs/list?page=${pageNo}`, undefined, { shallow: true });
   };
+  useEffect(() => {
+    setJobs(props.jobs);
+  }, [jobs]);
   // Update page length
   useEffect(() => {
     setPageLen(Math.ceil(jobs.length / perPage));

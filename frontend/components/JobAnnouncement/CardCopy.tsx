@@ -1,10 +1,11 @@
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import JobAnnouncement from '../../models/job/JobAnnouncement';
 import style from './index.module.scss';
 import dayjs from 'dayjs';
+import axios, { AxiosError } from 'axios';
 
 export type JobAnnouncementCardProps = Partial<JobAnnouncement>;
 
@@ -12,6 +13,16 @@ export const JobAnnouncementCard: React.FC<JobAnnouncementCardProps> = (
   props
 ) => {
   const router = useRouter();
+  const handleDelete = async () => {
+    await axios.delete(`/job/${props.id}`).then((res) => {
+      if (res.status == 404) console.log(res.statusText);
+    })
+      .catch((err) => {
+        console.log(err);
+      })
+    router.reload();
+  }
+
   return (
     <Card className={`mb-3 ${style['card']}`}>
       <Row noGutters className="align-items-center">
@@ -57,7 +68,7 @@ export const JobAnnouncementCard: React.FC<JobAnnouncementCardProps> = (
               }}>
               Edit
             </button>
-            <button type="button" className="my-2 btn btn-primary">
+            <button type="button" className="my-2 btn btn-primary" onClick={handleDelete}>
               Delete
             </button>
           </Col>
