@@ -27,36 +27,36 @@ export class JobController {
   constructor(private readonly service: JobService) {}
 
   @Get('index')
-  indexGet(): Promise<JobAnnouncement[]> {
+  async indexGet(): Promise<JobAnnouncement[]> {
     return this.service.index();
   }
 
   @Get('indexAll')
-  indexGetAll(): Promise<JobAnnouncement[]> {
+  async indexGetAll(): Promise<JobAnnouncement[]> {
     return this.service.indexAll();
   }
 
   @Get('owner')
   @UseGuards(JwtAuthGuard)
-  indexFromOwner(@Request() req): Promise<JobAnnouncement[]> {
+  async indexFromOwner(@Request() req): Promise<JobAnnouncement[]> {
     return this.service.findFromOwner(req.user.id);
   }
 
   @Get('tag/index')
-  indexTag(): Promise<Tag[]> {
+  async indexTag(): Promise<Tag[]> {
     return this.service.indexTag();
   }
 
   @Get('search')
   @UsePipes(new ValidationPipe({ whitelist: true }))
-  searchGet(@Body() dto: searchAnnouncement): Promise<JobAnnouncement[]> {
+  async searchGet(@Body() dto: searchAnnouncement): Promise<JobAnnouncement[]> {
     return this.service.search(dto);
   }
 
   @Post()
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe({ whitelist: true }))
-  create(
+  async create(
     @Request() req,
     @Body() dto: createAnnouncement,
   ): Promise<JobAnnouncement> {
@@ -66,7 +66,7 @@ export class JobController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe({ whitelist: true }))
-  update(
+  async update(
     @Request() req,
     @Param('id', new ParseIntPipe()) id: number,
     @Body() dto: updateAnnouncement,
@@ -80,7 +80,7 @@ export class JobController {
   }
 
   @Get('index/:id')
-  findById(
+  async findById(
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<JobAnnouncement> {
     return this.service.findById(id);
@@ -88,16 +88,16 @@ export class JobController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  delete(
+  async delete(
     @Request() req,
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<JobAnnouncement> {
-    return this.service.delete(req.user, id);
+    return this.service.softDelete(req.user, id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('tag/:name')
-  createTag(@Param('name') name: string): Promise<Tag> {
+  async createTag(@Param('name') name: string): Promise<Tag> {
     return this.service.createTag(name);
   }
 }

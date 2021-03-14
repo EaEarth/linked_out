@@ -78,6 +78,10 @@ export class JobService {
         return this.repo.findOne(id, { relations: ["picture", "tags"] });
     }
 
+    findAnnouncementById(id: number): Promise<JobAnnouncement | undefined> {
+        return this.repo.findOne(id);
+    }
+
     findFromOwner(userId: number): Promise<JobAnnouncement[]> {
         return this.repo.createQueryBuilder("jobAnnouncement")
             .leftJoinAndSelect("jobAnnouncement.picture", "picture")
@@ -97,7 +101,7 @@ export class JobService {
         var tagEntity;
 
         const picture = await this.filesService.findById(pictureId);
-        if (picture == undefined) throw new NotFoundException();
+        if (picture == undefined) throw new NotFoundException("Picture not found");
         jobAnnouncement.picture = picture
 
         // create relation with tag
@@ -147,7 +151,7 @@ export class JobService {
         }
         var announcement, repoAnnouncement
         await this.repo.findOne(id, { relations: ["owner"] }).then(async (entity) => {
-            if (entity == undefined) throw new NotFoundException();
+            if (entity == undefined) throw new NotFoundException("Job announcement not found");
             if (!ability.can(Action.Update, entity) && !(owner.id == entity.owner.id)) throw new UnauthorizedException();
             if (tag !== undefined) entity.tags = tagArr;
             if (pictureId !== undefined) {
@@ -164,10 +168,20 @@ export class JobService {
     async delete(owner: User, id: number): Promise<JobAnnouncement> {
         const ability = this.caslAbilityFactory.createForUser(owner);
         const jobAnnouncement = await this.repo.findOne(id, { relations: ["owner"] });
-        if (jobAnnouncement == undefined) throw new NotFoundException();
+        if (jobAnnouncement == undefined) throw new NotFoundException("Job announcement not found");
         if (!ability.can(Action.Update, jobAnnouncement) && !(owner.id == jobAnnouncement.owner.id)) throw new UnauthorizedException();
         await this.repo.remove(jobAnnouncement);
         return jobAnnouncement;
+    }
+
+    async softDelete(owner: User, id: number): Promise<JobAnnouncement> {
+        const ability = this.caslAbilityFactory.createForUser(owner);
+        const jobAnnouncement = await this.repo.findOne(id, { relations: ["owner"] });
+        if (jobAnnouncement == undefined) throw new NotFoundException("Job announcement not found");
+        if (!ability.can(Action.Update, jobAnnouncement) && !(owner.id == jobAnnouncement.owner.id)) throw new UnauthorizedException();
+        const deleteTime = {deletedAt: new Date()}
+        const deletedAnnouncement = {...jobAnnouncement, ...deleteTime};
+        return this.repo.save(deletedAnnouncement);
     }
 
     private prepareSearch(dto: searchAnnouncement) {

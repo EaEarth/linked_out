@@ -26,7 +26,11 @@ export class UsersService {
         return this.repo.findOne(id,{relations:["avatarFile"]});
     }
 
-    findByUsername(username: string): Promise<User | undefined> {
+    async findUserById(id: number): Promise<User | undefined> {
+        return this.repo.findOne(id);
+    }
+
+    async findByUsername(username: string): Promise<User | undefined> {
         return this.repo.findOne({username},{relations:["avatarFile"]});
     }
 
