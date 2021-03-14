@@ -126,7 +126,7 @@ Additional For Admin User (Edit other user)
 
 ---
 
-## `GET` auth/users/profile
+## `GET` /users/profile
 
 ---
 

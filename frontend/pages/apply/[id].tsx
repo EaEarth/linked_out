@@ -8,20 +8,25 @@ import axios from 'axios';
 import Link from 'next/link';
 import { ApplyModal } from '../../components/JobApply/modal';
 import { useRouter } from 'next/router'
+import dayjs from 'dayjs';
+import { observer } from 'mobx-react-lite';
+import { useRootStore } from '../../stores/stores';
 
 export const appForm = (props) => {
     const router = useRouter();
+    const applicationStore = useRootStore().applicationStore;
     const [modalShow, setModalShow] = useState(false);
     const [jobDetails] = useState(props.jobDetails);
+    const [profile] = useState(props.profile);
     const [state, setState] = useState({
-        firstName: 'First Name',
-        lastName: 'Last Name',
-        address: 'Address',
-        age: 'Age',
-        phone: 'Phone Number',
-        email: 'Email',
-        experience: 'Experience',
-        education: 'Education',
+        firstName: profile.firstname,
+        lastName: profile.lastname,
+        address: profile.address,
+        age: dayjs().diff(dayjs(profile.birthDate), 'year'),
+        phone: profile.telNumber,
+        email: profile.email,
+        experience: '',
+        education: '',
         resume: null,
         coverLetter: null,
         tranScript: null,
@@ -41,6 +46,29 @@ export const appForm = (props) => {
             ...prevState,
             [id]: file,
         }));
+    };
+    const handleSubmitClick = (e) => {
+        e.preventDefault();
+        const payload = {
+            experience: state.experience,
+            education: state.education,
+            jobAnnouncementId: jobDetails.id,
+            resumeId: null,
+            transcriptId: null,
+            coverLetterId: null
+        }
+        if (state.resume) {
+            applicationStore.uploadFile(state.resume, 'resume');
+            payload['resumeId'] = applicationStore.resumeId;
+        }
+        if (state.coverLetter) {
+            payload['coverLetterId'] = applicationStore.uploadFile(state.coverLetter, 'coverLetter');
+        }
+        if (state.tranScript) {
+            payload['transcriptId'] = applicationStore.uploadFile(state.tranScript, 'transcript');
+        }
+        applicationStore.apply(payload);
+        setModalShow(applicationStore.show);
     };
 
 
@@ -69,9 +97,10 @@ export const appForm = (props) => {
                                 <FormControl
                                     type="text"
                                     id="firstName"
-                                    placeholder="First Name"
+                                    placeholder={state.firstName}
                                     value={state.firstName}
-                                    onChange={handleChange} />
+                                    onChange={handleChange}
+                                    disabled />
                             </Form.Group>
 
                             <Form.Group>
@@ -81,7 +110,8 @@ export const appForm = (props) => {
                                     id="lastName"
                                     placeholder="Last Name"
                                     value={state.lastName}
-                                    onChange={handleChange} />
+                                    onChange={handleChange}
+                                    disabled />
                             </Form.Group>
 
                             <Form.Group>
@@ -91,7 +121,8 @@ export const appForm = (props) => {
                                     id="address"
                                     placeholder="Address"
                                     value={state.address}
-                                    onChange={handleChange} />
+                                    onChange={handleChange}
+                                    disabled />
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Age</Form.Label>
@@ -100,7 +131,8 @@ export const appForm = (props) => {
                                     id='age'
                                     placeholder="Age"
                                     value={state.age}
-                                    onChange={handleChange} />
+                                    onChange={handleChange}
+                                    disabled />
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Phone Number</Form.Label>
@@ -109,7 +141,8 @@ export const appForm = (props) => {
                                     id='phone'
                                     placeholder="Phone Number"
                                     value={state.phone}
-                                    onChange={handleChange} />
+                                    onChange={handleChange}
+                                    disabled />
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Email</Form.Label>
@@ -118,7 +151,8 @@ export const appForm = (props) => {
                                     id='email'
                                     placeholder="Email"
                                     value={state.email}
-                                    onChange={handleChange} />
+                                    onChange={handleChange}
+                                    disabled />
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Experience Summary (Optional)</Form.Label>
@@ -164,7 +198,7 @@ export const appForm = (props) => {
                 </Row>
                 <Row className="">
                     <Col md={6}>
-                        <button type="button" className="float-right my-2 btn btn-success" onClick={() => setModalShow(true)}>Summit</button>
+                        <button type="button" className="float-right my-2 btn btn-success" onClick={handleSubmitClick}>Summit</button>
                         <ApplyModal show={modalShow} onHide={() => setModalShow(false)} />
                     </Col >
                     <Col md={6}>
@@ -179,10 +213,17 @@ export const appForm = (props) => {
 
 
 export async function getServerSideProps(context) {
+    const cookie = context.req.cookies;
     const { data } = await axios.get(`/job/index/${context.params.id}`);
+    const profile = await axios.get(`/users/profile`, {
+        headers: {
+            Cookie: `jwt=${cookie['jwt']}`,
+        },
+    });
     return {
         props: {
-            jobDetails: data
+            jobDetails: data,
+            profile: profile.data
         }
     }
 }
