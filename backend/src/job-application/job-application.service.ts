@@ -67,6 +67,7 @@ export class JobApplicationService {
         .leftJoinAndSelect("jobApplication.jobAnnouncement", "announcement")
         .leftJoinAndSelect("announcement.picture", "picture")
         .leftJoinAndSelect("jobApplication.applicant", "applicant")
+        .leftJoinAndSelect("applicant.avatarFile", "avatar")
     }
 
     async createJobApplication(applicant: User, dto: createApplication): Promise<JobApplication>{
