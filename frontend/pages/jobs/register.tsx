@@ -79,11 +79,11 @@ export const RegisterJobAnnouncement = (props) => {
       temp_errors.address = "The address is required"
       checkError = true;
     }
-    if (lowerBoundSalary <= 0) {
+    if (lowerBoundSalary < 0) {
       temp_errors.lowerBoundSalary = "The lowerbound salary is required"
       checkError = true;
     }
-    if (upperBoundSalary <= 0) {
+    if (upperBoundSalary < 0) {
       temp_errors.upperBoundSalary = "The upperbound salary is required"
       checkError = true;
     }

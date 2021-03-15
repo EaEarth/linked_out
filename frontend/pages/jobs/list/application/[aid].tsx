@@ -1,18 +1,19 @@
 import Head from 'next/head';
 import React, { useState, useEffect } from 'react';
-import { Col, Container, Jumbotron, Form, Row, FormControl } from 'react-bootstrap';
-import DefaultLayout from '../../../layouts/Default';
+import { Col, Container, Jumbotron, Form, Row, FormControl, FormLabel } from 'react-bootstrap';
+import DefaultLayout from '../../../../layouts/Default';
 import Image from 'react-bootstrap/Image';
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router'
-import ApplicationForm from '../../../models/ApplicationForm/ApplicationForm';
+import ApplicationForm from '../../../../models/ApplicationForm/ApplicationForm';
 import dayjs from 'dayjs';
 import { GetServerSidePropsContext } from 'next';
 
 export const Response = (props) => {
     const router = useRouter();
     const [application] = useState(props.application);
+    const [feedback, setFeedback] = useState('');
     const statusHandler = (status) => {
         if (status == 1) return 'waiting';
         else if (status == 2) return 'accepted';
@@ -22,6 +23,35 @@ export const Response = (props) => {
         if (status == 1) return 'secondary';
         else if (status == 2) return 'success';
         else return 'danger';
+    }
+    const handleAcceptClick = (e) => {
+        e.preventDefault();
+        handleSubmitClick(2);
+    }
+    const handleRejectClick = (e) => {
+        e.preventDefault();
+        handleSubmitClick(3);
+    }
+    const handleSubmitClick = async (status) => {
+        const payload = {
+            feedback: feedback,
+            status: status,
+            jobAnnouncementId: application.jobAnnouncement.id,
+            resumeId: application.resume.id,
+            coverLetterId: application.coverLetter.id,
+            transcriptId: application.transcript.id,
+        };
+        try {
+            await axios.patch(`/job-application/${application.id}`, payload)
+                .then((response) => {
+                    if (response.status === 200) {
+                        router.push(`/jobs/list/applicant/${application.jobAnnouncement.id}`);
+                    }
+                })
+
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     return (
@@ -91,7 +121,24 @@ export const Response = (props) => {
                         </Row>
 
                         <h2>Feedback</h2>
-                        <p>{application.feedback == '' ? '-' : application.feedback}</p>
+                        <Form>
+                            <Form.Group>
+                                <FormControl
+                                    as="textarea" rows={3}
+                                    id='feedback'
+                                    placeholder="feedback"
+                                    value={feedback}
+                                    onChange={(e) => setFeedback(e.target.value)} />
+                            </Form.Group>
+                        </Form>
+                    </Col>
+                </Row>
+                <Row className="">
+                    <Col md={6}>
+                        <button type="button" className="float-right my-2 btn btn-success" onClick={handleAcceptClick} disabled>Accept</button>
+                    </Col >
+                    <Col md={6}>
+                        <button type="button" className="float-left my-2 btn btn-danger" onClick={handleRejectClick} disabled>Reject</button>
                     </Col>
                 </Row>
             </Container>
@@ -102,7 +149,7 @@ export const Response = (props) => {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const cookie = context.req.cookies;
-    const { data } = await axios.get<ApplicationForm[]>(`/job-application/index/${context.params.id}`, {
+    const { data } = await axios.get<ApplicationForm[]>(`/job-application/index/${context.params.aid}`, {
         headers: {
             Cookie: `jwt=${cookie['jwt']}`,
         },

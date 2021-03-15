@@ -56,7 +56,7 @@ export const appForm = (props) => {
             resumeId: null,
             transcriptId: null,
             coverLetterId: null
-        }
+        };
         if (state.resume) {
             await applicationStore.uploadFile(state.resume, 'resume');
             payload['resumeId'] = applicationStore.resumeId;
@@ -200,7 +200,7 @@ export const appForm = (props) => {
                 </Row>
                 <Row className="">
                     <Col md={6}>
-                        <button type="button" className="float-right my-2 btn btn-success" onClick={handleSubmitClick}>Summit</button>
+                        <button type="button" className="float-right my-2 btn btn-success" onClick={handleSubmitClick}>Submit</button>
                         <ApplyModal show={modalShow} onHide={() => setModalShow(false)} />
                     </Col >
                     <Col md={6}>
