@@ -8,6 +8,7 @@ import {
 import jwtDecode from 'jwt-decode';
 import RootStore from './RootStore';
 import axios, { AxiosError } from 'axios';
+import dayjs from 'dayjs';
 
 interface JWTToken {
   username: string;
@@ -33,8 +34,13 @@ export class AuthStore {
 
   @action
   init(): void {
-    if (typeof window !== 'undefined')
+    if (typeof window !== 'undefined') {
       this.accessToken = window.localStorage.getItem('accessToken');
+      // if the token is already expired
+      if (this.decodedToken.exp <= dayjs().unix()) {
+        this.logout();
+      }
+    }
   }
 
   @action
