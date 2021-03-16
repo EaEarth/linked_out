@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router'
 import ApplicationForm from '../../../models/ApplicationForm/ApplicationForm';
 import dayjs from 'dayjs';
+import style from './response.module.scss'
 import { GetServerSidePropsContext } from 'next';
 
 export const Response = (props) => {
@@ -30,7 +31,7 @@ export const Response = (props) => {
                 <title>Response - {application.jobAnnouncement.company} - {application.jobAnnouncement.title}</title>
             </Head>
 
-            <Container className="my-4">
+            <Container className=''>
                 <Row>
                     <Col className='text-center'>
                         <h1>Application Response</h1>
@@ -41,34 +42,36 @@ export const Response = (props) => {
                     <Col md={{ span: 5, offset: 1 }} className='mt-5'>
                         <Image src={application.applicant.avatarFile?.path || '/images/user/User.svg'} className='d-block w-75 mx-auto' rounded />
                     </Col>
-                    <Col md={{ span: 5 }} className='mx-auto mt-5'>
-                        <h2>Information</h2>
+                    <Col md={{ span: 5 }} className={`shadow-sm mx-auto mt-5 my-4 ${style['information']}`}>
+                        <h2 className="mt-2">Information</h2>
                         <Row className='mx-auto'>
-                            <p className="font-weight-bold my-2 mr-2">First Name :</p>
-                            <p className="m-2">{application.applicant.firstname}</p>
-                            <p className="font-weight-bold m-2">last Name :</p>
-                            <p className="ml-2 my-2">{application.applicant.lastname}</p>
+                            <Col md={{ span: 3 }} className="font-weight-bold pl-0">First Name</Col>
+                            <Col>{application.applicant.firstname}</Col>
                         </Row>
                         <Row className='mx-auto'>
-                            <p className="font-weight-bold my-2 mr-2">Address :</p>
-                            <p className="ml-2 my-2">{application.applicant.address}</p>
+                            <Col md={{ span: 3 }} className="font-weight-bold pl-0">Last Name</Col>
+                            <Col>{application.applicant.lastname}</Col>
                         </Row>
                         <Row className='mx-auto'>
-                            <p className="font-weight-bold my-2 mr-2">Age :</p>
-                            <p className="ml-2 my-2">{dayjs().diff(dayjs(application.applicant.birthDate), 'year')}</p>
+                            <Col md={{ span: 3 }} className="font-weight-bold pl-0">Address</Col>
+                            <Col>{application.applicant.address}</Col>
                         </Row>
                         <Row className='mx-auto'>
-                            <p className="font-weight-bold my-2 mr-2">TelNumber :</p>
-                            <p className="ml-2 my-2">{application.applicant.telNumber}</p>
+                            <Col md={{ span: 3 }} className="font-weight-bold pl-0">Age</Col>
+                            <Col>{dayjs().diff(dayjs(application.applicant.birthDate), 'year')}</Col>
                         </Row>
                         <Row className='mx-auto'>
-                            <p className="font-weight-bold my-2 mr-2">Email :</p>
-                            <p className="ml-2 my-2">{application.applicant.email}</p>
+                            <Col md={{ span: 3 }} className="font-weight-bold pl-0">TelNumber</Col>
+                            <Col>{application.applicant.telNumber}</Col>
+                        </Row>
+                        <Row className='mx-auto'>
+                            <Col md={{ span: 3 }} className="font-weight-bold pl-0">Email</Col>
+                            <Col>{application.applicant.email}</Col>
                         </Row>
                         <p className="font-weight-bold my-2">Experience Summary</p>
                         <p className="my-2">{application.experience == "" ? '-' : application.experience}</p>
                         <p className="font-weight-bold my-2">Education Summary</p>
-                        <p className=" my-2">{application.education == "" ? '-' : application.education}</p>
+                        <p className="">{application.education == "" ? '-' : application.education}</p>
                         {(application.resume) && (<Row className='d-block mx-auto'> <p className="font-weight-bold my-2">Resume</p>
                             <Link href={application.resume.path}>
                                 <a>{application.resume.title}</a>
@@ -89,9 +92,8 @@ export const Response = (props) => {
                             <h4 className="my-2 mr-2">status: </h4>
                             <h4 className={'my-2 text-' + statusColorHandler(application.status)}>{statusHandler(application.status)}</h4>
                         </Row>
-
                         <h2>Feedback</h2>
-                        <p>{application.feedback == '' ? '-' : application.feedback}</p>
+                        <p className="mb-2">{application.feedback == '' ? '-' : application.feedback}</p>
                     </Col>
                 </Row>
             </Container>

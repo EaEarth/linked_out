@@ -17,6 +17,11 @@ export const JobApplyCard: React.FC<ApplicationFormCardProps> = (
     else if (status == 2) return 'accepted';
     else return 'denied';
   }
+  const statusColorHandler = (status) => {
+    if (status == 1) return 'secondary';
+    else if (status == 2) return 'success';
+    else return 'danger';
+  }
   return (
     <a
       href={props.id ? `/apply/response/${props.id}` : undefined}
@@ -54,7 +59,10 @@ export const JobApplyCard: React.FC<ApplicationFormCardProps> = (
                 </Row>
               </h6>
               <p className="card-text m-0 text-primary">{props.jobAnnouncement.title}</p>
-              <p className="card-text m-0">status: {statusHandler(props.status)}</p>
+              <Row className="d-flex m-0">
+                <p className="card-text mr-1">status:</p>
+                <p className={`card-text m-0 text-${statusColorHandler(props.status)}`}>{statusHandler(props.status)}</p>
+              </Row>
               <p className="card-text m-0 d-none d-md-block mt-md-4">
                 <small className="text-muted">
                   {dayjs(props.createdAt).fromNow()}

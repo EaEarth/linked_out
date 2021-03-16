@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import React, { useState, useEffect } from 'react';
-import { Col, Container, Jumbotron, Form, Row, FormControl, FormLabel } from 'react-bootstrap';
+import { Col, Container, Jumbotron, Form, Row, FormControl, FormLabel, ThemeProvider } from 'react-bootstrap';
 import DefaultLayout from '../../../../layouts/Default';
 import Image from 'react-bootstrap/Image';
 import axios from 'axios';
@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router'
 import ApplicationForm from '../../../../models/ApplicationForm/ApplicationForm';
 import dayjs from 'dayjs';
+import style from './application.module.scss'
 import { GetServerSidePropsContext } from 'next';
 
 export const Response = (props) => {
@@ -19,6 +20,14 @@ export const Response = (props) => {
         else if (status == 2) return 'accepted';
         else return 'denied';
     }
+    // useEffect(() => {
+    //     if (application.status > 1) {
+    //         const acceptButton = document.getElementById('acceptButton');
+    //         const rejectButton = document.getElementById('rejectButton');
+    //         acceptButton.setAttribute('disabled', 'disabled');
+    //         rejectButton.setAttribute('disabled', 'disabled');
+    //     }
+    // }, [application.status]);
     const statusColorHandler = (status) => {
         if (status == 1) return 'secondary';
         else if (status == 2) return 'success';
@@ -37,9 +46,9 @@ export const Response = (props) => {
             feedback: feedback,
             status: status,
             jobAnnouncementId: application.jobAnnouncement.id,
-            resumeId: application.resume.id,
-            coverLetterId: application.coverLetter.id,
-            transcriptId: application.transcript.id,
+            resumeId: (application.resume) ? application.resume.id : null,
+            coverLetterId: (application.coverLetter) ? application.coverLetter.id : null,
+            transcriptId: (application.transcript) ? application.transcript.id : null,
         };
         try {
             await axios.patch(`/job-application/${application.id}`, payload)
@@ -63,7 +72,7 @@ export const Response = (props) => {
             <Container className="my-4">
                 <Row>
                     <Col className='text-center'>
-                        <h1>Application Response</h1>
+                        <h1>Application Detail</h1>
                         <h3 className='mt-3'>{application.jobAnnouncement.company} - {application.jobAnnouncement.title}</h3>
                     </Col>
                 </Row>
@@ -71,34 +80,36 @@ export const Response = (props) => {
                     <Col md={{ span: 5, offset: 1 }} className='mt-5'>
                         <Image src={application.applicant.avatarFile?.path || '/images/user/User.svg'} className='d-block w-75 mx-auto' rounded />
                     </Col>
-                    <Col md={{ span: 5 }} className='mx-auto mt-5'>
+                    <Col md={{ span: 5 }} className={`mx-auto mt-5 my-4 ${style['information']}`}>
                         <h2>Information</h2>
                         <Row className='mx-auto'>
-                            <p className="font-weight-bold my-2 mr-2">First Name :</p>
-                            <p className="m-2">{application.applicant.firstname}</p>
-                            <p className="font-weight-bold m-2">last Name :</p>
-                            <p className="ml-2 my-2">{application.applicant.lastname}</p>
+                            <Col md={{ span: 3 }} className="font-weight-bold pl-0">First Name</Col>
+                            <Col>{application.applicant.firstname}</Col>
                         </Row>
                         <Row className='mx-auto'>
-                            <p className="font-weight-bold my-2 mr-2">Address :</p>
-                            <p className="ml-2 my-2">{application.applicant.address}</p>
+                            <Col md={{ span: 3 }} className="font-weight-bold pl-0">Last Name</Col>
+                            <Col>{application.applicant.lastname}</Col>
                         </Row>
                         <Row className='mx-auto'>
-                            <p className="font-weight-bold my-2 mr-2">Age :</p>
-                            <p className="ml-2 my-2">{dayjs().diff(dayjs(application.applicant.birthDate), 'year')}</p>
+                            <Col md={{ span: 3 }} className="font-weight-bold pl-0">Address</Col>
+                            <Col>{application.applicant.address}</Col>
                         </Row>
                         <Row className='mx-auto'>
-                            <p className="font-weight-bold my-2 mr-2">TelNumber :</p>
-                            <p className="ml-2 my-2">{application.applicant.telNumber}</p>
+                            <Col md={{ span: 3 }} className="font-weight-bold pl-0">Age</Col>
+                            <Col>{dayjs().diff(dayjs(application.applicant.birthDate), 'year')}</Col>
                         </Row>
                         <Row className='mx-auto'>
-                            <p className="font-weight-bold my-2 mr-2">Email :</p>
-                            <p className="ml-2 my-2">{application.applicant.email}</p>
+                            <Col md={{ span: 3 }} className="font-weight-bold pl-0">TelNumber</Col>
+                            <Col>{application.applicant.telNumber}</Col>
+                        </Row>
+                        <Row className='mx-auto'>
+                            <Col md={{ span: 3 }} className="font-weight-bold pl-0">Email</Col>
+                            <Col>{application.applicant.email}</Col>
                         </Row>
                         <p className="font-weight-bold my-2">Experience Summary</p>
                         <p className="my-2">{application.experience == "" ? '-' : application.experience}</p>
                         <p className="font-weight-bold my-2">Education Summary</p>
-                        <p className=" my-2">{application.education == "" ? '-' : application.education}</p>
+                        <p className="">{application.education == "" ? '-' : application.education}</p>
                         {(application.resume) && (<Row className='d-block mx-auto'> <p className="font-weight-bold my-2">Resume</p>
                             <Link href={application.resume.path}>
                                 <a>{application.resume.title}</a>
@@ -121,26 +132,29 @@ export const Response = (props) => {
                         </Row>
 
                         <h2>Feedback</h2>
-                        <Form>
-                            <Form.Group>
-                                <FormControl
-                                    as="textarea" rows={3}
-                                    id='feedback'
-                                    placeholder="feedback"
-                                    value={feedback}
-                                    onChange={(e) => setFeedback(e.target.value)} />
-                            </Form.Group>
-                        </Form>
+                        {((application.status > 1) ? (<p className="">{application.feedback == "" ? '-' : application.feedback}</p>) :
+                            <Form>
+                                <Form.Group>
+                                    <FormControl
+                                        as="textarea" rows={3}
+                                        id='feedback'
+                                        placeholder="feedback"
+                                        value={feedback}
+                                        onChange={(e) => setFeedback(e.target.value)} />
+                                </Form.Group>
+                            </Form>
+                        )}
                     </Col>
                 </Row>
-                <Row className="">
-                    <Col md={6}>
-                        <button type="button" className="float-right my-2 btn btn-success" onClick={handleAcceptClick} disabled>Accept</button>
-                    </Col >
-                    <Col md={6}>
-                        <button type="button" className="float-left my-2 btn btn-danger" onClick={handleRejectClick} disabled>Reject</button>
-                    </Col>
-                </Row>
+                {(application.status > 1) ? null :
+                    (<Row className="">
+                        <Col md={6}>
+                            <button id="acceptButton" type="button" className="float-right my-2 btn btn-success" onClick={handleAcceptClick}>Accept</button>
+                        </Col >
+                        <Col md={6}>
+                            <button id="rejectButton" type="button" className="float-left my-2 btn btn-danger" onClick={handleRejectClick}>Reject</button>
+                        </Col>
+                    </Row>)}
             </Container>
         </DefaultLayout >
     );
