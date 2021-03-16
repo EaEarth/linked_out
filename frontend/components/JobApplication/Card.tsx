@@ -3,42 +3,37 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import ApplicationForm from '../../models/ApplicationForm/ApplicationForm';
-import style from './index.module.scss';
+import style from './jobApplication.module.scss';
 import dayjs from 'dayjs';
 
 export type ApplicationFormCardProps = Partial<ApplicationForm>;
 
-export const JobApplyCard: React.FC<ApplicationFormCardProps> = (
+export const JobApplicationCard: React.FC<ApplicationFormCardProps> = (
   props
 ) => {
   const router = useRouter();
   const statusHandler = (status) => {
-    if (status == 1) return 'waiting';
-    else if (status == 2) return 'accepted';
-    else return 'denied';
-  }
-  const statusColorHandler = (status) => {
-    if (status == 1) return 'secondary';
-    else if (status == 2) return 'success';
-    else return 'danger';
+    if (status == 1) return style['card-normal'];
+    else if (status == 2) return style['card-green'];
+    else return style['card-red'];
   }
   return (
     <a
-      href={props.id ? `/apply/response/${props.id}` : undefined}
+      href={props.id ? `/jobs/list/detail/${props.id}` : undefined}
       className={style['custom-a']}
       onClick={(e) => e.preventDefault()}>
       <Card
-        className={`mb-3 ${style['card']}`}
+        className={`mb-3 ${style['card']} ${statusHandler(props.status)}`}
         onClick={() => {
-          if (props.id) router.push(`/apply/response/${props.id}`);
+          if (props.id) router.push(`/jobs/list/detail/${props.id}`);
         }}>
         <Row noGutters className="align-items-center">
           {/* Image */}
           <Col xs={3} md={5}>
             <Image
-              src={props.jobAnnouncement.picture?.path || '/images/company/default.png'}
-              width="500"
-              height="500"
+              src={props.applicant.avatarFile?.path || '/images/user/User.svg'}
+              width="400"
+              height="400"
               layout="responsive"
               className={`${style['image']}`}
             />
@@ -49,7 +44,7 @@ export const JobApplyCard: React.FC<ApplicationFormCardProps> = (
               <h6 className="card-title mb-0">
                 <Row>
                   <Col xs={8} md={12}>
-                    {props.jobAnnouncement.company}
+                    {props.applicant.firstname} {props.applicant.lastname}
                   </Col>
                   <Col xs={4} className={`${style['wrap-text']}`}>
                     <small className="text-muted d-md-none float-right">
@@ -58,11 +53,9 @@ export const JobApplyCard: React.FC<ApplicationFormCardProps> = (
                   </Col>
                 </Row>
               </h6>
-              <p className="card-text m-0 text-primary">{props.jobAnnouncement.title}</p>
-              <Row className="d-flex m-0">
-                <p className="card-text mr-1">status:</p>
-                <p className={`card-text m-0 text-${statusColorHandler(props.status)}`}>{statusHandler(props.status)}</p>
-              </Row>
+              <p className="card-text m-0">Age: {dayjs().diff(dayjs(props.applicant.birthDate), 'year')}</p>
+              <p className="card-text m-0">{props.applicant.address}</p>
+
               <p className="card-text m-0 d-none d-md-block mt-md-4">
                 <small className="text-muted">
                   {dayjs(props.createdAt).fromNow()}
@@ -76,4 +69,4 @@ export const JobApplyCard: React.FC<ApplicationFormCardProps> = (
   );
 };
 
-export default JobApplyCard;
+export default JobApplicationCard;

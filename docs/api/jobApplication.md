@@ -136,7 +136,13 @@ Get list of all job applications.
             "longtitude": "longtitude number",
             "telNumber": "tel number",
             "vertifyAt": "verify date or null",
-            "isAdmin": "true or false"
+            "isAdmin": "true or false",
+            "avatarFile": {
+              "id": "file id",
+              "title": "file title",
+              "type": "file type e.g. image/jpeg, text/plain",
+              "path": "file path"
+            }
         },
         "coverLetter": {
             "id": "file id",
@@ -157,7 +163,13 @@ Get list of all job applications.
             "amountRequired": "amount number",
             "createdAt": "2021-03-13T19:18:57.912Z",
             "updatedAt": "2021-03-13T19:18:57.000Z",
-            "deletedAt": "date or null"
+            "deletedAt": "date or null",
+            "picture": {
+              "id": "file id",
+              "title": "file title",
+              "type": "file type e.g. image/jpeg, text/plain",
+              "path": "file path"
+            }
         },
         "transcript": {
             "id": "file id",
@@ -228,7 +240,13 @@ Path Variable
     "longtitude": "longtitude number",
     "telNumber": "tel number",
     "vertifyAt": "verify date or null",
-    "isAdmin": "true or false"
+    "isAdmin": "true or false",
+    "avatarFile": {
+      "id": "file id",
+      "title": "file title",
+      "type": "file type e.g. image/jpeg, text/plain",
+      "path": "file path"
+    }
   },
   "coverLetter": {
     "id": "file id",
@@ -249,7 +267,13 @@ Path Variable
     "amountRequired": "amount number",
     "createdAt": "2021-03-13T19:18:57.912Z",
     "updatedAt": "2021-03-13T19:18:57.000Z",
-    "deletedAt": "date or null"
+    "deletedAt": "date or null",
+    "picture": {
+      "id": "file id",
+      "title": "file title",
+      "type": "file type e.g. image/jpeg, text/plain",
+      "path": "file path"
+    }
   },
   "transcript": {
     "id": "file id",
@@ -310,7 +334,13 @@ Get list of all job applications which are sent by current login user
             "longtitude": "longtitude number",
             "telNumber": "tel number",
             "vertifyAt": "verify date or null",
-            "isAdmin": "true or false"
+            "isAdmin": "true or false",
+            "avatarFile": {
+              "id": "file id",
+              "title": "file title",
+              "type": "file type e.g. image/jpeg, text/plain",
+              "path": "file path"
+            }
         },
         "coverLetter": {
             "id": "file id",
@@ -331,7 +361,13 @@ Get list of all job applications which are sent by current login user
             "amountRequired": "amount number",
             "createdAt": "2021-03-13T19:18:57.912Z",
             "updatedAt": "2021-03-13T19:18:57.000Z",
-            "deletedAt": "date or null"
+            "deletedAt": "date or null",
+            "picture": {
+              "id": "file id",
+              "title": "file title",
+              "type": "file type e.g. image/jpeg, text/plain",
+              "path": "file path"
+            }
         },
         "transcript": {
             "id": "file id",
@@ -394,7 +430,13 @@ Get list of all job applications which are sent to current login user
             "longtitude": "longtitude number",
             "telNumber": "tel number",
             "vertifyAt": "verify date or null",
-            "isAdmin": "true or false"
+            "isAdmin": "true or false",
+            "avatarFile": {
+              "id": "file id",
+              "title": "file title",
+              "type": "file type e.g. image/jpeg, text/plain",
+              "path": "file path"
+            }
         },
         "coverLetter": {
             "id": "file id",
@@ -415,7 +457,13 @@ Get list of all job applications which are sent to current login user
             "amountRequired": "amount number",
             "createdAt": "2021-03-13T19:18:57.912Z",
             "updatedAt": "2021-03-13T19:18:57.000Z",
-            "deletedAt": "date or null"
+            "deletedAt": "date or null",
+            "picture": {
+              "id": "file id",
+              "title": "file title",
+              "type": "file type e.g. image/jpeg, text/plain",
+              "path": "file path"
+            }
         },
         "transcript": {
             "id": "file id",
@@ -487,7 +535,13 @@ Path Variable
             "longtitude": "longtitude number",
             "telNumber": "tel number",
             "vertifyAt": "verify date or null",
-            "isAdmin": "true or false"
+            "isAdmin": "true or false",
+            "avatarFile": {
+              "id": "file id",
+              "title": "file title",
+              "type": "file type e.g. image/jpeg, text/plain",
+              "path": "file path"
+            }
         },
         "coverLetter": {
             "id": "file id",
@@ -508,7 +562,13 @@ Path Variable
             "amountRequired": "amount number",
             "createdAt": "2021-03-13T19:18:57.912Z",
             "updatedAt": "2021-03-13T19:18:57.000Z",
-            "deletedAt": "date or null"
+            "deletedAt": "date or null",
+            "picture": {
+              "id": "file id",
+              "title": "file title",
+              "type": "file type e.g. image/jpeg, text/plain",
+              "path": "file path"
+            }
         },
         "transcript": {
             "id": "file id",

@@ -5,14 +5,12 @@
 
 @include media-breakpoint-down(sm) {
   .card{
-    border: none;
+    border: 1px solid $dark;
   }
   .card-details-column {
-    border-bottom: 1px solid $primary;
+    // border-bottom: 1px solid $primary;
   }
   .image {
-    border: 1px solid rgba($color: $secondary, $alpha: 0.25) !important;
-    border-radius: 0.25em;
   }
 }
 .image {
@@ -37,3 +35,16 @@
   color: inherit; /* blue colors for links too */
   text-decoration: inherit; /* no underline */
 }
+
+@include media-breakpoint-down(xl) {
+  .card-red{
+    background-color: rgba(#dc3545,0.2);
+  }
+  .card-green{
+    background-color: rgba(#28a745,0.2);
+  }
+  .card-normal{
+    background-color: white;
+  }
+}
+

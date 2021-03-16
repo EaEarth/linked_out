@@ -2,12 +2,11 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
-import JobApplyGrid from '../../components/JobApply/Grid';
-import JobPagination from '../../components/JobAnnouncement/Pagination';
-import TagList from '../../components/JobAnnouncement/TagList';
-import DefaultLayout from '../../layouts/Default';
+import JobApplicationGrid from '../../../../components/JobApplication/Grid';
+import JobPagination from '../../../../components/JobAnnouncement/Pagination';
+import DefaultLayout from '../../../../layouts/Default';
 import axios from 'axios';
-import ApplicationForm from '../../models/ApplicationForm/ApplicationForm';
+import ApplicationForm from '../../../../models/ApplicationForm/ApplicationForm';
 import { GetServerSidePropsContext } from 'next';
 
 
@@ -47,7 +46,7 @@ export const ApplicationList: React.FC<any> = (props) => {
                 <title>Apply List</title>
             </Head>
             <Container className="mt-4">
-                <JobApplyGrid
+                <JobApplicationGrid
                     applications={application.slice(page * perPage, (page + 1) * perPage)}
                 />
                 <JobPagination
@@ -63,7 +62,7 @@ export const ApplicationList: React.FC<any> = (props) => {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const cookie = context.req.cookies;
     const { data } = await axios.get<ApplicationForm[]>(
-        '/job-application/applicant',
+        '/job-application/announcement/' + context.params.jid,
         {
             headers: {
                 Cookie: `jwt=${cookie['jwt']}`,
