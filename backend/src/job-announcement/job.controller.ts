@@ -24,64 +24,80 @@ import { Tag } from 'src/entities/job/tag.entity';
 
 @Controller('job')
 export class JobController {
-  constructor(
-    private readonly service: JobService,
-  ) { }
+  constructor(private readonly service: JobService) {}
 
-    @Get('index')
-    indexGet(): Promise<JobAnnouncement[]> {
-      return this.service.index();
-    }
+  @Get('index')
+  async indexGet(): Promise<JobAnnouncement[]> {
+    return this.service.index();
+  }
 
-    @Get('indexAll')
-    indexGetAll(): Promise<JobAnnouncement[]> {
-      return this.service.indexAll();
-    }
+  @Get('indexAll')
+  async indexGetAll(): Promise<JobAnnouncement[]> {
+    return this.service.indexAll();
+  }
 
-    @Get('tag/index')
-    indexTag(): Promise<Tag[]> {
-      return this.service.indexTag();
-    }
-  
-    @Get('search')
-    @UsePipes(new ValidationPipe({whitelist:true}))
-    searchGet(@Body() dto: searchAnnouncement): Promise<JobAnnouncement[]> {
-      return this.service.search(dto);
-    }
+  @Get('owner')
+  @UseGuards(JwtAuthGuard)
+  async indexFromOwner(@Request() req): Promise<JobAnnouncement[]> {
+    return this.service.findFromOwner(req.user.id);
+  }
 
-    @Post()
-    @UseGuards(JwtAuthGuard)
-    @UsePipes(new ValidationPipe({whitelist:true}))
-    create(@Request() req, @Body() dto: createAnnouncement): Promise<JobAnnouncement> {
-      return this.service.createAnnouncement(req.user,dto);
-    }
-    
-    @Patch(':id')
-    @UseGuards(JwtAuthGuard)
-    @UsePipes(new ValidationPipe({whitelist:true}))
-    update(@Request() req, @Param('id', new ParseIntPipe()) id: number, @Body() dto: updateAnnouncement): Promise<JobAnnouncement> {
-      for (const [key, value] of Object.entries(dto)) {
-        if (value == null || value === '') {
-            delete dto[key];
-        }
+  @Get('tag/index')
+  async indexTag(): Promise<Tag[]> {
+    return this.service.indexTag();
+  }
+
+  @Get('search')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async searchGet(@Body() dto: searchAnnouncement): Promise<JobAnnouncement[]> {
+    return this.service.search(dto);
+  }
+
+  @Post()
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async create(
+    @Request() req,
+    @Body() dto: createAnnouncement,
+  ): Promise<JobAnnouncement> {
+    return this.service.createAnnouncement(req.user, dto);
+  }
+
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async update(
+    @Request() req,
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() dto: updateAnnouncement,
+  ): Promise<JobAnnouncement> {
+    for (const [key, value] of Object.entries(dto)) {
+      if (value == null || value === '') {
+        delete dto[key];
       }
-      return this.service.update(req.user, id, dto);
     }
+    return this.service.update(req.user, id, dto);
+  }
 
-    @Get('index/:id')
-    findById(@Param('id', new ParseIntPipe()) id: number): Promise<JobAnnouncement> {
-      return this.service.findById(id);
-    }
+  @Get('index/:id')
+  async findById(
+    @Param('id', new ParseIntPipe()) id: number,
+  ): Promise<JobAnnouncement> {
+    return this.service.findById(id);
+  }
 
-    @Delete(':id')
-    @UseGuards(JwtAuthGuard)
-    delete(@Request() req, @Param('id', new ParseIntPipe()) id: number): Promise<JobAnnouncement> {
-      return this.service.delete(req.user, id);
-    }
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  async delete(
+    @Request() req,
+    @Param('id', new ParseIntPipe()) id: number,
+  ): Promise<JobAnnouncement> {
+    return this.service.softDelete(req.user, id);
+  }
 
-    @UseGuards(JwtAuthGuard)
-    @Post('tag/:name')
-    createTag(@Param('name') name: string): Promise<Tag> {
-      return this.service.createTag(name);
-    }
+  @UseGuards(JwtAuthGuard)
+  @Post('tag/:name')
+  async createTag(@Param('name') name: string): Promise<Tag> {
+    return this.service.createTag(name);
+  }
 }

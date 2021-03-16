@@ -9,14 +9,15 @@ import styles from './modal.module.scss';
 export const BrowseModal = (props) => {
   const [search, setSearch] = useState('');
   const [jobTypes, setJobTypes] = useState([]);
-  const [province, setProvince] = useState("");
+  const [province, setProvince] = useState('');
   const [wage, setWage] = useState('');
   const [tags, setTags] = useState([]);
 
   const router = useRouter();
 
   useEffect(() => {
-    axios.get('http://localhost:8000/api/job/tag/index')
+    axios
+      .get('http://localhost:8000/api/job/tag/index')
       .then(function (response) {
         if (response.status === 200) {
           let tags = response.data;
@@ -29,15 +30,87 @@ export const BrowseModal = (props) => {
       })
       .catch(function (error) {
         console.log(error);
-      })
+      });
   }, [props.show]);
 
   const options = [
-    { value: 'Bangkok', label: 'Bangkok' },
-    { value: 'Chiang Mai', label: 'Chiang Mai' },
-    { value: 'Khon Kaen', label: 'Khon Kaen' },
-    { value: 'Prachuap Khiri Khan', label: 'Prachuap Khiri Khan' },
-    { value: 'Chon Buri', label: 'Chon Buri' },
+    { label: 'นครราชสีมา', value: 'นครราชสีมา' },
+    { label: 'เชียงใหม่', value: 'เชียงใหม่' },
+    { label: 'กาญจนบุรี', value: 'กาญจนบุรี' },
+    { label: 'ตาก', value: 'ตาก' },
+    { label: 'อุบลราชธานี', value: 'อุบลราชธานี' },
+    { label: 'สุราษฎร์ธานี', value: 'สุราษฎร์ธานี' },
+    { label: 'ชัยภูมิ', value: 'ชัยภูมิ' },
+    { label: 'แม่ฮ่องสอน', value: 'แม่ฮ่องสอน' },
+    { label: 'เพชรบูรณ์', value: 'เพชรบูรณ์' },
+    { label: 'ลำปาง', value: 'ลำปาง' },
+    { label: 'อุดรธานี', value: 'อุดรธานี' },
+    { label: 'เชียงราย', value: 'เชียงราย' },
+    { label: 'น่าน', value: 'น่าน' },
+    { label: 'เลย', value: 'เลย' },
+    { label: 'ขอนแก่น', value: 'ขอนแก่น' },
+    { label: 'พิษณุโลก', value: 'พิษณุโลก' },
+    { label: 'บุรีรัมย์', value: 'บุรีรัมย์' },
+    { label: 'นครศรีธรรมราช', value: 'นครศรีธรรมราช' },
+    { label: 'สกลนคร', value: 'สกลนคร' },
+    { label: 'นครสวรรค์', value: 'นครสวรรค์' },
+    { label: 'ศรีสะเกษ', value: 'ศรีสะเกษ' },
+    { label: 'กำแพงเพชร', value: 'กำแพงเพชร' },
+    { label: 'ร้อยเอ็ด', value: 'ร้อยเอ็ด' },
+    { label: 'สุรินทร์', value: 'สุรินทร์' },
+    { label: 'อุตรดิตถ์', value: 'อุตรดิตถ์' },
+    { label: 'สงขลา', value: 'สงขลา' },
+    { label: 'สระแก้ว', value: 'สระแก้ว' },
+    { label: 'กาฬสินธุ์', value: 'กาฬสินธุ์' },
+    { label: 'อุทัยธานี', value: 'อุทัยธานี' },
+    { label: 'สุโขทัย', value: 'สุโขทัย' },
+    { label: 'แพร่', value: 'แพร่' },
+    { label: 'ประจวบคีรีขันธ์', value: 'ประจวบคีรีขันธ์' },
+    { label: 'จันทบุรี', value: 'จันทบุรี' },
+    { label: 'พะเยา', value: 'พะเยา' },
+    { label: 'เพชรบุรี', value: 'เพชรบุรี' },
+    { label: 'ลพบุรี', value: 'ลพบุรี' },
+    { label: 'ชุมพร', value: 'ชุมพร' },
+    { label: 'นครพนม', value: 'นครพนม' },
+    { label: 'สุพรรณบุรี', value: 'สุพรรณบุรี' },
+    { label: 'ฉะเชิงเทรา', value: 'ฉะเชิงเทรา' },
+    { label: 'มหาสารคาม', value: 'มหาสารคาม' },
+    { label: 'ราชบุรี', value: 'ราชบุรี' },
+    { label: 'ตรัง', value: 'ตรัง' },
+    { label: 'ปราจีนบุรี', value: 'ปราจีนบุรี' },
+    { label: 'กระบี่', value: 'กระบี่' },
+    { label: 'พิจิตร', value: 'พิจิตร' },
+    { label: 'ยะลา', value: 'ยะลา' },
+    { label: 'ลำพูน', value: 'ลำพูน' },
+    { label: 'นราธิวาส', value: 'นราธิวาส' },
+    { label: 'ชลบุรี', value: 'ชลบุรี' },
+    { label: 'มุกดาหาร', value: 'มุกดาหาร' },
+    { label: 'บึงกาฬ', value: 'บึงกาฬ' },
+    { label: 'พังงา', value: 'พังงา' },
+    { label: 'ยโสธร', value: 'ยโสธร' },
+    { label: 'หนองบัวลำภู', value: 'หนองบัวลำภู' },
+    { label: 'สระบุรี', value: 'สระบุรี' },
+    { label: 'ระยอง', value: 'ระยอง' },
+    { label: 'พัทลุง', value: 'พัทลุง' },
+    { label: 'ระนอง', value: 'ระนอง' },
+    { label: 'อำนาจเจริญ', value: 'อำนาจเจริญ' },
+    { label: 'หนองคาย', value: 'หนองคาย' },
+    { label: 'ตราด', value: 'ตราด' },
+    { label: 'พระนครศรีอยุธยา', value: 'พระนครศรีอยุธยา' },
+    { label: 'สตูล', value: 'สตูล' },
+    { label: 'ชัยนาท', value: 'ชัยนาท' },
+    { label: 'นครปฐม', value: 'นครปฐม' },
+    { label: 'นครนายก', value: 'นครนายก' },
+    { label: 'ปัตตานี', value: 'ปัตตานี' },
+    { label: 'กรุงเทพมหานคร', value: 'กรุงเทพมหานคร' },
+    { label: 'ปทุมธานี', value: 'ปทุมธานี' },
+    { label: 'สมุทรปราการ', value: 'สมุทรปราการ' },
+    { label: 'อ่างทอง', value: 'อ่างทอง' },
+    { label: 'สมุทรสาคร', value: 'สมุทรสาคร' },
+    { label: 'สิงห์บุรี', value: 'สิงห์บุรี' },
+    { label: 'นนทบุรี', value: 'นนทบุรี' },
+    { label: 'ภูเก็ต', value: 'ภูเก็ต' },
+    { label: 'สมุทรสงคราม', value: 'สมุทรสงคราม' },
   ];
 
   const handleSubmitClick = (e) => {
@@ -52,14 +125,22 @@ export const BrowseModal = (props) => {
       hasTag = `&tags=${tempTag}`;
     }
 
-    const hasProvince = province == "" ? '' : `&province=${province}`;
-    const hasSearch = search == "" ? '' : `&search=${search}`;
-    const hasSalary = (wage == '' || wage == '0') ? '' : `&lowerBoundSalary=${wage}`;
-    router.push(`/jobs?browse=true${hasSearch}${hasTag}${hasSalary}${hasProvince}`);
-  }
+    const hasProvince = province == '' ? '' : `&province=${province}`;
+    const hasSearch = search == '' ? '' : `&search=${search}`;
+    const hasSalary =
+      wage == '' || wage == '0' ? '' : `&lowerBoundSalary=${wage}`;
+    router.push(
+      `/jobs?browse=true${hasSearch}${hasTag}${hasSalary}${hasProvince}`
+    );
+  };
 
   return (
-    <Modal show={props.show} onHide={props.onHide} id="browseModal" aria-labelledby="contained-modal-title-vcenter" centered>
+    <Modal
+      show={props.show}
+      onHide={props.onHide}
+      id="browseModal"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered>
       <Modal.Header
         closeButton
         className={`show-grid ${styles['browse-body']}`}>
@@ -73,7 +154,9 @@ export const BrowseModal = (props) => {
             <Col>
               <Form>
                 <Form.Group>
-                  <Form.Label className={styles.label}>Title & Company :</Form.Label>
+                  <Form.Label className={styles.label}>
+                    Title & Company :
+                  </Form.Label>
                   <Form.Control
                     className="form-control"
                     type="text"
@@ -93,7 +176,7 @@ export const BrowseModal = (props) => {
                 </Form.Group>
 
                 <Form.Group>
-                  <Form.Label className={styles.label}>Job Type :</Form.Label>
+                  <Form.Label className={styles.label}>Tags :</Form.Label>
                   <Select
                     isMulti
                     value={jobTypes}
@@ -132,6 +215,5 @@ export const BrowseModal = (props) => {
     </Modal>
   );
 };
-
 
 export default BrowseModal;

@@ -11,21 +11,28 @@ import Select from 'react-select';
 
 export const EditJobDetails = (props) => {
   const router = useRouter();
-  const jobId = props.jobDetailId
+  const jobId = props.jobDetailId;
   const [title, setTitle] = useState(props.jobDetail.title);
   const [description, setDescription] = useState(props.jobDetail.description);
   const [jobTag, setJobTag] = useState(props.jobTag);
   const [company, setCompany] = useState(props.jobDetail.company);
   const [location, setLocation] = useState(props.jobDetail.address);
   const [publish, setPublish] = useState(props.jobDetail.isPublished);
-  const [minWage, setMinWage] = useState(props.jobDetail.lowerBoundSalary.toString());
-  const [maxWage, setMaxWage] = useState(props.jobDetail.upperBoundSalary.toString());
-  const [amount, setAmount] = useState(props.jobDetail.amountRequired.toString());
+  const [minWage, setMinWage] = useState(
+    props.jobDetail.lowerBoundSalary.toString()
+  );
+  const [maxWage, setMaxWage] = useState(
+    props.jobDetail.upperBoundSalary.toString()
+  );
+  const [amount, setAmount] = useState(
+    props.jobDetail.amountRequired.toString()
+  );
   const [province, setProvince] = useState(props.jobDetail.province);
   const [successMessage, setMessage] = useState(null);
   const [file, setFile] = useState(null);
   const [fileURL, setFileURL] = useState(props.jobDetail.picture.path);
   const inputFile = useRef(null);
+  const [tagOption, setTagOption] = useState(props.tagOption);
 
   const [required, setRequired] = useState({
     title: '',
@@ -36,32 +43,105 @@ export const EditJobDetails = (props) => {
     province: '',
     minSalary: '',
     maxSalary: '',
-    amount: ''
-  })
+    amount: '',
+  });
 
   const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
-    { value: 'cookie', label: 'Cookies' },
-    { value: 'trash', label: 'Trash' },
+    { label: 'นครราชสีมา', value: 'นครราชสีมา' },
+    { label: 'เชียงใหม่', value: 'เชียงใหม่' },
+    { label: 'กาญจนบุรี', value: 'กาญจนบุรี' },
+    { label: 'ตาก', value: 'ตาก' },
+    { label: 'อุบลราชธานี', value: 'อุบลราชธานี' },
+    { label: 'สุราษฎร์ธานี', value: 'สุราษฎร์ธานี' },
+    { label: 'ชัยภูมิ', value: 'ชัยภูมิ' },
+    { label: 'แม่ฮ่องสอน', value: 'แม่ฮ่องสอน' },
+    { label: 'เพชรบูรณ์', value: 'เพชรบูรณ์' },
+    { label: 'ลำปาง', value: 'ลำปาง' },
+    { label: 'อุดรธานี', value: 'อุดรธานี' },
+    { label: 'เชียงราย', value: 'เชียงราย' },
+    { label: 'น่าน', value: 'น่าน' },
+    { label: 'เลย', value: 'เลย' },
+    { label: 'ขอนแก่น', value: 'ขอนแก่น' },
+    { label: 'พิษณุโลก', value: 'พิษณุโลก' },
+    { label: 'บุรีรัมย์', value: 'บุรีรัมย์' },
+    { label: 'นครศรีธรรมราช', value: 'นครศรีธรรมราช' },
+    { label: 'สกลนคร', value: 'สกลนคร' },
+    { label: 'นครสวรรค์', value: 'นครสวรรค์' },
+    { label: 'ศรีสะเกษ', value: 'ศรีสะเกษ' },
+    { label: 'กำแพงเพชร', value: 'กำแพงเพชร' },
+    { label: 'ร้อยเอ็ด', value: 'ร้อยเอ็ด' },
+    { label: 'สุรินทร์', value: 'สุรินทร์' },
+    { label: 'อุตรดิตถ์', value: 'อุตรดิตถ์' },
+    { label: 'สงขลา', value: 'สงขลา' },
+    { label: 'สระแก้ว', value: 'สระแก้ว' },
+    { label: 'กาฬสินธุ์', value: 'กาฬสินธุ์' },
+    { label: 'อุทัยธานี', value: 'อุทัยธานี' },
+    { label: 'สุโขทัย', value: 'สุโขทัย' },
+    { label: 'แพร่', value: 'แพร่' },
+    { label: 'ประจวบคีรีขันธ์', value: 'ประจวบคีรีขันธ์' },
+    { label: 'จันทบุรี', value: 'จันทบุรี' },
+    { label: 'พะเยา', value: 'พะเยา' },
+    { label: 'เพชรบุรี', value: 'เพชรบุรี' },
+    { label: 'ลพบุรี', value: 'ลพบุรี' },
+    { label: 'ชุมพร', value: 'ชุมพร' },
+    { label: 'นครพนม', value: 'นครพนม' },
+    { label: 'สุพรรณบุรี', value: 'สุพรรณบุรี' },
+    { label: 'ฉะเชิงเทรา', value: 'ฉะเชิงเทรา' },
+    { label: 'มหาสารคาม', value: 'มหาสารคาม' },
+    { label: 'ราชบุรี', value: 'ราชบุรี' },
+    { label: 'ตรัง', value: 'ตรัง' },
+    { label: 'ปราจีนบุรี', value: 'ปราจีนบุรี' },
+    { label: 'กระบี่', value: 'กระบี่' },
+    { label: 'พิจิตร', value: 'พิจิตร' },
+    { label: 'ยะลา', value: 'ยะลา' },
+    { label: 'ลำพูน', value: 'ลำพูน' },
+    { label: 'นราธิวาส', value: 'นราธิวาส' },
+    { label: 'ชลบุรี', value: 'ชลบุรี' },
+    { label: 'มุกดาหาร', value: 'มุกดาหาร' },
+    { label: 'บึงกาฬ', value: 'บึงกาฬ' },
+    { label: 'พังงา', value: 'พังงา' },
+    { label: 'ยโสธร', value: 'ยโสธร' },
+    { label: 'หนองบัวลำภู', value: 'หนองบัวลำภู' },
+    { label: 'สระบุรี', value: 'สระบุรี' },
+    { label: 'ระยอง', value: 'ระยอง' },
+    { label: 'พัทลุง', value: 'พัทลุง' },
+    { label: 'ระนอง', value: 'ระนอง' },
+    { label: 'อำนาจเจริญ', value: 'อำนาจเจริญ' },
+    { label: 'หนองคาย', value: 'หนองคาย' },
+    { label: 'ตราด', value: 'ตราด' },
+    { label: 'พระนครศรีอยุธยา', value: 'พระนครศรีอยุธยา' },
+    { label: 'สตูล', value: 'สตูล' },
+    { label: 'ชัยนาท', value: 'ชัยนาท' },
+    { label: 'นครปฐม', value: 'นครปฐม' },
+    { label: 'นครนายก', value: 'นครนายก' },
+    { label: 'ปัตตานี', value: 'ปัตตานี' },
+    { label: 'กรุงเทพมหานคร', value: 'กรุงเทพมหานคร' },
+    { label: 'ปทุมธานี', value: 'ปทุมธานี' },
+    { label: 'สมุทรปราการ', value: 'สมุทรปราการ' },
+    { label: 'อ่างทอง', value: 'อ่างทอง' },
+    { label: 'สมุทรสาคร', value: 'สมุทรสาคร' },
+    { label: 'สิงห์บุรี', value: 'สิงห์บุรี' },
+    { label: 'นนทบุรี', value: 'นนทบุรี' },
+    { label: 'ภูเก็ต', value: 'ภูเก็ต' },
+    { label: 'สมุทรสงคราม', value: 'สมุทรสงคราม' },
   ];
+
   const choices = [
     { value: 'yes', label: 'Yes' },
     { value: 'no', label: 'No' },
   ];
 
-  const handleFileUpload = e => {
-    const  files  = e.target.files;
+  const handleFileUpload = (e) => {
+    const files = e.target.files;
     // console.log(files)
     if (files && files.length) {
       const filename = files[0].name;
 
-      var parts = filename.split(".");
+      var parts = filename.split('.');
       const fileType = parts[parts.length - 1];
       // console.log("fileType", fileType); //ex: zip, rar, jpg, svg etc.
-      
-      setFileURL(URL.createObjectURL(e.target.files[0]))
+
+      setFileURL(URL.createObjectURL(e.target.files[0]));
 
       setFile(e.target.files[0]);
     }
@@ -71,78 +151,95 @@ export const EditJobDetails = (props) => {
     inputFile.current.click();
   };
 
-  let tagArr=[]
+  let tagArr = [];
 
   const handleSubmitClick = async (e) => {
     e.preventDefault();
     let allInfo = true;
-    if(title === null || !title.length){
-      setRequired((prevRequired) => ({ ...prevRequired, title: "*required" }));
+    if (title === null || !title.length) {
+      setRequired((prevRequired) => ({ ...prevRequired, title: '*required' }));
       allInfo = false;
-    }else{
-      setRequired((prevRequired) => ({ ...prevRequired, title: "" }));
+    } else {
+      setRequired((prevRequired) => ({ ...prevRequired, title: '' }));
     }
-    if(description === null || !description.length){
-      setRequired((prevRequired) => ({ ...prevRequired, description: "*required" }));
+    if (description === null || !description.length) {
+      setRequired((prevRequired) => ({
+        ...prevRequired,
+        description: '*required',
+      }));
       allInfo = false;
-    }else{
-      setRequired((prevRequired) => ({ ...prevRequired, description: "" }));
+    } else {
+      setRequired((prevRequired) => ({ ...prevRequired, description: '' }));
     }
-    if(!jobTag.length){
-      setRequired((prevRequired) => ({ ...prevRequired, tag: "*required" }));
+    if (!jobTag.length) {
+      setRequired((prevRequired) => ({ ...prevRequired, tag: '*required' }));
       allInfo = false;
-    }else{
-      setRequired((prevRequired) => ({ ...prevRequired, tag: "" }));
+    } else {
+      setRequired((prevRequired) => ({ ...prevRequired, tag: '' }));
     }
-    if(location === null || !location.length){
-      setRequired((prevRequired) => ({ ...prevRequired, address: "*required" }));
+    if (location === null || !location.length) {
+      setRequired((prevRequired) => ({
+        ...prevRequired,
+        address: '*required',
+      }));
       allInfo = false;
-    }else{
-      setRequired((prevRequired) => ({ ...prevRequired, address: "" }));
+    } else {
+      setRequired((prevRequired) => ({ ...prevRequired, address: '' }));
     }
-    if(company === null || !company.length){
-      setRequired((prevRequired) => ({ ...prevRequired, company: "*required" }));
+    if (company === null || !company.length) {
+      setRequired((prevRequired) => ({
+        ...prevRequired,
+        company: '*required',
+      }));
       allInfo = false;
-    }else{
-      setRequired((prevRequired) => ({ ...prevRequired, company: "" }));
+    } else {
+      setRequired((prevRequired) => ({ ...prevRequired, company: '' }));
     }
-    if(maxWage === null || !maxWage.length){
-      setRequired((prevRequired) => ({ ...prevRequired, maxSalary: "*required" }));
+    if (maxWage === null || !maxWage.length) {
+      setRequired((prevRequired) => ({
+        ...prevRequired,
+        maxSalary: '*required',
+      }));
       allInfo = false;
-    }else{
-      setRequired((prevRequired) => ({ ...prevRequired, maxSalary: "" }));
+    } else {
+      setRequired((prevRequired) => ({ ...prevRequired, maxSalary: '' }));
     }
-    if(minWage === null || !minWage.length){
-      setRequired((prevRequired) => ({ ...prevRequired, minSalary: "*required" }));
+    if (minWage === null || !minWage.length) {
+      setRequired((prevRequired) => ({
+        ...prevRequired,
+        minSalary: '*required',
+      }));
       allInfo = false;
-    }else{
-      setRequired((prevRequired) => ({ ...prevRequired, minSalary: "" }));
+    } else {
+      setRequired((prevRequired) => ({ ...prevRequired, minSalary: '' }));
     }
-    if(province === null){
-      setRequired((prevRequired) => ({ ...prevRequired, province: "*required" }));
+    if (province === null) {
+      setRequired((prevRequired) => ({
+        ...prevRequired,
+        province: '*required',
+      }));
       allInfo = false;
-    }else{
-      setRequired((prevRequired) => ({ ...prevRequired, province: "" }));
+    } else {
+      setRequired((prevRequired) => ({ ...prevRequired, province: '' }));
     }
-    if(amount === null || !amount.length){
-      setRequired((prevRequired) => ({ ...prevRequired, amount: "*required" }));
+    if (amount === null || !amount.length) {
+      setRequired((prevRequired) => ({ ...prevRequired, amount: '*required' }));
       allInfo = false;
-    }else{
-      setRequired((prevRequired) => ({ ...prevRequired, amount: "" }));
+    } else {
+      setRequired((prevRequired) => ({ ...prevRequired, amount: '' }));
     }
-    if(!allInfo) return;
+    if (!allInfo) return;
     let fileEntity = null;
-    if(file !== null){
-      let formData = new FormData()
-      formData.append(
-        'file',
-        file,
-        file.name
-      )
-      fileEntity = await axios.post('http://localhost:8000/api/files/upload', formData)
+    if (file !== null) {
+      let formData = new FormData();
+      formData.append('file', file, file.name);
+      fileEntity = await axios.post(
+        'http://localhost:8000/api/files/upload',
+        formData
+      );
     }
-    for(let i = 0; i<jobTag.length; ++i){
-      tagArr.push(jobTag[i]['value'])
+    for (let i = 0; i < jobTag.length; ++i) {
+      tagArr.push(jobTag[i]['value']);
     }
     const payload = {
       title: title,
@@ -157,16 +254,17 @@ export const EditJobDetails = (props) => {
       isPublished: publish,
       pictureId: file !== null ? fileEntity.data.id : null,
     };
-    axios.patch(`http://localhost:8000/api/job/${jobId}`,payload)
-        .then(function (response){
-            if(response.status == 200) {
-                setMessage('Update successful. Redirecting to job page..');
-                router.push("/jobs");
-            } else{
-                console.log("There is an Error")
-            }
-        })
-  }
+    axios
+      .patch(`http://localhost:8000/api/job/${jobId}`, payload)
+      .then(function (response) {
+        if (response.status == 200) {
+          setMessage('Update successful. Redirecting to job page..');
+          router.push('/jobs/list');
+        } else {
+          console.log('There is an Error');
+        }
+      });
+  };
 
   return (
     <DefaultLayout>
@@ -176,67 +274,74 @@ export const EditJobDetails = (props) => {
 
       <Container className="my-4">
         <Row>
-          <Col md={6} 
+          <Col
+            md={6}
             style={{
-              width: "50%",
-              paddingRight: 50
+              width: '50%',
+              paddingRight: 50,
             }}>
             <Row>
               <Image
-                src= {fileURL == null ? "/images/user/User.svg" : fileURL}
-                height = "150"
+                src={fileURL == null ? '/images/user/User.svg' : fileURL}
+                height="150"
                 className="d-block w-30 mx-auto"
                 rounded
               />
-
             </Row>
             <Row className="d-flex justify-content-center my-2">
               <input
-                style={{ display: "none" }}
+                style={{ display: 'none' }}
                 // accept=".zip,.rar"
                 ref={inputFile}
                 onChange={handleFileUpload}
                 type="file"
               />
-              <button type="button" className="my-2 btn btn-primary" onClick={onFileButtonClick}>
+              <button
+                type="button"
+                className="my-2 btn btn-primary"
+                onClick={onFileButtonClick}>
                 Add Picture
               </button>
             </Row>
-            <Row className="d-flex justify-content-center my-2" >
+            <Row className="d-flex justify-content-center my-2">
               <Form>
-                  <Form.Group>
-                    <Form.Label className={styles.label}>Title</Form.Label>
-                    <Form.Control
-                      className="form-control"
-                      type="text"
-                      defaultValue={props.jobDetail.title}
-                      placeholder="Title"
-                      onChange={(e) => setTitle(e.target.value)}
-                    />
-                    <p style={{ color: 'red' }}>{required.title}</p>
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Label className={styles.label}>Description</Form.Label>
-                    <Form.Control
-                      className="form-control"
-                      type="text"
-                      defaultValue={props.jobDetail.description}
-                      placeholder="Description"
-                      onChange={(e) => setDescription(e.target.value)}
-                    />
-                    <p style={{ color: 'red' }}>{required.description}</p>
-                  </Form.Group>
-                  <Form.Group>
+                <Form.Group>
+                  <Form.Label className={styles.label}>Title</Form.Label>
+                  <Form.Control
+                    className="form-control"
+                    type="text"
+                    defaultValue={props.jobDetail.title}
+                    placeholder="Title"
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                  <p style={{ color: 'red' }}>{required.title}</p>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label className={styles.label}>Description</Form.Label>
+                  <Form.Control
+                    className="form-control"
+                    type="text"
+                    defaultValue={props.jobDetail.description}
+                    placeholder="Description"
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                  <p style={{ color: 'red' }}>{required.description}</p>
+                </Form.Group>
+                <Form.Group>
                   <Form.Label>Job Tag</Form.Label>
                   <Select
                     //value={jobTag}
                     name="colors"
                     defaultValue={props.jobTag}
-                    options={jobTag.length >=3 ? jobTag : options}
-                    noOptionsMessage={()=>"You could only assign 3 tags to Job Announcement"}
+                    options={jobTag.length >= 3 ? jobTag : tagOption}
+                    noOptionsMessage={() =>
+                      'You could only assign 3 tags to Job Announcement'
+                    }
                     className="basic-multi-select "
                     classNamePrefix="select"
-                    onChange={(e) => {setJobTag(e)}}
+                    onChange={(e) => {
+                      setJobTag(e);
+                    }}
                     isMulti
                   />
                   <p style={{ color: 'red' }}>{required.tag}</p>
@@ -274,7 +379,10 @@ export const EditJobDetails = (props) => {
                   <Select
                     //value={province}
                     options={options}
-                    defaultValue={{value: props.jobDetail.province ,label: props.jobDetail.province}}
+                    defaultValue={{
+                      value: props.jobDetail.province,
+                      label: props.jobDetail.province,
+                    }}
                     className="basic-multi-select"
                     classNamePrefix="select"
                     onChange={(e) => setProvince(e)}
@@ -282,7 +390,9 @@ export const EditJobDetails = (props) => {
                   <p style={{ color: 'red' }}>{required.province}</p>
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label className={styles.label}>Minimum salary per month</Form.Label>
+                  <Form.Label className={styles.label}>
+                    Minimum salary per month
+                  </Form.Label>
                   <Form.Control
                     type="number"
                     defaultValue={props.jobDetail.lowerBoundSalary}
@@ -294,7 +404,9 @@ export const EditJobDetails = (props) => {
                   <p style={{ color: 'red' }}>{required.minSalary}</p>
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label className={styles.label}>Maximum salary per month</Form.Label>
+                  <Form.Label className={styles.label}>
+                    Maximum salary per month
+                  </Form.Label>
                   <Form.Control
                     type="number"
                     defaultValue={props.jobDetail.lowerBoundSalary}
@@ -320,25 +432,32 @@ export const EditJobDetails = (props) => {
                   <p style={{ color: 'red' }}>{required.amount}</p>
                 </Form.Group>
                 <Form.Group>
-                  <Form.Check 
-                    type="checkbox" 
-                    className = "form-control-lg" 
+                  <Form.Check
+                    type="checkbox"
+                    className="form-control-lg"
                     label="Publish"
-                    defaultChecked={props.jobDetail.isPublished} 
-                    onClick={()=>setPublish(!publish)}/>
+                    defaultChecked={props.jobDetail.isPublished}
+                    onClick={() => setPublish(!publish)}
+                  />
                 </Form.Group>
               </Form>
             </Row>
           </Col>
         </Row>
         <Row className="text-center">
-         <Col md={6}>
-            <button type="button" className="my-2 btn btn-primary btn-lg float-right" onClick={handleSubmitClick}>
+          <Col md={6}>
+            <button
+              type="button"
+              className="my-2 btn btn-primary btn-lg float-right"
+              onClick={handleSubmitClick}>
               Save
             </button>
-          </Col >
+          </Col>
           <Col md={6}>
-            <button type="button" className="my-2 btn btn-primary btn-lg float-left">
+            <button
+              type="button"
+              className="my-2 btn btn-primary btn-lg float-left"
+              onClick={() => router.push('/jobs/list')}>
               Cancel
             </button>
           </Col>
@@ -349,20 +468,30 @@ export const EditJobDetails = (props) => {
 };
 
 export async function getServerSideProps(context) {
-  const detail = await axios.get(`http://localhost:8000/api/job/index/${context.params.id}`);
-  let tag = []
-  for(let i = 0; i<detail.data.tags.length; ++i){
+  const detail = await axios.get(
+    `http://localhost:8000/api/job/index/${context.params.id}`
+  );
+  const tagapi = await axios.get('http://localhost:8000/api/job/tag/index');
+  let tag = [];
+  let tags = tagapi.data;
+  const tempTags = [];
+  for (const tag of tags) {
+    tempTags.push({ value: tag.name, label: tag.name });
+  }
+  for (let i = 0; i < detail.data.tags.length; ++i) {
     tag.push({
-      value : detail.data.tags[i].name,
-      label: detail.data.tags[i].name
-  })}
+      value: detail.data.tags[i].name,
+      label: detail.data.tags[i].name,
+    });
+  }
   return {
     props: {
       jobDetailId: context.params.id,
       jobDetail: detail.data,
-      jobTag: tag
-    }
-  }
+      jobTag: tag,
+      tagOption: tempTags,
+    },
+  };
 }
 
 export default EditJobDetails;
