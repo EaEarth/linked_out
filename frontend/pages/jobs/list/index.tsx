@@ -2,19 +2,19 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
-import JobAnnouncementGrid from '../../components/JobAnnouncement/GridCopy';
-import JobPagination from '../../components/JobAnnouncement/Pagination';
-import TagList from '../../components/JobAnnouncement/TagList';
-import DefaultLayout from '../../layouts/Default';
+import JobAnnouncementGrid from '../../../components/JobAnnouncement/GridCopy';
+import JobPagination from '../../../components/JobAnnouncement/Pagination';
+import TagList from '../../../components/JobAnnouncement/TagList';
+import DefaultLayout from '../../../layouts/Default';
 import { Col, Row } from 'react-bootstrap';
 import axios from 'axios';
-import JobAnnouncement from '../../models/job/JobAnnouncement';
+import JobAnnouncement from '../../../models/job/JobAnnouncement';
 
 export const lists: React.FC<any> = (props) => {
   const router = useRouter();
   // Data
   //const [tags] = useState(props.tags || []);
-  const [jobs] = useState(props.jobs || []);
+  const [jobs, setJobs] = useState(props.jobs || []);
   // Pagination state
   const [pageLen, setPageLen] = useState(1);
   const page = (Number.parseInt(router.query.page as string) || 1) - 1;
@@ -25,6 +25,9 @@ export const lists: React.FC<any> = (props) => {
     if (pageNo >= 0 && pageNo <= pageLen)
       router.push(`/jobs/list?page=${pageNo}`, undefined, { shallow: true });
   };
+  useEffect(() => {
+    setJobs(props.jobs);
+  }, [jobs]);
   // Update page length
   useEffect(() => {
     setPageLen(Math.ceil(jobs.length / perPage));

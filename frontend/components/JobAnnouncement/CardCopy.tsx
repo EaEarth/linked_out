@@ -1,10 +1,13 @@
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import JobAnnouncement from '../../models/job/JobAnnouncement';
 import style from './index.module.scss';
 import dayjs from 'dayjs';
+import axios, { AxiosError } from 'axios';
+import Link from 'next/link';
+
 
 export type JobAnnouncementCardProps = Partial<JobAnnouncement>;
 
@@ -12,6 +15,16 @@ export const JobAnnouncementCard: React.FC<JobAnnouncementCardProps> = (
   props
 ) => {
   const router = useRouter();
+  const handleDelete = async () => {
+    await axios.delete(`/job/${props.id}`).then((res) => {
+      if (res.status == 404) console.log(res.statusText);
+    })
+      .catch((err) => {
+        console.log(err);
+      })
+    router.reload();
+  }
+
   return (
     <Card className={`mb-3 ${style['card']}`}>
       <Row noGutters className="align-items-center">
@@ -31,7 +44,9 @@ export const JobAnnouncementCard: React.FC<JobAnnouncementCardProps> = (
             <h6 className="card-title mb-0">
               <Row>
                 <Col xs={8} md={12}>
-                  {props.title}
+                  <Link href={`/jobs/list/applicant/${props.id}`}>
+                    <a className='text-dark h5'>{props.title}</a>
+                  </Link>
                 </Col>
                 <Col xs={4} className={`${style['wrap-text']}`}>
                   <small className="text-muted d-md-none float-right">
@@ -57,7 +72,7 @@ export const JobAnnouncementCard: React.FC<JobAnnouncementCardProps> = (
               }}>
               Edit
             </button>
-            <button type="button" className="my-2 btn btn-primary">
+            <button type="button" className="my-2 btn btn-primary" onClick={handleDelete}>
               Delete
             </button>
           </Col>

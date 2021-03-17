@@ -1,7 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, ManyToOne } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable, ManyToOne, OneToMany, DeleteDateColumn } from 'typeorm';
 import { User } from '../users/user.entity';
 import { Tag } from './tag.entity';
 import { FileItem } from '../files/fileItem.entity'
+import { JobApplication } from './jobApplication.entity';
 
 @Entity()
 export class JobAnnouncement {
@@ -41,6 +42,9 @@ export class JobAnnouncement {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @DeleteDateColumn()
+  deletedAt: Date;
+
   @ManyToMany(() => Tag, tag => tag.jobAnnouncements)
   @JoinTable()
   tags: Tag[];
@@ -51,4 +55,6 @@ export class JobAnnouncement {
   @ManyToOne(() => FileItem, picture => picture.jobAnnouncements)
   picture: FileItem;
 
+  @OneToMany(() => JobApplication, application => application.jobAnnouncement)
+  application: JobApplication[];
 }

@@ -76,6 +76,10 @@ export const login = observer((props) => {
                 </p>
               </Form.Group>
 
+              <Link href="/test">
+                <a className="d-block text-right">forget password?</a>
+              </Link>
+
               <Row className="d-flex justify-content-center">
                 <button
                   type="button"
@@ -84,9 +88,14 @@ export const login = observer((props) => {
                   Login
                 </button>
               </Row>
-              <Link href="/test">
-                <a className="d-block text-center ">forget password?</a>
-              </Link>
+
+              <Row className="justify-content-center">
+                <span>Don't have an account?</span>
+                <Link href="/auth/register">
+                  <a className="ml-2">Register</a>
+                </Link>
+              </Row>
+
             </Form>
           </Col>
         </Row>

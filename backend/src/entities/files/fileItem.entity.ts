@@ -1,5 +1,6 @@
 import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { JobAnnouncement } from "../job/jobAnnouncement.entity";
+import { JobApplication } from "../job/jobApplication.entity";
 import { User } from "../users/user.entity";
 
 @Entity()
@@ -24,4 +25,13 @@ export class FileItem {
 
   @OneToOne(() => User)
   profileUser: User;
+
+  @OneToOne(() => JobApplication)
+  jobApplicationResume: JobApplication;
+
+  @OneToOne(() => JobApplication)
+  jobApplicationCoverLetter: JobApplication;
+
+  @OneToOne(() => JobApplication)
+  jobApplicationTranscript: JobApplication;
 }

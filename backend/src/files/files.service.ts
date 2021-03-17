@@ -27,7 +27,7 @@ export class FilesService {
         return this.repo.find({title:title, owner:user});
     }
 
-    createFile(@Req() req, dto:createFile, @UploadedFile() file){
+    createFile(@Req() req, dto:createFile, @UploadedFile() file): Promise<FileItem>{
         const newFile = new FileItem();
         
         newFile.title = dto.title ? dto.title : file.filename;
