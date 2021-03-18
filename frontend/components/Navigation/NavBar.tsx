@@ -96,7 +96,7 @@ export const NavBar = observer((props) => {
             )}
             {authStore.isLoggedIn && (
               <NavDropdown.Item onClick={() => router.push('/jobs/list')}>
-                My recruited Job
+                My Recruited Job
               </NavDropdown.Item>
             )}
             {authStore.isLoggedIn && (

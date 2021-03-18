@@ -45,6 +45,10 @@ export const Response = (props) => {
                     <Col md={{ span: 5 }} className={`shadow-sm mx-auto mt-5 my-4 ${style['information']}`}>
                         <h2 className="mt-2">Information</h2>
                         <Row className='mx-auto'>
+                            <h5 className="my-1 mr-2">Status: </h5>
+                            <h5 className={'my-1 text-' + statusColorHandler(application.status)}>{statusHandler(application.status)}</h5>
+                        </Row>
+                        <Row className='mx-auto'>
                             <Col md={{ span: 3 }} className="font-weight-bold pl-0">First Name</Col>
                             <Col>{application.applicant.firstname}</Col>
                         </Row>
@@ -83,16 +87,13 @@ export const Response = (props) => {
                             </Link>
                         </Row>
                         )}
-                        {(application.transcript) && (<Row className='d-block mx-auto'> <p className="font-weight-bold my-2">transcript</p>
+                        {(application.transcript) && (<Row className='d-block mx-auto'> <p className="font-weight-bold my-2">Transcript</p>
                             <Link href={application.transcript.path}>
                                 <a>{application.transcript.title}</a>
                             </Link></Row>
                         )}
-                        <Row className='mx-auto'>
-                            <h4 className="my-2 mr-2">status: </h4>
-                            <h4 className={'my-2 text-' + statusColorHandler(application.status)}>{statusHandler(application.status)}</h4>
-                        </Row>
-                        <h2>Feedback</h2>
+
+                        <h2 className="my-2">Feedback</h2>
                         <p className="mb-2">{application.feedback == '' ? '-' : application.feedback}</p>
                     </Col>
                 </Row>

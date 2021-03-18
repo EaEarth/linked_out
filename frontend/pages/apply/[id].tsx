@@ -89,7 +89,7 @@ export const appForm = (props) => {
                 </Row>
                 <Row>
                     <Col md={{ span: 5, offset: 1 }} className='mt-5'>
-                        <Image src='/images/user/User.svg' className='d-block w-75 mx-auto' rounded />
+                        <Image src={profile.avatarFile?.path || '/images/user/User.svg'} className='d-block w-75 mx-auto' rounded />
                     </Col>
                     <Col md={{ span: 5 }} className='mx-auto mt-5'>
                         <h2>Information</h2>
