@@ -3,6 +3,7 @@ import { User } from '../users/user.entity';
 import { Tag } from './tag.entity';
 import { FileItem } from '../files/fileItem.entity'
 import { JobApplication } from './jobApplication.entity';
+import { ChatRoom } from '../chats/chatRoom.entity';
 
 @Entity()
 export class JobAnnouncement {
@@ -57,4 +58,8 @@ export class JobAnnouncement {
 
   @OneToMany(() => JobApplication, application => application.jobAnnouncement)
   application: JobApplication[];
+
+  @OneToMany(() => ChatRoom, chatRoom => chatRoom.jobAnnouncement)
+  chatRooms: ChatRoom[];
+
 }

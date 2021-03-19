@@ -3,6 +3,8 @@ import { IsDate, IsEmail } from 'class-validator';
 import { JobAnnouncement } from "../job/jobAnnouncement.entity";
 import { FileItem } from "../files/fileItem.entity";
 import { JobApplication } from "../job/jobApplication.entity";
+import { Message } from "../chats/message.entity";
+import { ChatRoom } from "../chats/chatRoom.entity";
 
 @Entity()
 @Unique(["username"])
@@ -64,4 +66,12 @@ export class User {
     @OneToMany(() => JobApplication, jobApplication => jobApplication.applicant)
     jobApplication: JobApplication[];
 
+    @OneToMany(() => Message, message => message.sender)
+    messages: Message[];
+
+    @OneToMany(() => ChatRoom, chatRoom => chatRoom.recruiter)
+    ownChatRooms: ChatRoom[];
+
+    @OneToMany(() => ChatRoom, chatRoom => chatRoom.applicant)
+    joinChatRooms: ChatRoom[];
 }
