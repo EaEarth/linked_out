@@ -19,13 +19,13 @@ export const JobApplicationCard: React.FC<ApplicationFormCardProps> = (
   }
   return (
     <a
-      href={props.id ? `/jobs/list/application/${props.id}` : undefined}
+      href={props.id ? `/jobs/list/detail/${props.id}` : undefined}
       className={style['custom-a']}
       onClick={(e) => e.preventDefault()}>
       <Card
         className={`mb-3 ${style['card']} ${statusHandler(props.status)}`}
         onClick={() => {
-          if (props.id) router.push(`/jobs/list/application/${props.id}`);
+          if (props.id) router.push(`/jobs/list/detail/${props.id}`);
         }}>
         <Row noGutters className="align-items-center">
           {/* Image */}

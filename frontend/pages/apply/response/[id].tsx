@@ -15,9 +15,9 @@ export const Response = (props) => {
     const router = useRouter();
     const [application] = useState(props.application);
     const statusHandler = (status) => {
-        if (status == 1) return 'Waiting';
-        else if (status == 2) return 'Accepted';
-        else return 'Denied';
+        if (status == 1) return 'waiting';
+        else if (status == 2) return 'accepted';
+        else return 'denied';
     }
     const statusColorHandler = (status) => {
         if (status == 1) return 'secondary';
@@ -33,7 +33,7 @@ export const Response = (props) => {
 
             <Container className=''>
                 <Row>
-                    <Col className='mt-3 text-center'>
+                    <Col className='text-center'>
                         <h1>Application Response</h1>
                         <h3 className='mt-3'>{application.jobAnnouncement.company} - {application.jobAnnouncement.title}</h3>
                     </Col>
@@ -45,27 +45,31 @@ export const Response = (props) => {
                     <Col md={{ span: 5 }} className={`shadow-sm mx-auto mt-5 my-4 ${style['information']}`}>
                         <h2 className="mt-2">Information</h2>
                         <Row className='mx-auto'>
-                            <Col className="font-weight-bold pl-0 col-sm-3 col-4">First Name</Col>
-                            <Col className="">{application.applicant.firstname}</Col>
+                            <h5 className="my-1 mr-2">Status: </h5>
+                            <h5 className={'my-1 text-' + statusColorHandler(application.status)}>{statusHandler(application.status)}</h5>
                         </Row>
                         <Row className='mx-auto'>
-                            <Col className="font-weight-bold pl-0 col-sm-3 col-4">Last Name</Col>
+                            <Col md={{ span: 3 }} className="font-weight-bold pl-0">First Name</Col>
+                            <Col>{application.applicant.firstname}</Col>
+                        </Row>
+                        <Row className='mx-auto'>
+                            <Col md={{ span: 3 }} className="font-weight-bold pl-0">Last Name</Col>
                             <Col>{application.applicant.lastname}</Col>
                         </Row>
                         <Row className='mx-auto'>
-                            <Col className="font-weight-bold pl-0 col-sm-3 col-4">Address</Col>
+                            <Col md={{ span: 3 }} className="font-weight-bold pl-0">Address</Col>
                             <Col>{application.applicant.address}</Col>
                         </Row>
                         <Row className='mx-auto'>
-                            <Col className="font-weight-bold pl-0 col-sm-3 col-4">Age</Col>
+                            <Col md={{ span: 3 }} className="font-weight-bold pl-0">Age</Col>
                             <Col>{dayjs().diff(dayjs(application.applicant.birthDate), 'year')}</Col>
                         </Row>
                         <Row className='mx-auto'>
-                            <Col className="font-weight-bold pl-0 col-sm-3 col-4">TelNumber</Col>
+                            <Col md={{ span: 3 }} className="font-weight-bold pl-0">TelNumber</Col>
                             <Col>{application.applicant.telNumber}</Col>
                         </Row>
                         <Row className='mx-auto'>
-                            <Col className="font-weight-bold pl-0 col-sm-3 col-4">Email</Col>
+                            <Col md={{ span: 3 }} className="font-weight-bold pl-0">Email</Col>
                             <Col>{application.applicant.email}</Col>
                         </Row>
                         <p className="font-weight-bold my-2">Experience Summary</p>
@@ -83,16 +87,13 @@ export const Response = (props) => {
                             </Link>
                         </Row>
                         )}
-                        {(application.transcript) && (<Row className='d-block mx-auto'> <p className="font-weight-bold my-2">transcript</p>
+                        {(application.transcript) && (<Row className='d-block mx-auto'> <p className="font-weight-bold my-2">Transcript</p>
                             <Link href={application.transcript.path}>
                                 <a>{application.transcript.title}</a>
                             </Link></Row>
                         )}
-                        <Row className='mx-auto'>
-                            <h4 className="my-2 mr-2">Status: </h4>
-                            <h4 className={'my-2 text-' + statusColorHandler(application.status)}>{statusHandler(application.status)}</h4>
-                        </Row>
-                        <h2>Feedback</h2>
+
+                        <h2 className="my-2">Feedback</h2>
                         <p className="mb-2">{application.feedback == '' ? '-' : application.feedback}</p>
                     </Col>
                 </Row>

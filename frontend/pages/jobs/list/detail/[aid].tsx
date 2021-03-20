@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router'
 import ApplicationForm from '../../../../models/ApplicationForm/ApplicationForm';
 import dayjs from 'dayjs';
-import style from './application.module.scss'
+import style from './detail.module.scss'
 import { GetServerSidePropsContext } from 'next';
 
 export const Response = (props) => {
@@ -80,8 +80,8 @@ export const Response = (props) => {
                     <Col md={{ span: 5, offset: 1 }} className='mt-5'>
                         <Image src={application.applicant.avatarFile?.path || '/images/user/User.svg'} className='d-block w-75 mx-auto' rounded />
                     </Col>
-                    <Col md={{ span: 5 }} className={`mx-auto mt-5 my-4 ${style['information']}`}>
-                        <h2>Information</h2>
+                    <Col md={{ span: 5 }} className={`shadow-sm mx-auto mt-5 my-4 ${style['information']}`}>
+                        <h2 className="mt-2">Information</h2>
                         <Row className='mx-auto'>
                             <Col md={{ span: 3 }} className="font-weight-bold pl-0">First Name</Col>
                             <Col>{application.applicant.firstname}</Col>

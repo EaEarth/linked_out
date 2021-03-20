@@ -19,7 +19,7 @@ export class CreateAll implements Seeder {
       this.userEntity.push(
         await factory(User)()
           .map(async (user: User) : Promise<User> => {
-            const file = await factory(FileItem)().create();
+            const file = await factory(FileItem)().create({ path:`http://localhost:8000/api/files/default_profile_${i%5}.jpeg`});
             file.owner = user;
             user.avatarFile = file;
             user.jobAnnouncements = []
