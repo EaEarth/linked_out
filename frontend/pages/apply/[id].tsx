@@ -7,7 +7,7 @@ import styles from './job_detail.module.scss';
 import axios from 'axios';
 import Link from 'next/link';
 import { ApplyModal } from '../../components/JobApply/modal';
-import { useRouter } from 'next/router'
+import { Router, useRouter } from 'next/router'
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
 import { useRootStore } from '../../stores/stores';
@@ -221,11 +221,22 @@ export async function getServerSideProps(context) {
         headers: {
             Cookie: `jwt=${cookie['jwt']}`,
         },
+    })
+    .catch((err) => {
+        console.log(err)
     });
+    if(!profile){
+        return {
+            redirect: {
+            permanent: false,
+            destination: '/auth/login'
+            }
+        }
+    }
     return {
         props: {
             jobDetails: data,
-            profile: profile.data
+            profile: profile ? profile.data:null
         }
     }
 }
