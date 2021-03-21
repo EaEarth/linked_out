@@ -11,11 +11,7 @@ import axios, { AxiosError } from 'axios';
 export class ApplicationStore {
     private rootStore: RootStore;
     @observable
-    resumeId: number | null;
-    @observable
-    coverLetterId: number | null;
-    @observable
-    transcriptId: number | null;
+    id: number | null;
     @observable
     show: boolean;
 
@@ -26,20 +22,14 @@ export class ApplicationStore {
     }
 
     @action
-    async uploadFile(file, name: string): Promise<void> {
+    async uploadFile(file): Promise<void> {
         let formData = new FormData();
         formData.append('file', file, file.name);
         try {
             const response = await axios.post('http://localhost:8000/api/files/upload', formData);
             runInAction(() => {
                 if (response.status === 201) {
-                    if (name === 'resume') {
-                        this.resumeId = response.data.id;
-                    } else if (name === 'coverLetter') {
-                        this.coverLetterId = response.data.id;
-                    } else if (name === 'transcript') {
-                        this.transcriptId = response.data.id;
-                    }
+                    this.id = response.data.id;
                 }
             });
         } catch (err) {
