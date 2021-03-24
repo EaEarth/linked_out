@@ -9,10 +9,11 @@ import { JobModule } from './job-announcement/job.module';
 import { CaslModule } from './casl/casl.module';
 import { FilesModule } from './files/files.module';
 import { JobApplicationModule } from './job-application/job-application.module';
+import { ChatModule } from './chat/chat.module';
 import 'reflect-metadata';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), AuthModule, UsersModule, JobModule, CaslModule, FilesModule, JobApplicationModule],
+  imports: [TypeOrmModule.forRoot(), AuthModule, UsersModule, JobModule, CaslModule, FilesModule, JobApplicationModule, ChatModule],
   controllers: [AppController],
   providers: [AppService],
 })

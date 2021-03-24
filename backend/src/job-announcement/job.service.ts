@@ -78,6 +78,10 @@ export class JobService {
         return this.repo.findOne(id, { relations: ["picture", "tags"] });
     }
 
+    findByIdWithOwner(id: number): Promise<JobAnnouncement | undefined> {
+        return this.repo.findOne(id, { relations: ["picture", "tags", "owner"] });
+    }
+
     findAnnouncementById(id: number): Promise<JobAnnouncement | undefined> {
         return this.repo.findOne(id);
     }

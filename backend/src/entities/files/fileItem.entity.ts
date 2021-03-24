@@ -23,7 +23,7 @@ export class FileItem {
   @OneToMany(() => JobAnnouncement, jobAnnouncements => jobAnnouncements.picture)
   jobAnnouncements: JobAnnouncement[];
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, user=>user.avatarFile)
   profileUser: User;
 
   @OneToOne(() => JobApplication)

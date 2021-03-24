@@ -53,7 +53,7 @@ export class User {
     @Column({default: false})
     isAdmin: boolean;
 
-    @OneToOne(() => FileItem)
+    @OneToOne(() => FileItem, file=>file.profileUser)
     @JoinColumn()
     avatarFile: FileItem;
 
