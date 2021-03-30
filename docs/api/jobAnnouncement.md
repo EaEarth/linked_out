@@ -186,14 +186,13 @@ Get all tags
 ```json
 [
     {
- 
+
         "id": "tagId",
         "name": "tagname"
     },
     ...
 ]
 ```
-
 
 ---
 
@@ -522,4 +521,28 @@ Path Variable
     "avatarFile": "avatarFile"
   }
 }
+```
+
+---
+
+## `DELETE` api/job/user/recommendation
+
+---
+
+**Explanation**
+
+```js
+Recommend a job announcement from a user
+```
+
+**Guard**
+
+```js
+["JwtAuthGuard"];
+```
+
+**Response**
+
+```json
+
 ```

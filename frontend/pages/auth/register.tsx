@@ -5,6 +5,7 @@ import { Col, Container, InputGroup, Row, Form, FormGroup } from 'react-bootstra
 import DefaultLayout from '../../layouts/Default';
 import Link from 'next/link';
 import axios from 'axios';
+import Select from 'react-select';
 import PhoneInput from 'react-phone-input-2';
 
 
@@ -21,6 +22,8 @@ export const Register = (props) => {
     birthDate: "",
     password: "",
     confirmPassword: "",
+    tags: [],
+    province: "",
     successMessage: null
   })
 
@@ -33,6 +36,8 @@ export const Register = (props) => {
     phone: '',
     birthDate: '',
     password: '',
+    tags: '',
+    province: '',
     confirmPassword: '',
   })
 
@@ -44,12 +49,22 @@ export const Register = (props) => {
     }));
   };
 
+  const handleSelectMultiChange = (e) => {
+    let tempTags = [];
+    for (let i=0;i<e.length;i++){
+      tempTags.push(e[i]['value']);
+    }
+    setState((prevState) => ({...prevState,tags: tempTags}));
+    console.log(state)
+  }
+
   const handleSubmitClick = (e) => {
     e.preventDefault();
     let allInfo = true;
     if (!state.username.length) {
       setRequired((prevRequired) => ({ ...prevRequired, username: "*required" }));
       allInfo = false;
+      console.log(required)
     } else setRequired((prevRequired) => ({ ...prevRequired, username: "" }));
 
     if (!state.firstname.length) {
@@ -92,12 +107,17 @@ export const Register = (props) => {
       allInfo = false;
     } else setRequired((prevRequired) => ({ ...prevRequired, phone: "" }));
 
+    if (!state.province) {
+      setRequired(({...required, province:"*required"}))
+    } else setRequired(({...required, province:""}))
+
     if (state.password === state.confirmPassword) {
       if (allInfo) sendDetailsToServer();
     } else {
       setRequired((prevRequired) => ({ ...prevRequired, confirmPassword: "Password not match" }));
     }
   };
+
 
   const sendDetailsToServer = () => {
     if (state.email.length && state.password.length) {
@@ -113,6 +133,8 @@ export const Register = (props) => {
         latitude: 12,
         longtitude: 13,
         telNumber: state.phone,
+        province: state.province,
+        tags: state.tags
       };
       axios
         .post('http://localhost:8000/api/users', payload)
@@ -235,6 +257,36 @@ export const Register = (props) => {
               </Form.Group>
 
               <Form.Group>
+                  <Form.Label>Job Tag</Form.Label>
+                  <Select
+                    name="colors"
+                    options={state.tags.length >= 3 ? [] : props.allTags}
+                    noOptionsMessage={() =>
+                      'You could only assign 3 tags to your profile'
+                    }
+                    className="basic-multi-select "
+                    classNamePrefix="select"
+                    onChange={handleSelectMultiChange}
+                    isMulti
+                  />
+                  <p style={{ color: 'red' }}>{required.tags}</p>
+                </Form.Group>
+                
+                <label>Province</label>
+                <Select
+                  options={provinceList}
+                  name="province"
+                  isSearchable="true"
+                  maxMenuHeight={200}
+                  className="basic-select mb-3"
+                  classNamePrefix="select"
+                  onChange={(e) => {
+                    setState({...state,province: e.value})
+                  }}
+                />
+                <p style={{ color: 'red' }}>{required.province}</p>
+
+              <Form.Group>
                 <i className="bi bi-key-fill"></i>
                 <Form.Control
                   type="password"
@@ -280,84 +332,19 @@ export const Register = (props) => {
   );
 };
 
-const province = [
-    'นครราชสีมา',
-    'เชียงใหม่',
-    'กาญจนบุรี',
-    'ตาก',
-    'อุบลราชธานี',
-    'สุราษฎร์ธานี',
-    'ชัยภูมิ',
-    'แม่ฮ่องสอน',
-    'เพชรบูรณ์',
-    'ลำปาง',
-    'อุดรธานี',
-    'เชียงราย',
-    'น่าน',
-    'เลย',
-    'ขอนแก่น',
-    'พิษณุโลก',
-    'บุรีรัมย์',
-    'นครศรีธรรมราช',
-    'สกลนคร',
-    'นครสวรรค์',
-    'ศรีสะเกษ',
-    'กำแพงเพชร',
-    'ร้อยเอ็ด',
-    'สุรินทร์',
-    'อุตรดิตถ์',
-    'สงขลา',
-    'สระแก้ว',
-    'กาฬสินธุ์',
-    'อุทัยธานี',
-    'สุโขทัย',
-    'แพร่',
-    'ประจวบคีรีขันธ์',
-    'จันทบุรี',
-    'พะเยา',
-    'เพชรบุรี',
-    'ลพบุรี',
-    'ชุมพร',
-    'นครพนม',
-    'สุพรรณบุรี',
-    'ฉะเชิงเทรา',
-    'มหาสารคาม',
-    'ราชบุรี',
-    'ตรัง',
-    'ปราจีนบุรี',
-    'กระบี่',
-    'พิจิตร',
-    'ยะลา',
-    'ลำพูน',
-    'นราธิวาส',
-    'ชลบุรี',
-    'มุกดาหาร',
-    'บึงกาฬ',
-    'พังงา',
-    'ยโสธร',
-    'หนองบัวลำภู',
-    'สระบุรี',
-    'ระยอง',
-    'พัทลุง',
-    'ระนอง',
-    'อำนาจเจริญ',
-    'หนองคาย',
-    'ตราด',
-    'พระนครศรีอยุธยา',
-    'สตูล',
-    'ชัยนาท',
-    'นครปฐม',
-    'นครนายก',
-    'ปัตตานี',
-    'กรุงเทพมหานคร',
-    'ปทุมธานี',
-    'สมุทรปราการ',
-    'อ่างทอง',
-    'สมุทรสาคร',
-    'สิงห์บุรี',
-    'นนทบุรี',
-    'ภูเก็ต',
-    'สมุทรสงคราม',
-  ];
+export async function getServerSideProps(context) {
+  const tagapi = await axios.get('http://localhost:8000/api/job/tag/index');
+  let allTags = []
+  for (const tag of tagapi.data) {
+    allTags.push({ value: tag.name, label: tag.name });
+  }
+  return {
+    props:{
+      allTags: allTags
+    }
+  }
+}
+
+const provinceList = [{ 'label': 'นครราชสีมา', 'value': 'นครราชสีมา' }, { 'label': 'เชียงใหม่', 'value': 'เชียงใหม่' }, { 'label': 'กาญจนบุรี', 'value': 'กาญจนบุรี' }, { 'label': 'ตาก', 'value': 'ตาก' }, { 'label': 'อุบลราชธานี', 'value': 'อุบลราชธานี' }, { 'label': 'สุราษฎร์ธานี', 'value': 'สุราษฎร์ธานี' }, { 'label': 'ชัยภูมิ', 'value': 'ชัยภูมิ' }, { 'label': 'แม่ฮ่องสอน', 'value': 'แม่ฮ่องสอน' }, { 'label': 'เพชรบูรณ์', 'value': 'เพชรบูรณ์' }, { 'label': 'ลำปาง', 'value': 'ลำปาง' }, { 'label': 'อุดรธานี', 'value': 'อุดรธานี' }, { 'label': 'เชียงราย', 'value': 'เชียงราย' }, { 'label': 'น่าน', 'value': 'น่าน' }, { 'label': 'เลย', 'value': 'เลย' }, { 'label': 'ขอนแก่น', 'value': 'ขอนแก่น' }, { 'label': 'พิษณุโลก', 'value': 'พิษณุโลก' }, { 'label': 'บุรีรัมย์', 'value': 'บุรีรัมย์' }, { 'label': 'นครศรีธรรมราช', 'value': 'นครศรีธรรมราช' }, { 'label': 'สกลนคร', 'value': 'สกลนคร' }, { 'label': 'นครสวรรค์', 'value': 'นครสวรรค์' }, { 'label': 'ศรีสะเกษ', 'value': 'ศรีสะเกษ' }, { 'label': 'กำแพงเพชร', 'value': 'กำแพงเพชร' }, { 'label': 'ร้อยเอ็ด', 'value': 'ร้อยเอ็ด' }, { 'label': 'สุรินทร์', 'value': 'สุรินทร์' }, { 'label': 'อุตรดิตถ์', 'value': 'อุตรดิตถ์' }, { 'label': 'สงขลา', 'value': 'สงขลา' }, { 'label': 'สระแก้ว', 'value': 'สระแก้ว' }, { 'label': 'กาฬสินธุ์', 'value': 'กาฬสินธุ์' }, { 'label': 'อุทัยธานี', 'value': 'อุทัยธานี' }, { 'label': 'สุโขทัย', 'value': 'สุโขทัย' }, { 'label': 'แพร่', 'value': 'แพร่' }, { 'label': 'ประจวบคีรีขันธ์', 'value': 'ประจวบคีรีขันธ์' }, { 'label': 'จันทบุรี', 'value': 'จันทบุรี' }, { 'label': 'พะเยา', 'value': 'พะเยา' }, { 'label': 'เพชรบุรี', 'value': 'เพชรบุรี' }, { 'label': 'ลพบุรี', 'value': 'ลพบุรี' }, { 'label': 'ชุมพร', 'value': 'ชุมพร' }, { 'label': 'นครพนม', 'value': 'นครพนม' }, { 'label': 'สุพรรณบุรี', 'value': 'สุพรรณบุรี' }, { 'label': 'ฉะเชิงเทรา', 'value': 'ฉะเชิงเทรา' }, { 'label': 'มหาสารคาม', 'value': 'มหาสารคาม' }, { 'label': 'ราชบุรี', 'value': 'ราชบุรี' }, { 'label': 'ตรัง', 'value': 'ตรัง' }, { 'label': 'ปราจีนบุรี', 'value': 'ปราจีนบุรี' }, { 'label': 'กระบี่', 'value': 'กระบี่' }, { 'label': 'พิจิตร', 'value': 'พิจิตร' }, { 'label': 'ยะลา', 'value': 'ยะลา' }, { 'label': 'ลำพูน', 'value': 'ลำพูน' }, { 'label': 'นราธิวาส', 'value': 'นราธิวาส' }, { 'label': 'ชลบุรี', 'value': 'ชลบุรี' }, { 'label': 'มุกดาหาร', 'value': 'มุกดาหาร' }, { 'label': 'บึงกาฬ', 'value': 'บึงกาฬ' }, { 'label': 'พังงา', 'value': 'พังงา' }, { 'label': 'ยโสธร', 'value': 'ยโสธร' }, { 'label': 'หนองบัวลำภู', 'value': 'หนองบัวลำภู' }, { 'label': 'สระบุรี', 'value': 'สระบุรี' }, { 'label': 'ระยอง', 'value': 'ระยอง' }, { 'label': 'พัทลุง', 'value': 'พัทลุง' }, { 'label': 'ระนอง', 'value': 'ระนอง' }, { 'label': 'อำนาจเจริญ', 'value': 'อำนาจเจริญ' }, { 'label': 'หนองคาย', 'value': 'หนองคาย' }, { 'label': 'ตราด', 'value': 'ตราด' }, { 'label': 'พระนครศรีอยุธยา', 'value': 'พระนครศรีอยุธยา' }, { 'label': 'สตูล', 'value': 'สตูล' }, { 'label': 'ชัยนาท', 'value': 'ชัยนาท' }, { 'label': 'นครปฐม', 'value': 'นครปฐม' }, { 'label': 'นครนายก', 'value': 'นครนายก' }, { 'label': 'ปัตตานี', 'value': 'ปัตตานี' }, { 'label': 'กรุงเทพมหานคร', 'value': 'กรุงเทพมหานคร' }, { 'label': 'ปทุมธานี', 'value': 'ปทุมธานี' }, { 'label': 'สมุทรปราการ', 'value': 'สมุทรปราการ' }, { 'label': 'อ่างทอง', 'value': 'อ่างทอง' }, { 'label': 'สมุทรสาคร', 'value': 'สมุทรสาคร' }, { 'label': 'สิงห์บุรี', 'value': 'สิงห์บุรี' }, { 'label': 'นนทบุรี', 'value': 'นนทบุรี' }, { 'label': 'ภูเก็ต', 'value': 'ภูเก็ต' }, { 'label': 'สมุทรสงคราม', 'value': 'สมุทรสงคราม' }]
 
 export default Register;

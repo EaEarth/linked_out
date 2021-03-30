@@ -1,8 +1,9 @@
-import { Column, Double, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, Timestamp, Unique } from "typeorm";
+import { Column, Double, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, Timestamp, Unique } from "typeorm";
 import { IsDate, IsEmail } from 'class-validator';
 import { JobAnnouncement } from "../job/jobAnnouncement.entity";
 import { FileItem } from "../files/fileItem.entity";
 import { JobApplication } from "../job/jobApplication.entity";
+import { Tag } from "../job/tag.entity";
 
 @Entity()
 @Unique(["username"])
@@ -51,6 +52,9 @@ export class User {
     @Column({default: false})
     isAdmin: boolean;
 
+    @Column()
+    province: string;
+
     @OneToOne(() => FileItem)
     @JoinColumn()
     avatarFile: FileItem;
@@ -64,4 +68,7 @@ export class User {
     @OneToMany(() => JobApplication, jobApplication => jobApplication.applicant)
     jobApplication: JobApplication[];
 
+    @ManyToMany(() => Tag, Tag => Tag.users)
+    @JoinTable()
+    tags: Tag[];
 }

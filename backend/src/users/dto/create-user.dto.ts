@@ -1,6 +1,7 @@
 import { Type } from "class-transformer";
 import { IsDate, IsEmail, IsEmpty, IsLatitude, IsLongitude, IsNotEmpty, IsNumberString, IsOptional, Length } from "class-validator";
 import { JobAnnouncement } from "src/entities/job/jobAnnouncement.entity";
+import { Tag } from "src/entities/job/tag.entity";
 import { Double } from "typeorm";
 
 export class createUser{
@@ -53,6 +54,12 @@ export class createUser{
 
     @IsEmpty()
     isAdmin: boolean;
+
+    @IsNotEmpty()
+    province: string;
+
+    @IsOptional()
+    tags: string[];
 
     @IsEmpty()
     jobAnnouncement : JobAnnouncement[];

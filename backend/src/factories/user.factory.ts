@@ -25,6 +25,8 @@ define(User, (faker: typeof Faker) => {
     user.vertifyAt = null
     user.isAdmin = false
     user.avatarFile = null
+    user.province = ""
+    user.tags = []
     user.jobAnnouncements = []
     user.files = []
 

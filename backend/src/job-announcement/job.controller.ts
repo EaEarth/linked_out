@@ -50,7 +50,8 @@ export class JobController {
   @Get('search')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async searchGet(@Body() dto: searchAnnouncement): Promise<JobAnnouncement[]> {
-    return this.service.search(dto);
+    let qb = this.service.search(dto);
+    return qb.getMany();
   }
 
   @Post()
@@ -99,5 +100,11 @@ export class JobController {
   @Post('tag/:name')
   async createTag(@Param('name') name: string): Promise<Tag> {
     return this.service.createTag(name);
+  }
+
+  @Get('user/recommendation')
+  @UseGuards(JwtAuthGuard)
+  async recommended(@Request() req): Promise<JobAnnouncement[]> {
+    return this.service.recommendedJob(req.user.id);;
   }
 }

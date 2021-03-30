@@ -1,5 +1,6 @@
 import { Type } from "class-transformer";
 import { IsDate, IsEmail, IsLatitude, IsLongitude, IsNumberString, IsOptional, Length } from "class-validator";
+import { Tag } from "src/entities/job/tag.entity";
 import { Double } from "typeorm";
 
 export class updateUser{
@@ -45,6 +46,12 @@ export class updateUser{
     
     @IsOptional()
     avatarFileId: number;
+
+    @IsOptional()
+    tags: string[];
+
+    @IsOptional()
+    province: string;
 
     @IsOptional()
     isAdmin: boolean;

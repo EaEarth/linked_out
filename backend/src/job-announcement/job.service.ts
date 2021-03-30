@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JobAnnouncement } from 'src/entities/job/jobAnnouncement.entity';
-import { Repository } from 'typeorm';
+import { QueryBuilder, Repository, SelectQueryBuilder } from 'typeorm';
 import { createAnnouncement } from './jobDto/create-announcement.dto';
 import { updateAnnouncement } from './jobDto/update-announcement.dto';
 import { searchAnnouncement } from './jobDto/search-announcement.dto';
@@ -36,7 +36,7 @@ export class JobService {
         return this.tagRepo.find();
     }
 
-    search(dto: searchAnnouncement): Promise<JobAnnouncement[]> {
+    search(dto: searchAnnouncement): SelectQueryBuilder<JobAnnouncement> {
         const info = this.prepareSearch(dto);
 
         // split search keyword
@@ -70,8 +70,7 @@ export class JobService {
             qb = qb.andWhere("upperBoundSalary >= :salary", { salary: info.lowerBoundSalary }) // upperBound salary must >= specific salary
             qb = qb.andWhere(" isPublished = 1 ") // the announcement must published
         }
-        const result = qb.getMany();
-        return result;
+        return qb;
     }
 
     findById(id: number): Promise<JobAnnouncement | undefined> {
@@ -201,4 +200,16 @@ export class JobService {
         }
         return tag;
     }
+
+    async recommendedJob(id: number): Promise<JobAnnouncement[]> {
+        let user = await this.usersService.findById(id)
+        let info:searchAnnouncement = {'tag':user.tags.map(a => a.name), 'province':user.province, 'search':"", 'lowerBoundSalary':0}
+        let qb = this.search(info)
+        let result = await qb.take(10).getMany();
+        if(result.length<10){
+            result = result.concat(await this.repo.find({ relations: ["picture", "tags"], where: { isPublished: true }, take:10-result.length}))
+        }
+        return result
+    }
+
 }

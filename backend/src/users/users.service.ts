@@ -8,22 +8,25 @@ import { CaslAbilityFactory } from 'src/casl/casl-ability.factory';
 import { Action } from 'src/policies/action.enum';
 import { FilesService } from 'src/files/files.service';
 import { updateUser } from './dto/update-user.dto';
+import { Tag } from 'src/entities/job/tag.entity';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectRepository(User)
         private readonly repo: Repository<User>,
+        @InjectRepository(Tag) 
+        private readonly tagRepo: Repository<Tag>,
         private readonly filesService: FilesService,
         private readonly caslAbilityFactory: CaslAbilityFactory
     ){}
 
     async index(): Promise<any> {
-        return this.repo.find({relations:["avatarFile"]});
+        return this.repo.find({relations:["avatarFile","tags"]});
     }
     
     async findById(id: number): Promise<User | undefined> {
-        return this.repo.findOne(id,{relations:["avatarFile"]});
+        return this.repo.findOne(id,{relations:["avatarFile","tags"]});
     }
 
     async findUserById(id: number): Promise<User | undefined> {
@@ -31,28 +34,42 @@ export class UsersService {
     }
 
     async findByUsername(username: string): Promise<User | undefined> {
-        return this.repo.findOne({username},{relations:["avatarFile"]});
+        return this.repo.findOne({username},{relations:["avatarFile","tags"]});
     }
 
-    async create({password,...dto}: Omit<createUser, 'id'>): Promise<User>{
+    async create({password,tags,...dto}: Omit<createUser, 'id'>): Promise<User>{
         const user = { ...new User(), ...dto};
         if (dto.avatarFileId) {
             user.avatarFile = await this.filesService.findById(dto.avatarFileId)
         }
         user.hashedPassword = this.hash(password);
+        tags = [...new Set(tags)];
+        var tagEntitys = []
+        for(var i=0;i<tags.length;i++){
+            var tagEntity = await this.tagRepo.findOne({ where: { name: tags[i] } });
+            if (tagEntity===undefined) {
+                tagEntity = { ...new Tag(), ...{ name: tags[i] } };
+                await this.tagRepo.save(tagEntity)
+                tagEntitys.push(tagEntity)
+            }
+            else{
+                tagEntitys.push(tagEntity)
+            }
+        }
+        user.tags = tagEntitys
         return this.repo.save(user);
     }
 
-    async update(user: User,{id,...dto}: updateUser): Promise<User>{
+    async update(user: User,{tags,...dto}: updateUser): Promise<User>{
         const ability = this.caslAbilityFactory.createForUser(user);
-        if(id){
-            if(!ability.can(Action.Manage,'all')) throw new UnauthorizedException();
-        }
-        else {
-            id = user.id;
-        }
+        const id = dto.id || user.id 
+        
         const updatedUser = { ...(await this.repo.findOne(id)), ...dto };
         if(updatedUser == undefined) throw new NotFoundException();
+        console.log(updatedUser)
+        console.log(user)
+        console.log(updatedUser.id == user.id);
+
         if(!ability.can(Action.Update,updatedUser) && !(updatedUser.id == user.id)) throw new UnauthorizedException();
         if (dto.password) {
             updatedUser.hashedPassword = this.hash(dto.password);
@@ -60,6 +77,20 @@ export class UsersService {
         if (dto.avatarFileId) {
             updatedUser.avatarFile = await this.filesService.findById(dto.avatarFileId)
         }
+        tags = [...new Set(tags)];
+        var tagEntitys = []
+        for(var i=0;i<tags.length;i++){
+            var tagEntity = await this.tagRepo.findOne({ where: { name: tags[i] } });
+            if (tagEntity===undefined) {
+                tagEntity = { ...new Tag(), ...{ name: tags[i] } };
+                await this.tagRepo.save(tagEntity)
+                tagEntitys.push(tagEntity)
+            }
+            else{
+                tagEntitys.push(tagEntity)
+            }
+        }
+        updatedUser.tags = tagEntitys;
         return this.repo.save(updatedUser);
     }
 
