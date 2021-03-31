@@ -4,6 +4,8 @@ import { FileItem } from '../entities/files/fileItem.entity';
 import { JobAnnouncement } from '../entities/job/jobAnnouncement.entity';
 import { Tag } from '../entities/job/tag.entity';
 import { JobApplication } from '../entities/job/jobApplication.entity';
+import { ChatRoom } from '../entities/chats/chatRoom.entity';
+import { Message } from '../entities/chats/message.entity';
 
 export class CreateAll implements Seeder {
   
@@ -83,6 +85,27 @@ export class CreateAll implements Seeder {
     }
     var rng
     for(var i = 0; i<10; i++){
+      for (var j = 0; j<2; j++){
+        await factory(ChatRoom)()
+        .map(async (chatRoom: ChatRoom) : Promise<ChatRoom> => {
+          chatRoom.messages = [];
+
+          const message = await factory(Message)({
+            sender:this.userEntity[i]
+          }).create();
+          chatRoom.messages.push(message);
+
+          const message2 = await factory(Message)({
+            sender:this.userEntity[(i+1+j)%this.userEntity.length]
+          }).create();
+          chatRoom.messages.push(message2);
+
+          chatRoom.jobAnnouncement = this.announcementEntity[i*3];
+          chatRoom.recruiter = this.userEntity[i];
+          chatRoom.applicant = this.userEntity[(i+1+j)%this.userEntity.length];
+          return chatRoom;
+        }).create()
+      }
       await factory(JobApplication)()
       .map(async (application : JobApplication) : Promise<JobApplication> => {
         application.applicant = this.userEntity[i];
