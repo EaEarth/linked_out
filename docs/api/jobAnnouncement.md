@@ -525,7 +525,7 @@ Path Variable
 
 ---
 
-## `DELETE` api/job/user/recommendation
+## `GET` api/job/user/recommendation
 
 ---
 
