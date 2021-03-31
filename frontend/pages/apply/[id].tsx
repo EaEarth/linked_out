@@ -58,16 +58,16 @@ export const appForm = (props) => {
             coverLetterId: null
         };
         if (state.resume) {
-            await applicationStore.uploadFile(state.resume, 'resume');
-            payload['resumeId'] = applicationStore.resumeId;
+            await applicationStore.uploadFile(state.resume);
+            payload['resumeId'] = applicationStore.id;
         }
         if (state.coverLetter) {
-            await applicationStore.uploadFile(state.coverLetter, 'coverLetter');
-            payload['coverLetterId'] = applicationStore.coverLetterId;
+            await applicationStore.uploadFile(state.coverLetter);
+            payload['coverLetterId'] = applicationStore.id;
         }
         if (state.transcript) {
-            await applicationStore.uploadFile(state.transcript, 'transcript');
-            payload['transcriptId'] = applicationStore.transcriptId;
+            await applicationStore.uploadFile(state.transcript);
+            payload['transcriptId'] = applicationStore.id;
         }
         await applicationStore.apply(payload);
         setModalShow(applicationStore.show);

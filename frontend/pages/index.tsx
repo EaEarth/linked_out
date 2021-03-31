@@ -1,7 +1,8 @@
 import Head from 'next/head';
 import React from 'react';
-import { Col, Container, Jumbotron, Row } from 'react-bootstrap';
+import { Col, Container, Jumbotron, Row, } from 'react-bootstrap';
 import DefaultLayout from '../layouts/Default';
+import styles from '../components/Homepage/homepage.module.scss';
 
 export const Home = () => {
   return (
@@ -10,19 +11,9 @@ export const Home = () => {
         <title>LinkedOut</title>
       </Head>
       <Jumbotron>
-        <Container>
-          <h1 className="display-3">Welcome to Linked Out</h1>
-          <p>
-            This is a template for a simple marketing or informational website.
-            It includes a large callout called a jumbotron and three supporting
-            pieces of content. Use it as a starting point to create something
-            more unique.
-          </p>
-          <p>
-            <a className="btn btn-primary btn-lg" href="#" role="button">
-              Learn more »
-            </a>
-          </p>
+        <Container className={`${styles['container']}`}>
+          <h1 className="display-3 text-center">Welcome to Linked Out</h1>
+          <h2 className="text-center">Find your dream job</h2>
         </Container>
       </Jumbotron>
     </DefaultLayout>
