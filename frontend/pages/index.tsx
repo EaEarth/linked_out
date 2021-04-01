@@ -15,14 +15,25 @@ export const Home = (props) => {
       <Head>
         <title>LinkedOut</title>
       </Head>
-      <Container >
-        <Row className={`d-block ${styles['container']}`} >
-          <h1 className="text-center font-weight-bold">Welcome! to Linked Out</h1>
-          <h2 className="text-center">Find your dream job</h2>
+      <Jumbotron className={`${styles['container']} d-flex align-items-center`}>
+        <Container>
+          <Row className="">
+            <Col className="">
+              <h1 className="font-weight-bold">Welcome! to</h1>
+              <h1 className="font-weight-bold">Linked Out</h1>
+              <h2 className="">Find your dream job</h2>
+            </Col>
+          </Row>
+        </Container>
+      </Jumbotron>
+      <Container>
+        <Row className="d-block">
+          <h3>Recommend Jobs</h3>
+          <JobAnnouncementGrid
+            jobs={jobs}
+          />
         </Row>
-        <JobAnnouncementGrid
-          jobs={jobs}
-        />
+
       </Container>
     </DefaultLayout>
   );
@@ -30,14 +41,20 @@ export const Home = (props) => {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const cookie = context.req.cookies;
-  const { data } = await axios.get<JobAnnouncement[]>(`/job/user/recommendation`, {
+  const recommendJobs = await axios.get<JobAnnouncement[]>(`/job/user/recommendation`, {
     headers: {
       Cookie: `jwt=${cookie['jwt']}`,
     },
+  }).catch((err) => {
+    console.log(err)
   });
+  if (!recommendJobs) {
+
+  }
+
   return {
     props: {
-      job: data
+      job: recommendJobs ? recommendJobs.data : [],
     }
   }
 }
