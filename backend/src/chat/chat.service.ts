@@ -1,15 +1,17 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Socket } from 'socket.io';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
+import { parse } from 'cookie';
 import { ChatRoom } from 'src/entities/chats/chatRoom.entity';
 import { Message } from 'src/entities/chats/message.entity';
-import { JobAnnouncement } from 'src/entities/job/jobAnnouncement.entity';
 import { User } from 'src/entities/users/user.entity';
 import { JobService } from 'src/job-announcement/job.service';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { createChatRoom } from './chatDto/create-chat-room.dto';
 import { createMessage } from './chatDto/create-message.dto';
+import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class ChatService {
@@ -18,8 +20,19 @@ export class ChatService {
         @InjectRepository(ChatRoom) private readonly chatRoomRepo: Repository<ChatRoom>,
         @InjectRepository(Message) private readonly messageRepo: Repository<Message>,
         private usersService: UsersService,
-        private jobService: JobService
+        private jobService: JobService,
+        private userService: UsersService
     ) { }
+
+    async getUserFromSocket(socket: Socket) {
+        const cookie = socket.handshake.headers.cookie;
+        const { Authentication: authenticationToken } = parse(cookie);
+        const user = await this.userService.getUserFromAuthenticationToken(authenticationToken);
+        if (!user) {
+          throw new WsException('Invalid credentials.');
+        }
+        return user;
+    }
 
     indexChatRoom(): Promise<ChatRoom[]>{
         return this.queryBuilderChatRoom().getMany()

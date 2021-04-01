@@ -8,6 +8,9 @@ import { CaslAbilityFactory } from 'src/casl/casl-ability.factory';
 import { Action } from 'src/policies/action.enum';
 import { FilesService } from 'src/files/files.service';
 import { updateUser } from './dto/update-user.dto';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+
 
 @Injectable()
 export class UsersService {
@@ -15,8 +18,20 @@ export class UsersService {
         @InjectRepository(User)
         private readonly repo: Repository<User>,
         private readonly filesService: FilesService,
-        private readonly caslAbilityFactory: CaslAbilityFactory
+        private readonly caslAbilityFactory: CaslAbilityFactory,
+        private readonly jwtService: JwtService,
+        private readonly configService: ConfigService
+        
     ){}
+
+    public async getUserFromAuthenticationToken(token: string) {
+        const payload = this.jwtService.verify(token, {
+          secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET')
+        });
+        if (payload.userId) {
+          return this.findById(payload.userId);
+        }
+    }
 
     async index(): Promise<any> {
         return this.repo.find({relations:["avatarFile"]});

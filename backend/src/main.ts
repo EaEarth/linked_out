@@ -4,7 +4,6 @@ import { AppModule } from './app.module';
 import { AllExceptionFilter } from './filters/all-exception.filter';
 import * as helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
-import { NestExpressApplication } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
