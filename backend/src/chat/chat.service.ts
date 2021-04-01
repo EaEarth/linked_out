@@ -1,15 +1,17 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Socket } from 'socket.io';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
+import { parse } from 'cookie';
 import { ChatRoom } from 'src/entities/chats/chatRoom.entity';
 import { Message } from 'src/entities/chats/message.entity';
-import { JobAnnouncement } from 'src/entities/job/jobAnnouncement.entity';
 import { User } from 'src/entities/users/user.entity';
 import { JobService } from 'src/job-announcement/job.service';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { createChatRoom } from './chatDto/create-chat-room.dto';
 import { createMessage } from './chatDto/create-message.dto';
+import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class ChatService {
@@ -18,15 +20,26 @@ export class ChatService {
         @InjectRepository(ChatRoom) private readonly chatRoomRepo: Repository<ChatRoom>,
         @InjectRepository(Message) private readonly messageRepo: Repository<Message>,
         private usersService: UsersService,
-        private jobService: JobService
+        private jobService: JobService,
+        private userService: UsersService
     ) { }
 
-    indexChatRoom(): Promise<ChatRoom[]> {
-        return this.queryBuilderChatRoom().getMany()
+    async getUserFromSocket(socket: Socket) {
+        const cookie = socket.handshake.headers.cookie;
+        const { Authentication: authenticationToken } = parse(cookie);
+        const user = await this.userService.getUserFromAuthenticationToken(authenticationToken);
+        if (!user) {
+          throw new WsException('Invalid credentials.');
+        }
+        return user;
     }
 
-    findChatRoomById(chatRoomId: number): Promise<ChatRoom> {
-        return this.queryBuilderChatRoom().where("chatroom.id = :id", { id: chatRoomId }).getOne();
+    indexChatRoom(): Promise<ChatRoom[]>{
+        return this.queryBuilderChatRoom().getMany();
+    }
+
+    findChatRoomById(chatRoomId: number, userId: number): Promise<ChatRoom>{
+        return this.queryBuilderChatRoom().where("chatroom.id = :id",{id: chatRoomId}).getOne();
     }
 
     async findMessageById(user: User, messageId: number): Promise<Message> {
@@ -59,19 +72,19 @@ export class ChatService {
             .getMany();
     }
 
-    indexChatRoomByJobAnnouncement(jobAnnouncementId: number): Promise<ChatRoom[]> {
+    indexChatRoomByJobAnnouncement(jobAnnouncementId: number, userId: number): Promise<ChatRoom[]>{
         return this.queryBuilderChatRoom()
-            .where("announcement.id = :id", { id: jobAnnouncementId }).getMany();
+        .where("announcement.id = :id",{id: jobAnnouncementId}).getMany();
     }
 
     private queryBuilderChatRoom() {
         return this.chatRoomRepo
-            .createQueryBuilder("chatroom")
-            .leftJoinAndSelect("chatroom.recruiter", "recruiter")
-            .leftJoinAndSelect("recruiter.avatarFile", "recruiterPict")
-            .leftJoinAndSelect("chatroom.applicant", "applicant")
-            .leftJoinAndSelect("applicant.avatarFile", "applicantPict")
-            .leftJoinAndSelect('chatroom.jobAnnouncement', "announcement")
+        .createQueryBuilder("chatroom")
+        .leftJoinAndSelect("chatroom.recruiter", "recruiter")
+        .leftJoinAndSelect("recruiter.avatarFile", "recruiterPict")
+        .leftJoinAndSelect("chatroom.applicant", "applicant")
+        .leftJoinAndSelect("applicant.avatarFile", "applicantPict")
+        .leftJoinAndSelect('chatroom.jobAnnouncement', "announcement")
     }
 
     async indexMessageFromChatRoom(id: number, userId: number): Promise<Message[]> {
@@ -104,9 +117,9 @@ export class ChatService {
 
     async createMessage(user: User, dto: createMessage) {
         const { chatRoomId, ...content } = dto;
-        const chatRoom = await this.findChatRoomById(chatRoomId);
-        if (chatRoom === undefined) throw new NotFoundException("Chat room doesn't exist")
-        if (chatRoom.applicant.id !== user.id && chatRoom.recruiter.id !== user.id) throw new UnauthorizedException("User can't acces to this chat room");
+        const chatRoom = await this.findChatRoomById(chatRoomId, user.id);
+        if(chatRoom === undefined) throw new NotFoundException("Chat room doesn't exist")
+        if(chatRoom.applicant.id !== user.id && chatRoom.recruiter.id !== user.id) throw new UnauthorizedException("User can't acces to this chat room");
         const sender = await this.usersService.findById(user.id);
         const message = { ...new Message(), ...content }
         message.sender = sender;
@@ -114,9 +127,9 @@ export class ChatService {
         return this.messageRepo.save(message);
     }
 
-    async deleteChatRoom(user: User, chatRoomId: number): Promise<ChatRoom> {
-        const chatRoom = await this.findChatRoomById(chatRoomId);
-        if (chatRoom.applicant.id !== user.id && chatRoom.recruiter.id !== user.id) throw new UnauthorizedException("User can't acces to this chat room");
+    async deleteChatRoom(user:User, chatRoomId: number): Promise<ChatRoom>{
+        const chatRoom = await this.findChatRoomById(chatRoomId, user.id);
+        if(chatRoom.applicant.id !== user.id && chatRoom.recruiter.id !== user.id) throw new UnauthorizedException("User can't acces to this chat room");
         this.chatRoomRepo.remove(chatRoom);
         return chatRoom
     }
@@ -137,9 +150,9 @@ export class ChatService {
     // 
     //     
 
-    indexChatRoomPaginate(page: number, limit: number) {
-        const qb = this.queryBuilderChatRoom();
-        return paginate<ChatRoom>(qb, { page, limit, route: "http://localhost:8000/api/chat/paginate/index" })
+    indexChatRoomPaginate(page: number, limit: number): Promise<Pagination<ChatRoom>>{
+        const qb = this.queryBuilderChatRoom()
+        return paginate<ChatRoom>(qb,{page, limit, route:"http://localhost:8000/api/chat/paginate/index"})
     }
 
     indexChatRoomByRecruiterPaginate(recruiterId: number, page: number, limit: number): Promise<Pagination<ChatRoom>> {
@@ -159,11 +172,10 @@ export class ChatService {
         return paginate(qb, { page, limit, route: "http://localhost:8000/api/chat/paginate/index/member/chat-room" });
     }
 
-    indexChatRoomByJobAnnouncementPaginate(jobAnnouncementId: number, page: number, limit: number): Promise<Pagination<ChatRoom>> {
+    indexChatRoomByJobAnnouncementPaginate(jobAnnouncementId: number,userId: number, page: number, limit: number): Promise<Pagination<ChatRoom>>{
         const qb = this.queryBuilderChatRoom()
-            .leftJoinAndSelect('chatroom.jobAnnouncement', "announcement")
-            .where("announcement.id = :id", { id: jobAnnouncementId });
-        return paginate(qb, { page, limit, route: "http://localhost:8000/api/chat/paginate/index/job-announcement/" + jobAnnouncementId + "/chat-room" });
+        .where("announcement.id = :id",{id: jobAnnouncementId});
+        return paginate(qb,{page, limit, route:"http://localhost:8000/api/chat/paginate/index/job-announcement/"+jobAnnouncementId+"/chat-room"});
     }
 
     async indexMessageFromChatRoomPaginate(id: number, userId: number, page: number, limit: number): Promise<Pagination<Message>> {

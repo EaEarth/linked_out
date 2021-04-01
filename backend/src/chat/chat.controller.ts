@@ -26,8 +26,11 @@ export class ChatController {
     @Get('index/chat-room/:id')
     @UseGuards(JwtAuthGuard)
     @UsePipes(new ValidationPipe({ whitelist: true }))
-    async indexChatRoomById(@Param('id', new ParseIntPipe()) id: number): Promise<ChatRoom> {
-        return this.service.findChatRoomById(id);
+    async indexChatRoomById( 
+        @Param('id', new ParseIntPipe()) id: number,
+        @Request() req
+    ): Promise<ChatRoom> {
+        return this.service.findChatRoomById(id, req.user.id);
     }
 
     @Get('index/recruiter/chat-room')
@@ -44,15 +47,18 @@ export class ChatController {
 
     @Get('index/member/chat-room')
     @UseGuards(JwtAuthGuard)
-    async indexChatRoomByMember(@Request() req): Promise<ChatRoom[]> {
-        return this.service.indexChatRoomByMember(req.user.id)
+    async indexChatRoomByMember(@Request() req) {
+        return {"chat": await this.service.indexChatRoomByMember(req.user.id), "user": req.user}
     }
 
     @Get('index/job-announcement/:id/chat-room')
     @UseGuards(JwtAuthGuard)
     @UsePipes(new ValidationPipe({ whitelist: true }))
-    async indexChatRoomByJobAnnouncement(@Param('id', new ParseIntPipe()) id: number): Promise<ChatRoom[]> {
-        return this.service.indexChatRoomByJobAnnouncement(id);
+    async indexChatRoomByJobAnnouncement(
+        @Param('id', new ParseIntPipe()) id: number,
+        @Request() req
+    ): Promise<ChatRoom[]> {
+        return this.service.indexChatRoomByJobAnnouncement(id, req.user.id);
     }
 
     @Get('index/message/chat-room/:roomId')
@@ -144,8 +150,9 @@ export class ChatController {
         @Param('id', new ParseIntPipe()) id: number,
         @Query('page') page: number = 1,
         @Query('limit') limit: number = 10,
+        @Request() req
     ): Promise<Pagination<ChatRoom>> {
-        return this.service.indexChatRoomByJobAnnouncementPaginate(id, page, limit);
+        return this.service.indexChatRoomByJobAnnouncementPaginate(id,req.user.id,page, limit);
     }
 
     @Get('paginate/index/member/chat-room')
@@ -154,8 +161,8 @@ export class ChatController {
         @Request() req,
         @Query('page') page: number = 1,
         @Query('limit') limit: number = 10,
-    ): Promise<Pagination<ChatRoom>> {
-        return this.service.indexChatRoomByMemberPaginate(req.user.id, page, limit);
+    ){
+        return {"chat": await this.service.indexChatRoomByMemberPaginate(req.user.id,page, limit), "user": req.user};
     }
 
     @Get('paginate/index/message/chat-room/:roomId')
