@@ -532,17 +532,34 @@ Path Variable
 **Explanation**
 
 ```js
-Recommend a job announcement from a user
+Recommend a job announcement at most 10 announcement to a user
 ```
 
 **Guard**
 
 ```js
-["JwtAuthGuard"];
+["OptionalJwtAuthGuard"];
 ```
 
 **Response**
 
 ```json
-
+[
+    {
+        "id": "announcementId",
+        "title": "announcement title",
+        "description": "announcement description",
+        "company": "company",
+        "lowerBoundSalary": "lowerBoundSalary",
+        "upperBoundSalary": "upperBoundSalary",
+        "province": "province",
+        "isPublished": "isPublished",
+        "address": "address",
+        "amountRequired": "amountRequired",
+        "createdAt": "createdAt",
+        "updatedAt": "updatedAt",
+        "deletedAt": "deletedAt"
+    },
+    ...
+]
 ```

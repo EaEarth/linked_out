@@ -9,10 +9,10 @@ import { createMessage } from './chatDto/create-message.dto';
 
 @Controller('chat')
 export class ChatController {
-    constructor(private readonly service: ChatService) {}
+    constructor(private readonly service: ChatService) { }
 
     @Get('index')
-    async indexChatRoom( ): Promise<ChatRoom[]> {
+    async indexChatRoom(): Promise<ChatRoom[]> {
         return this.service.indexChatRoom();
     }
 
@@ -20,13 +20,13 @@ export class ChatController {
     @UseGuards(JwtAuthGuard)
     @UsePipes(new ValidationPipe({ whitelist: true }))
     async indexMessageById(@Request() req, @Param('id', new ParseIntPipe()) id: number): Promise<Message> {
-        return this.service.findMessageById(req.user,id);
+        return this.service.findMessageById(req.user, id);
     }
 
     @Get('index/chat-room/:id')
     @UseGuards(JwtAuthGuard)
     @UsePipes(new ValidationPipe({ whitelist: true }))
-    async indexChatRoomById( @Param('id', new ParseIntPipe()) id: number): Promise<ChatRoom> {
+    async indexChatRoomById(@Param('id', new ParseIntPipe()) id: number): Promise<ChatRoom> {
         return this.service.findChatRoomById(id);
     }
 
@@ -61,45 +61,45 @@ export class ChatController {
     async indexMessage(@Request() req,
         @Param('roomId', new ParseIntPipe()) id: number,
     ): Promise<Message[]> {
-        return this.service.indexMessageFromChatRoom(id,req.user.id);
+        return this.service.indexMessageFromChatRoom(id, req.user.id);
     }
 
     @Post("chat-room")
     @UseGuards(JwtAuthGuard)
     @UsePipes(new ValidationPipe({ whitelist: true }))
     async createChatRoom(
-      @Request() req,
-      @Body() dto: createChatRoom,
-    ){
-      return this.service.createChatRoom(req.user, dto);
+        @Request() req,
+        @Body() dto: createChatRoom,
+    ) {
+        return this.service.createChatRoom(req.user, dto);
     }
 
     @Post("message")
     @UseGuards(JwtAuthGuard)
     @UsePipes(new ValidationPipe({ whitelist: true }))
     async createMessage(
-      @Request() req,
-      @Body() dto: createMessage,
+        @Request() req,
+        @Body() dto: createMessage,
     ): Promise<Message> {
-      return this.service.createMessage(req.user, dto);
+        return this.service.createMessage(req.user, dto);
     }
 
     @Delete('chat-room/:id')
     @UseGuards(JwtAuthGuard)
     async deleteChatRoom(
-      @Request() req,
-      @Param('id', new ParseIntPipe()) id: number,
+        @Request() req,
+        @Param('id', new ParseIntPipe()) id: number,
     ): Promise<ChatRoom> {
-      return this.service.deleteChatRoom(req.user, id);
+        return this.service.deleteChatRoom(req.user, id);
     }
 
     @Delete('message/:id')
     @UseGuards(JwtAuthGuard)
     async deleteMessage(
-      @Request() req,
-      @Param('id', new ParseIntPipe()) id: number,
+        @Request() req,
+        @Param('id', new ParseIntPipe()) id: number,
     ): Promise<Message> {
-      return this.service.deleteMessage(req.user, id);
+        return this.service.deleteMessage(req.user, id);
     }
 
     //     
@@ -109,52 +109,53 @@ export class ChatController {
     //     
 
     @Get('paginate/index')
-    async indexChatRoomPaginate(  
+    async indexChatRoomPaginate(
         @Query('page') page: number = 1,
         @Query('limit') limit: number = 10,
-    ): Promise<Pagination<ChatRoom>> {
-        return this.service.indexChatRoomPaginate(page, limit);
+        @Request() req
+    ) {
+        return { "chat": this.service.indexChatRoomPaginate(page, limit) };
     }
 
     @Get('paginate/index/recruiter/chat-room')
     @UseGuards(JwtAuthGuard)
-    async indexChatRoomByRecruiterPaginate( 
-        @Request() req, 
-        @Query('page') page: number = 1,
-        @Query('limit') limit: number = 10,
-    ): Promise<Pagination<ChatRoom>> {
-        return this.service.indexChatRoomByRecruiterPaginate(req.user.id,page, limit);
-    }
-
-    @Get('paginate/index/applicant/chat-room')
-    @UseGuards(JwtAuthGuard)
-    async indexChatRoomByApplicantPaginate(  
+    async indexChatRoomByRecruiterPaginate(
         @Request() req,
         @Query('page') page: number = 1,
         @Query('limit') limit: number = 10,
     ): Promise<Pagination<ChatRoom>> {
-        return this.service.indexChatRoomByApplicantPaginate(req.user.id,page, limit);
+        return this.service.indexChatRoomByRecruiterPaginate(req.user.id, page, limit);
+    }
+
+    @Get('paginate/index/applicant/chat-room')
+    @UseGuards(JwtAuthGuard)
+    async indexChatRoomByApplicantPaginate(
+        @Request() req,
+        @Query('page') page: number = 1,
+        @Query('limit') limit: number = 10,
+    ): Promise<Pagination<ChatRoom>> {
+        return this.service.indexChatRoomByApplicantPaginate(req.user.id, page, limit);
     }
 
     @Get('paginate/index/job-announcement/:id/chat-room')
     @UseGuards(JwtAuthGuard)
     @UsePipes(new ValidationPipe({ whitelist: true }))
-    async indexChatRoomByJobAnnouncementPaginate(  
+    async indexChatRoomByJobAnnouncementPaginate(
         @Param('id', new ParseIntPipe()) id: number,
         @Query('page') page: number = 1,
         @Query('limit') limit: number = 10,
     ): Promise<Pagination<ChatRoom>> {
-        return this.service.indexChatRoomByJobAnnouncementPaginate(id,page, limit);
+        return this.service.indexChatRoomByJobAnnouncementPaginate(id, page, limit);
     }
 
     @Get('paginate/index/member/chat-room')
     @UseGuards(JwtAuthGuard)
-    async indexChatRoomByMemberPaginate(  
+    async indexChatRoomByMemberPaginate(
         @Request() req,
         @Query('page') page: number = 1,
         @Query('limit') limit: number = 10,
     ): Promise<Pagination<ChatRoom>> {
-        return this.service.indexChatRoomByMemberPaginate(req.user.id,page, limit);
+        return this.service.indexChatRoomByMemberPaginate(req.user.id, page, limit);
     }
 
     @Get('paginate/index/message/chat-room/:roomId')
@@ -166,6 +167,6 @@ export class ChatController {
         @Query('page') page: number = 1,
         @Query('limit') limit: number = 10,
     ): Promise<Pagination<Message>> {
-        return this.service.indexMessageFromChatRoomPaginate(id,req.user.id, page, limit);
+        return this.service.indexMessageFromChatRoomPaginate(id, req.user.id, page, limit);
     }
 }

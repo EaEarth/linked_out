@@ -29,7 +29,7 @@ export class JobService {
     }
 
     indexAll(): Promise<JobAnnouncement[]> {
-        return this.repo.find({ relations: ["picture", "tags","owner"], where: { isPublished: true } });
+        return this.repo.find({ relations: ["picture", "tags", "owner"], where: { isPublished: true } });
     }
 
     indexTag(): Promise<Tag[]> {
@@ -182,8 +182,8 @@ export class JobService {
         const jobAnnouncement = await this.repo.findOne(id, { relations: ["owner"] });
         if (jobAnnouncement == undefined) throw new NotFoundException("Job announcement not found");
         if (!ability.can(Action.Update, jobAnnouncement) && !(owner.id == jobAnnouncement.owner.id)) throw new UnauthorizedException();
-        const deleteTime = {deletedAt: new Date()}
-        const deletedAnnouncement = {...jobAnnouncement, ...deleteTime};
+        const deleteTime = { deletedAt: new Date() }
+        const deletedAnnouncement = { ...jobAnnouncement, ...deleteTime };
         return this.repo.save(deletedAnnouncement);
     }
 
@@ -207,13 +207,23 @@ export class JobService {
 
     async recommendedJob(id: number): Promise<JobAnnouncement[]> {
         let user = await this.usersService.findById(id)
-        let info:searchAnnouncement = {'tag':user.tags.map(a => a.name), 'province':user.province, 'search':"", 'lowerBoundSalary':0}
+        let info: searchAnnouncement = { 'tag': user.tags.map(a => a.name), 'province': user.province, 'search': "", 'lowerBoundSalary': 0 }
         let qb = this.search(info)
         let result = await qb.take(10).getMany();
-        if(result.length<10){
-            result = result.concat(await this.repo.find({ relations: ["picture", "tags"], where: { isPublished: true }, take:10-result.length}))
+        if (result.length < 10) {
+            result = result.concat(await this.repo.find({ relations: ["picture", "tags"], where: { isPublished: true }, take: 10 - result.length }))
         }
         return result
     }
 
+    async defaultRecommendation(): Promise<JobAnnouncement[]> {
+        let jobs = await this.repo.createQueryBuilder("jobAnnouncement")
+            .leftJoin("jobAnnouncement.application", "jobApplication")
+            .addSelect('COUNT(jobApplication.id)', 'application_count')
+            .groupBy('jobAnnouncement.id')
+            .orderBy("application_count", 'DESC')
+            .take(10)
+            .getMany();
+        return jobs
+    }
 }

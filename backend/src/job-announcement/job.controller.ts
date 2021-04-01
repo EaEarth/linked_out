@@ -21,10 +21,11 @@ import { JobService } from './job.service';
 import { searchAnnouncement } from './jobDto/search-announcement.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Tag } from 'src/entities/job/tag.entity';
+import { OptionalJwtAuthGuard } from 'src/auth/guards/optional-auth.guard';
 
 @Controller('job')
 export class JobController {
-  constructor(private readonly service: JobService) {}
+  constructor(private readonly service: JobService) { }
 
   @Get('index')
   async indexGet(): Promise<JobAnnouncement[]> {
@@ -102,9 +103,10 @@ export class JobController {
     return this.service.createTag(name);
   }
 
+  @UseGuards(OptionalJwtAuthGuard)
   @Get('user/recommendation')
-  @UseGuards(JwtAuthGuard)
   async recommended(@Request() req): Promise<JobAnnouncement[]> {
-    return this.service.recommendedJob(req.user.id);;
+    if (req.user) return this.service.recommendedJob(req.user.id);
+    else return this.service.defaultRecommendation();
   }
 }

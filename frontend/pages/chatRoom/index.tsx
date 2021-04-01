@@ -3,11 +3,35 @@ import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import Image from 'next/image';
 import DefaultLayout from '../../layouts/Default';
+import styles from '../../components/Chat/ChatList.module.scss';
+import ContactCard from '../../components/Chat/ContactCard';
+import ChatList from '../../components/Chat/ChatList';
+
 export const chatRoom = (props) => {
   const mockData = [
     {
       name: 'Dee',
-      lastMessage: 'HELLO MAN',
+      job: 'Back-end Dev',
+      lastDate: '3 days ago',
+    },
+    {
+      name: 'Dee',
+      job: 'Back-end Dev',
+      lastDate: '3 days ago',
+    },
+    {
+      name: 'Dee',
+      job: 'Back-end Dev',
+      lastDate: '3 days ago',
+    },
+    {
+      name: 'Dee',
+      job: 'Back-end Dev',
+      lastDate: '3 days ago',
+    },
+    {
+      name: 'Dee',
+      job: 'Back-end Dev',
       lastDate: '3 days ago',
     },
   ];
@@ -21,7 +45,7 @@ export const chatRoom = (props) => {
       <Container className="my-3">
         <Row>
           <Col md={3}>
-            <div className="list-group w-100">
+            <div className={`list-group ${styles.chatlist}`}>
               <button className="list-group-item">
                 <Row>
                   <Col md={3} className="px-1 py-1">
@@ -45,13 +69,15 @@ export const chatRoom = (props) => {
                   </Col>
                 </Row>
               </button>
-              <li className="list-group-item">A second item</li>
-              <li className="list-group-item">A third item</li>
-              <li className="list-group-item">A fourth item</li>
-              <li className="list-group-item">And a fifth one</li>
+              <ContactCard {...mockData[0]}></ContactCard>
+              <ContactCard {...mockData[0]}></ContactCard>
+              <ContactCard {...mockData[0]}></ContactCard>
+              <ContactCard {...mockData[0]}></ContactCard>
             </div>
           </Col>
-          <Col md={9}></Col>
+          <Col md={3}>
+            <ChatList {...mockData}></ChatList>
+          </Col>
         </Row>
       </Container>
     </DefaultLayout>
