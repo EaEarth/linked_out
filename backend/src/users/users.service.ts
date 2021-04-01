@@ -9,6 +9,8 @@ import { Action } from 'src/policies/action.enum';
 import { FilesService } from 'src/files/files.service';
 import { updateUser } from './dto/update-user.dto';
 import { Tag } from 'src/entities/job/tag.entity';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
@@ -18,7 +20,7 @@ export class UsersService {
         @InjectRepository(Tag) 
         private readonly tagRepo: Repository<Tag>,
         private readonly filesService: FilesService,
-        private readonly caslAbilityFactory: CaslAbilityFactory
+        private readonly caslAbilityFactory: CaslAbilityFactory,
     ){}
 
     async index(): Promise<any> {
