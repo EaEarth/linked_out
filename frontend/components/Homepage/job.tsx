@@ -21,7 +21,8 @@ export const JobAnnouncementCard: React.FC<JobAnnouncementCardProps> = (
             <Card className={`${style['grid']} rounded`}
                 onClick={() => {
                     if (props.id) router.push(`/jobs/${props.id}`);
-                }}>
+                }}
+            >
                 <Row noGutters className="align-items-center" >
 
                     <Col md={4} className="d-flex align-items-center">

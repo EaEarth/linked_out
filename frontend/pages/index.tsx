@@ -25,8 +25,8 @@ export const Home = (props) => {
             </Col>
           </Row>
         </Container>
-      </Jumbotron>
-      <Container>
+      </Jumbotron >
+      <Container className={`${styles['recommend']}`}>
         <Row className="d-block">
           <h3>Recommend Jobs</h3>
           <JobAnnouncementGrid

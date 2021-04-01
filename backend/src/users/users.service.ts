@@ -8,7 +8,15 @@ import { CaslAbilityFactory } from 'src/casl/casl-ability.factory';
 import { Action } from 'src/policies/action.enum';
 import { FilesService } from 'src/files/files.service';
 import { updateUser } from './dto/update-user.dto';
+<<<<<<< HEAD
 import { Tag } from 'src/entities/job/tag.entity';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+=======
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+
+>>>>>>> b4978c3a061f027d6737c06e987dc465b5ff48a8
 
 @Injectable()
 export class UsersService {
@@ -18,8 +26,23 @@ export class UsersService {
         @InjectRepository(Tag) 
         private readonly tagRepo: Repository<Tag>,
         private readonly filesService: FilesService,
-        private readonly caslAbilityFactory: CaslAbilityFactory
+        private readonly caslAbilityFactory: CaslAbilityFactory,
+<<<<<<< HEAD
+=======
+        private readonly jwtService: JwtService,
+        private readonly configService: ConfigService
+        
+>>>>>>> b4978c3a061f027d6737c06e987dc465b5ff48a8
     ){}
+
+    public async getUserFromAuthenticationToken(token: string) {
+        const payload = this.jwtService.verify(token, {
+          secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET')
+        });
+        if (payload.userId) {
+          return this.findById(payload.userId);
+        }
+    }
 
     async index(): Promise<any> {
         return this.repo.find({relations:["avatarFile","tags"]});
