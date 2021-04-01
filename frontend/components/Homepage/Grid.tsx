@@ -16,16 +16,16 @@ export const JobAnnouncementGrid: React.FC<JobAnnouncementGridProps> = ({
         <Row key={'title'} >
             <Col>
                 <Row noGutters className={`${style['title']} align-items-center rounded`}>
-                    <Col className="pr-0 ml-2" md={4}>
+                    <Col className="pl-3 pr-0" md={4}>
                         Position
                     </Col>
-                    <Col className="px-0">
+                    <Col className="px-0 d-none d-md-block">
                         Company
                     </Col>
-                    <Col className="px-0">
+                    <Col className="px-0 d-none d-md-block">
                         Salary
                     </Col>
-                    <Col className="pl-0" md={2}>
+                    <Col className="pl-0 d-none d-md-block" md={2}>
                         Province
                     </Col>
                 </Row>

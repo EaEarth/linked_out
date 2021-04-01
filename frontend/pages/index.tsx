@@ -15,26 +15,28 @@ export const Home = (props) => {
       <Head>
         <title>LinkedOut</title>
       </Head>
-      <Jumbotron className={`${styles['container']} d-flex align-items-center`}>
+      <Jumbotron className={`${styles['jumbotron']} d-flex align-items-center`}>
         <Container>
           <Row className="">
             <Col className="">
               <h1 className="font-weight-bold">Welcome! to</h1>
               <h1 className="font-weight-bold">Linked Out</h1>
+              <h2 className="">Join us and</h2>
               <h2 className="">Find your dream job</h2>
             </Col>
           </Row>
         </Container>
       </Jumbotron >
-      <Container className={`${styles['recommend']}`}>
-        <Row className="d-block">
-          <h3>Recommend Jobs</h3>
-          <JobAnnouncementGrid
-            jobs={jobs}
-          />
-        </Row>
-
-      </Container>
+      <Jumbotron className={`${styles['recommend']}`}>
+        <Container>
+          <Row className="d-block">
+            <h3 className="mb-4 font-weight-bold ">Recommend Jobs</h3>
+            <JobAnnouncementGrid
+              jobs={jobs}
+            />
+          </Row>
+        </Container>
+      </Jumbotron>
     </DefaultLayout>
   );
 };
@@ -45,12 +47,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     headers: {
       Cookie: `jwt=${cookie['jwt']}`,
     },
-  }).catch((err) => {
-    console.log(err)
-  });
-  if (!recommendJobs) {
-
-  }
+  })
 
   return {
     props: {

@@ -25,7 +25,7 @@ export const JobAnnouncementCard: React.FC<JobAnnouncementCardProps> = (
             >
                 <Row noGutters className="align-items-center" >
 
-                    <Col md={4} className="d-flex align-items-center">
+                    <Col md={4} className="d-flex align-items-center ">
                         <Row noGutters>
                             <Col className="mx-2 mb-1 mt-2">
                                 <Image
@@ -37,15 +37,17 @@ export const JobAnnouncementCard: React.FC<JobAnnouncementCardProps> = (
                                 />
                             </Col>
                         </Row>
-                        {props.title}
+                        <Row noGutters>
+                            <Col>{props.title}</Col>
+                        </Row>
                     </Col>
-                    <Col>
+                    <Col className="d-none d-md-block">
                         {props.company}
                     </Col>
-                    <Col>
-                        {props.lowerBoundSalary} to {props.upperBoundSalary} Baht/month
+                    <Col className="d-none d-md-block">
+                        {props.lowerBoundSalary} - {props.upperBoundSalary}   ฿/month
                     </Col>
-                    <Col md={2}>
+                    <Col md={2} className="d-none d-md-block">
                         {props.province}
                     </Col>
                 </Row>
