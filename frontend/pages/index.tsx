@@ -10,12 +10,10 @@ export const Home = () => {
       <Head>
         <title>LinkedOut</title>
       </Head>
-      <Jumbotron>
-        <Container className={`${styles['container']}`}>
-          <h1 className="display-3 text-center">Welcome to Linked Out</h1>
-          <h2 className="text-center">Find your dream job</h2>
-        </Container>
-      </Jumbotron>
+      <Container className={`my-5 ${styles['container']}`}>
+        <h1 className="display-3 text-center">Welcome to Linked Out</h1>
+        <h2 className="text-center">Find your dream job</h2>
+      </Container>
     </DefaultLayout>
   );
 };
