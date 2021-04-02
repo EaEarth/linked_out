@@ -8,18 +8,21 @@ export class WebSocketStore {
     @observable
     socket?: Socket;
 
+    @observable
+    url?: string;
+
     constructor(rootStore: RootStore) {
         this.rootStore = rootStore;
         this.socket = null
+        const urlObject = new URL(process.env.NEXT_PUBLIC_API_ENDPOINT);
+        this.url = `ws://${urlObject.host}`;
+        this.socket = io(this.url);
         makeObservable(this);
     }
 
     @action
     init(): void {
-        this.socket = io(new URL(process.env.NEXT_PUBLIC_API_ENDPOINT).origin);
-        this.socket.on('connect', () => {
-            console.log('Connected');
-        });
+        this.socket.connect();
     }
 
     @action
