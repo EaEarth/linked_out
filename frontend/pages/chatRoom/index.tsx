@@ -13,43 +13,6 @@ import ChatRoom from '../../models/Chat/Chatroom';
 
 export const chatRoom = (props) => {
   const [chatrooms, setChatRooms] = useState(props.chatrooms || []);
-  const mockData: any[] = [
-    {
-      name: 'Dee',
-      job: 'Back-end Dev',
-      lastDate: '3 days ago',
-    },
-    {
-      name: 'Dee',
-      job: 'Back-end Dev',
-      lastDate: '3 days ago',
-    },
-    {
-      name: 'Dee',
-      job: 'Back-end Dev',
-      lastDate: '3 days ago',
-    },
-    {
-      name: 'Dee',
-      job: 'Back-end Dev',
-      lastDate: '3 days ago',
-    },
-    {
-      name: 'Dee',
-      job: 'Back-end Dev',
-      lastDate: '3 days ago',
-    },
-    {
-      name: 'Dee',
-      job: 'Back-end Dev',
-      lastDate: '3 days ago',
-    },
-    {
-      name: 'Dee',
-      job: 'Back-end Dev',
-      lastDate: '3 days ago',
-    },
-  ];
 
   return (
     <DefaultLayout>

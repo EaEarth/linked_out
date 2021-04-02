@@ -8,10 +8,10 @@ export const ChatRoom: React.FC<any> = (props) => {
       <Row className="chatlog-header">
         <p className="font-weight-bold w-100 pb-0 mb-0 text-center">Dee</p>
       </Row>
-      <Row>
+      <Row className="border">
         <Col md={3}></Col>
         <Col md={9}>
-          <p className="border">HELLO</p>
+          <p>HELLO</p>
         </Col>
       </Row>
       <Row>
