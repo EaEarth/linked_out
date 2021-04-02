@@ -3,6 +3,7 @@ import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import Image from 'next/image';
 import DefaultLayout from '../../layouts/Default';
+import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 export const chatRoom = (props) => {
   const mockData = [
     {
@@ -59,3 +60,7 @@ export const chatRoom = (props) => {
 };
 
 export default chatRoom;
+
+export async function getServerSideProps(context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<any>> {
+  return { props: {} };
+}
