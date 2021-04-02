@@ -25,7 +25,7 @@ import { OptionalJwtAuthGuard } from 'src/auth/guards/optional-auth.guard';
 
 @Controller('job')
 export class JobController {
-  constructor(private readonly service: JobService) { }
+  constructor(private readonly service: JobService) {}
 
   @Get('index')
   async indexGet(): Promise<JobAnnouncement[]> {
@@ -106,7 +106,8 @@ export class JobController {
   @UseGuards(OptionalJwtAuthGuard)
   @Get('user/recommendation')
   async recommended(@Request() req): Promise<JobAnnouncement[]> {
-    if (req.user) return this.service.recommendedJob(req.user.id);
-    else return this.service.defaultRecommendation();
+    if (req.user) {
+      return this.service.recommendedJob(req.user.id);
+    } else return this.service.defaultRecommendation();
   }
 }

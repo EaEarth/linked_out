@@ -5,20 +5,23 @@ import Image from 'next/image';
 
 export const ChatLog: React.FC<any> = (props) => {
   return (
-    <Card>
-      <Col className="pt-2 border" md={3}>
-        <Image
-          src={props.picture?.path || '/images/company/default.png'}
-          width="75"
-          height="75"
-          layout="intrinsic"
-        />
-      </Col>
-      <Col className="pt-2 border" md={9}>
-        <Row>{props.title}</Row>
-        <Row>{props.text}</Row>
-      </Col>
+    <Card >
+      <Row noGutters>
+        <Col className="p-2 border" md={2}>
+          <Image
+            src={props.picture?.path || '/images/company/default.png'}
+            width="50"
+            height="50"
+            layout="intrinsic"
+          />
+        </Col>
+        <Col className="pt-2 border">
+          <Card.Title>{props.title}</Card.Title>
+          <Card.Text>{props.text}</Card.Text>
+        </Col>
+      </Row>
     </Card>
+    
   );
 };
 

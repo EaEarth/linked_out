@@ -27,6 +27,7 @@ export const chatRoom = (props) => {
           </Col>
           <ChatRoomComp></ChatRoomComp>
         </Row>
+        
       </Container>
     </DefaultLayout>
   );

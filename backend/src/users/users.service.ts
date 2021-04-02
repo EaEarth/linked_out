@@ -23,8 +23,8 @@ export class UsersService {
         private readonly caslAbilityFactory: CaslAbilityFactory,
         private readonly jwtService: JwtService,
         private readonly configService: ConfigService
-        
-    ){}
+
+    ) { }
 
     public async getUserFromAuthenticationToken(token: string) {
         const payload = this.jwtService.verify(token, {
