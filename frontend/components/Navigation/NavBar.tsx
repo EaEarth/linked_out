@@ -69,10 +69,10 @@ export const NavBar = observer((props) => {
             </Nav.Link>
           </Link>
           {authStore.isLoggedIn && (
-            <Link href="/chatroom">
+            <Link href="/chat-room">
               <Nav.Link
-                active={router.pathname === '/chatroom'}
-                href="/chatroom">
+                active={router.pathname === '/chat-room'}
+                href="/chat-room">
                 Chat
               </Nav.Link>
             </Link>

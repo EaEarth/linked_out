@@ -7,7 +7,7 @@ import DefaultLayout from '../../layouts/Default';
 import styles from '../../components/Chat/ChatList.module.scss';
 import ContactCard from '../../components/Chat/ContactCard';
 import ChatList from '../../components/Chat/ChatList';
-import ChatRoomComp from '../../components/Chat/Chatroom';
+import ChatRoomComp from '../../components/Chat/ChatRoom';
 import { GetServerSidePropsContext } from 'next';
 import ChatRoom from '../../models/Chat/Chatroom';
 
