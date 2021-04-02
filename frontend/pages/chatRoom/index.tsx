@@ -1,14 +1,28 @@
 import Head from 'next/head';
-import React from 'react';
+import React, { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import Image from 'next/image';
+import axios from 'axios';
 import DefaultLayout from '../../layouts/Default';
 import styles from '../../components/Chat/ChatList.module.scss';
 import ContactCard from '../../components/Chat/ContactCard';
 import ChatList from '../../components/Chat/ChatList';
+import { GetServerSidePropsContext } from 'next';
+import ChatRoom from '../../models/Chat/Chatroom';
 
 export const chatRoom = (props) => {
-  const mockData = [
+  const [chatrooms, setChatRooms] = useState(props.chatrooms || []);
+  const mockData: any[] = [
+    {
+      name: 'Dee',
+      job: 'Back-end Dev',
+      lastDate: '3 days ago',
+    },
+    {
+      name: 'Dee',
+      job: 'Back-end Dev',
+      lastDate: '3 days ago',
+    },
     {
       name: 'Dee',
       job: 'Back-end Dev',
@@ -45,43 +59,55 @@ export const chatRoom = (props) => {
       <Container className="my-3">
         <Row>
           <Col md={3}>
-            <div className={`list-group ${styles.chatlist}`}>
-              <button className="list-group-item">
-                <Row>
-                  <Col md={3} className="px-1 py-1">
-                    <Image
-                      src="http://localhost:8000/api/files/default_profile_3.jpg"
-                      width={300}
-                      height={300}
-                      layout="responsive"
-                      className=""
-                    />
-                  </Col>
-
-                  <Col md={9}>
-                    <div className="d-flex w-100 justify-content-between">
-                      <h5 className="mb-1">{mockData[0].name}</h5>
-                      <small>{mockData[0].lastDate}</small>
-                    </div>
-                    <div className="d-flex w-100 justify-content-between">
-                      <small className="">{mockData[0].lastMessage}</small>
-                    </div>
-                  </Col>
-                </Row>
-              </button>
-              <ContactCard {...mockData[0]}></ContactCard>
-              <ContactCard {...mockData[0]}></ContactCard>
-              <ContactCard {...mockData[0]}></ContactCard>
-              <ContactCard {...mockData[0]}></ContactCard>
-            </div>
+            <ChatList {...props.chatrooms}></ChatList>
           </Col>
-          <Col md={3}>
-            <ChatList {...mockData}></ChatList>
+          <Col className="pt-2 border" md={9}>
+            <div>
+              <p className="font-weight-bold pb-0 mb-0 text-center">Dee</p>
+            </div>
+            <div>
+              <p className="border">HELLO</p>
+            </div>
+            {/* <ul className="list-group">
+              <li className="list-group-item active text-center h3">Dee</li>
+              <div className="container">
+                <img
+                  src="http://localhost:8000/api/files/default_profile_1.jpg"
+                  alt="Avatar"></img>
+                <p>Hello. How are you today?</p>
+                <span className="time-right">11:00</span>
+              </div>
+              <li className="list-group-item ">
+                <p className="font-weight-bold pb-0 mb-0">Dee</p>
+                <p>HELLO</p>
+              </li>
+              <li className="list-group-item">
+                <p className="font-weight-bold pb-0 mb-0">Earth</p>
+                <p>HI</p>
+              </li>
+            </ul> */}
           </Col>
         </Row>
       </Container>
     </DefaultLayout>
   );
 };
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const cookie = context.req.cookies;
+  const { data } = await axios.get(
+    'http://localhost:8000/api/chat/index/member/chat-room',
+    {
+      headers: {
+        Cookie: `jwt=${cookie['jwt']}`,
+      },
+    }
+  );
+  return {
+    props: {
+      chatrooms: data,
+    },
+  };
+}
 
 export default chatRoom;

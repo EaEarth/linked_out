@@ -4,29 +4,36 @@ import Image from 'next/image';
 
 export const ContactCard: React.FC<any> = (props) => {
   return (
-    <button className="list-group-item">
-    <Row>
-      <Col md={3}  className="px-1 py-1">
-        <Image
-          src="http://localhost:8000/api/files/default_profile_3.jpg"
-          width={300}
-          height={300}
-          layout="responsive"
-          className=""
-        />
-      </Col>
+    <button className="list-group-item w-100">
+      <Row>
+        <Col md={3} className="px-1 py-1">
+          <Image
+            src={
+              props.user.id === props.recruiter.id
+                ? props.applicant.avatarFile.path
+                : props.recruiter.avatarFile.path
+            }
+            width={300}
+            height={300}
+            layout="responsive"
+            className=""
+          />
+        </Col>
 
-      <Col md={9}>
-        <div className="d-flex w-100 justify-content-between">
-          <h5 className="mb-1">{props.name}</h5>
-          <small>{props.lastDate}</small>
-        </div>
-        <div className="d-flex w-100 justify-content-between">
-          <small className="">{props.job}</small>
-        </div>
-      </Col>
-    </Row>
-  </button>
+        <Col md={9}>
+          <div className="d-flex w-100">
+            <h5 className="mb-1">
+              {props.user.id === props.recruiter.id
+                ? props.applicant.username
+                : props.recruiter.username}
+            </h5>
+          </div>
+          <div className="d-flex w-100">
+            <small className="text-left">{props.jobAnnouncement.title}</small>
+          </div>
+        </Col>
+      </Row>
+    </button>
   );
 };
 
