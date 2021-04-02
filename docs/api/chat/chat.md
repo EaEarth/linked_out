@@ -65,7 +65,7 @@ Body
     "firstname": "firstName",
     "lastname": "lastName",
     "birthDate": "birthDate",
-    "address": "address",
+    "address<": "address",
     "latitude": "latitude",
     "longtitude": "longtitude",
     "telNumber": "telNumber",
