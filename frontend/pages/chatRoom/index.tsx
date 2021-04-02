@@ -68,6 +68,9 @@ export const chatRoom = (props) => {
             <div>
               <p className="border">HELLO</p>
             </div>
+            <div>
+              <p className="border text-right">HI</p>
+            </div>
             {/* <ul className="list-group">
               <li className="list-group-item active text-center h3">Dee</li>
               <div className="container">

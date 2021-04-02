@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
-import { Col, Container, Jumbotron, Row, } from 'react-bootstrap';
+import { Col, Container, Jumbotron, Row } from 'react-bootstrap';
 import DefaultLayout from '../layouts/Default';
 import JobAnnouncementGrid from '../components/Homepage/Grid';
 import styles from '../components/Homepage/homepage.module.scss';
@@ -26,14 +26,12 @@ export const Home = (props) => {
             </Col>
           </Row>
         </Container>
-      </Jumbotron >
+      </Jumbotron>
       <Jumbotron className={`${styles['recommend']}`}>
         <Container>
           <Row className="d-block">
             <h3 className="mb-4 font-weight-bold ">Recommend Jobs</h3>
-            <JobAnnouncementGrid
-              jobs={jobs}
-            />
+            <JobAnnouncementGrid jobs={jobs} />
           </Row>
         </Container>
       </Jumbotron>
@@ -43,17 +41,20 @@ export const Home = (props) => {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const cookie = context.req.cookies;
-  const recommendJobs = await axios.get<JobAnnouncement[]>(`/job/user/recommendation`, {
-    headers: {
-      Cookie: `jwt=${cookie['jwt']}`,
-    },
-  })
+  const recommendJobs = await axios.get<JobAnnouncement[]>(
+    `http://localhost:8000/api/job/user/recommendation`,
+    {
+      headers: {
+        Cookie: `jwt=${cookie['jwt']}`,
+      },
+    }
+  );
 
   return {
     props: {
       job: recommendJobs ? recommendJobs.data : [],
-    }
-  }
+    },
+  };
 }
 
 export default Home;
