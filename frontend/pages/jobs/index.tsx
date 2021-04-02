@@ -78,7 +78,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
   if (context.query.browse) {
     const { data } = await axios.get<JobAnnouncement[]>(
-      'http://localhost:8000/api/job/search',
+      'job/search',
       {
         data: {
           search: searchQuery,
@@ -96,7 +96,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
   const { data } = await axios.get<JobAnnouncement[]>(
-    'http://localhost:8000/api/job/index'
+    'job/index'
   );
 
   return {
