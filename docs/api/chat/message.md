@@ -245,7 +245,13 @@ Path Variable
             "longtitude": "longtitude",
             "telNumber": "telNumber",
             "vertifyAt": "vertifyAt",
-            "isAdmin": "isAdmin"
+            "isAdmin": "isAdmin",
+            "avatarFile": {
+              "id": "file id",
+              "title": "title e.g. 2021-02-16T14:37:16.624Z.png",
+              "type": "file type e.g. image/png",
+              "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
+            }
         },
         "chatRoom": {
             "id": "chat room id",
@@ -374,7 +380,13 @@ Path Variable
               "longtitude": "longtitude",
               "telNumber": "telNumber",
               "vertifyAt": "vertifyAt",
-              "isAdmin": "isAdmin"
+              "isAdmin": "isAdmin",
+              "avatarFile": {
+                "id": "file id",
+                "title": "title e.g. 2021-02-16T14:37:16.624Z.png",
+                "type": "file type e.g. image/png",
+                "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
+              }
           },
           "chatRoom": {
               "id": "chat room id",

@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 export const ContactCard: React.FC<any> = (props) => {
   return (
-    <button className="list-group-item w-100">
+    <button className="list-group-item w-100" onClick={props.setNewRoom(props)} >
       <Row>
         <Col md={3} className="px-1 py-1">
           <Image

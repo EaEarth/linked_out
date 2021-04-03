@@ -9,7 +9,7 @@ export const ChatLog: React.FC<any> = (props) => {
       <Row noGutters>
         <Col className={`pl-2 pt-3 pr-0`} md={1}>
           <Image
-            src={props.picture?.path || '/images/company/central.png'}
+            src={props.sender.avatarFile.path || '/images/company/central.png'}
             width="50"
             height="50"
             layout="intrinsic"
@@ -22,14 +22,14 @@ export const ChatLog: React.FC<any> = (props) => {
             <Row>
               <Col className={`p-0 m-0`} xs={8} md={12}>
                 <h5 className="card-title">
-                  {props.title}
+                  {props.sender.username}
                 </h5>
               </Col>
             </Row>
 
             <Row>
               <Col className={`p-0 m-0`} xs={8} md={12}>
-                {props.text}
+                {props.message}
               </Col>
             </Row>
 
