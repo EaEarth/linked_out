@@ -9,7 +9,8 @@ export const ChatRoom: React.FC<any> = (props) => {
       <Row className={styles['chatlog-header']}>
         <p className="font-weight-bold w-100 pb-0 ปmb-0 text-center">Dee</p>
       </Row>
-      <ChatLog {...{  title: 'DEE',  text: 'Hello how are you  kuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuay'  }}></ChatLog>
+      <ChatLog {...{ title: 'DEE', text: 'Hello how are you  kuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuaykuay' }}></ChatLog>
+      <ChatLog {...{ title: 'xcsfdg', text: 'Hello how are you  ' }}></ChatLog>
       <Row noGutters className={`${styles['sendbox']}`}>
         <InputGroup className="mb-3 align-buttom">
           <FormControl
