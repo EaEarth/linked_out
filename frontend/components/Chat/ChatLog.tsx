@@ -5,31 +5,38 @@ import Image from 'next/image';
 
 export const ChatLog: React.FC<any> = (props) => {
   return (
-    <Card >
+    <Card className={styles["chatLogCard"]}>
       <Row noGutters>
-        <Col className="p-2 border" md={1}>
+        <Col className={`pl-2 pt-3 pr-0`} md={1}>
           <Image
-            src={props.picture?.path || '/images/company/default.png'}
+            src={props.picture?.path || '/images/company/central.png'}
             width="50"
             height="50"
             layout="intrinsic"
           />
         </Col>
         {/* Content */}
-        <Col xs={9} md={11}>
+        <Col className={`p-0 m-0`} xs={9} md={11}>
           <Card.Body>
-            <h6 className="card-title mb-0">
-              <Row>
-                <Col xs={8} md={12}>
+
+            <Row>
+              <Col className={`p-0 m-0`} xs={8} md={12}>
+                <h5 className="card-title">
                   {props.title}
-                </Col>
-              </Row>
-            </h6>
-            <p className="card-text m-0">{props.text}</p>
+                </h5>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col className={`p-0 m-0`} xs={8} md={12}>
+                {props.text}
+              </Col>
+            </Row>
+
           </Card.Body>
         </Col>
       </Row>
-    </Card>
+    </Card >
 
 
 
