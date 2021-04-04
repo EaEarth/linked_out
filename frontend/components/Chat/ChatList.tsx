@@ -8,6 +8,7 @@ export const ChatList: React.FC<any> = (contracts) => {
       <ContactCard
         key={i} 
         setNewRoom={contracts.setNewRoom}
+        currentRoom={contracts.currentRoom}
         {...Object.assign(
           { user: contracts.chat.user },
           contracts.chat.chat[i]

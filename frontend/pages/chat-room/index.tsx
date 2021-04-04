@@ -49,7 +49,7 @@ export const chatRoom = (props) => {
       <Container className="my-3">
         <Row>
           <Col md={3}>
-            <ChatList chat={chatrooms} setNewRoom={setNewRoom}></ChatList>
+            <ChatList chat={chatrooms} setNewRoom={setNewRoom} currentRoom={currentRoom}></ChatList>
           </Col>
           {currentRoom && (
             <ChatRoom message={messages} chat={currentRoom}></ChatRoom>
