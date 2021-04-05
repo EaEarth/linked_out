@@ -25,9 +25,9 @@ export const JobAnnouncementCard: React.FC<JobAnnouncementCardProps> = (
             >
                 <Row noGutters className="align-items-center" >
 
-                    <Col md={4} className="d-flex align-items-center ">
+                    <Col md={4} className="d-flex align-items-center">
                         <Row noGutters>
-                            <Col className="mx-2 mb-1 mt-2">
+                            <Col xs="auto" md="auto" className="mx-2 mb-1 mt-2">
                                 <Image
                                     src={props.picture?.path || '/images/company/default.png'}
                                     width="75"
@@ -36,9 +36,7 @@ export const JobAnnouncementCard: React.FC<JobAnnouncementCardProps> = (
                                     className={`${style['image']}`}
                                 />
                             </Col>
-                        </Row>
-                        <Row noGutters>
-                            <Col>{props.title}</Col>
+                            <Col className="d-flex align-items-center">{props.title}</Col>
                         </Row>
                     </Col>
                     <Col className="d-none d-md-block">
