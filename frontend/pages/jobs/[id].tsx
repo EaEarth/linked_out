@@ -4,20 +4,29 @@ import { Col, Container, Jumbotron, Row } from 'react-bootstrap';
 import DefaultLayout from '../../layouts/Default';
 import Image from 'react-bootstrap/Image';
 import styles from './job_detail.module.scss';
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router'
+import { isServerReq, makeServerAxios } from '../../utils/request';
+import { useAsync } from 'react-use';
 
 export const JobDetails = (props) => {
-  const jobDetails = props.jobDetails
+  const [jobDetails, setJobDetails] = useState(props.jobDetails);
+  const router = useRouter();
+  useAsync(async () => {
+    if (!jobDetails) {
+      const { data } = await fetchData(axios, router.query.id as string);
+      setJobDetails(data);
+    }
+  }, [jobDetails]);
 
   return (
     <DefaultLayout>
       <Head>
-        <title>Job Detail - {jobDetails.company} - {jobDetails.title}</title>
+        <title>Job Detail {jobDetails && `- ${jobDetails.company} - ${jobDetails.title}`}</title>
       </Head>
 
-      <Container className="my-4">
+      {jobDetails && <Container className="my-4">
         <Row>
           <Col md={{ span: 5, offset: 1 }} className=''>
             <h1 className='text-center'>{jobDetails.title}</h1>
@@ -54,17 +63,21 @@ export const JobDetails = (props) => {
             </Link>
           </Col>
         </Row>
-      </Container>
+      </Container>}
 
     </DefaultLayout >
   );
 };
 
+async function fetchData(axios: AxiosInstance, id: string) {
+  return axios.get(`/job/index/${id}`);
+}
+
 export async function getServerSideProps(context) {
-  const details = await axios.get(`/job/index/${context.params.id}`);
+  const { data } = isServerReq(context.req) ? await fetchData(makeServerAxios(context), context.params.id) : { data: null };
   return {
     props: {
-      jobDetails: details.data
+      jobDetails: data
     }
   }
 }
