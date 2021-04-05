@@ -7,12 +7,38 @@ import DefaultLayout from '../../layouts/Default';
 import styles from '../../components/Chat/ChatList.module.scss';
 import ContactCard from '../../components/Chat/ContactCard';
 import ChatList from '../../components/Chat/ChatList';
-import ChatRoomComp from '../../components/Chat/ChatRoom';
+import ChatRoom from '../../components/Chat/ChatRoom';
 import { GetServerSidePropsContext } from 'next';
-import ChatRoom from '../../models/Chat/Chatroom';
+import Test from '../test';
+import ChatLog from '../../components/Chat/ChatLog';
 
 export const chatRoom = (props) => {
   const [chatrooms, setChatRooms] = useState(props.chatrooms || []);
+  const [messages, setMessages] = useState([])
+  const [currentRoom, setCurrentRoom] = useState()
+
+  const chatLog = messages.map(log=>{
+    <ChatLog {...{log}}></ChatLog>
+  })
+
+  const setNewRoom = chatRoom => async e => {
+    setCurrentRoom(chatRoom)
+    setNewMessage(chatRoom.id)
+  }
+
+  const setNewMessage = async chatRoomId => {
+    const cookie = props.cookie
+    const { data } = await axios.get(
+      `http://localhost:8000/api/chat/index/message/chat-room/${chatRoomId}`,
+      {
+        headers: {
+          Cookie: `jwt=${cookie['jwt']}`,
+        },
+      }
+    );
+    setMessages(data);
+  }
+
 
   return (
     <DefaultLayout>
@@ -23,9 +49,11 @@ export const chatRoom = (props) => {
       <Container className="my-3">
         <Row>
           <Col md={3}>
-            <ChatList {...props.chatrooms}></ChatList>
+            <ChatList chat={chatrooms} setNewRoom={setNewRoom} currentRoom={currentRoom}></ChatList>
           </Col>
-          <ChatRoomComp></ChatRoomComp>
+          {currentRoom && (
+            <ChatRoom message={messages} chat={currentRoom}></ChatRoom>
+          )}
         </Row>
         
       </Container>
@@ -46,6 +74,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       chatrooms: data,
+      cookie: cookie
     },
   };
 }

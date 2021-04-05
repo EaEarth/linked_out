@@ -94,6 +94,7 @@ export class ChatService {
             .createQueryBuilder("message")
             .leftJoinAndSelect("message.chatRoom", "chatRoom")
             .leftJoinAndSelect("message.sender", "sender")
+            .leftJoinAndSelect("sender.avatarFile", "pict")
             .where("chatRoom.id = :id", { id: id })
             .getMany();
     }
@@ -185,6 +186,7 @@ export class ChatService {
             .createQueryBuilder("message")
             .leftJoinAndSelect("message.chatRoom", "chatRoom")
             .leftJoinAndSelect("message.sender", "sender")
+            .leftJoinAndSelect("sender.avatarFile", "pict")
             .where("chatRoom.id = :id", { id: id });
         return paginate(qb, { page, limit, route: "http://localhost:8000/api/chat/paginate/index/message/chat-room/" + id });
     }
