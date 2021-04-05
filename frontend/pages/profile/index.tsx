@@ -8,6 +8,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router'
 import dayjs from 'dayjs';
+import Select from 'react-select';
 import { useRootStore } from '../../stores/stores';
 
 export const editProfile = (props) => {
@@ -15,7 +16,8 @@ export const editProfile = (props) => {
     const applicationStore = useRootStore().applicationStore;
     const [modalShow, setModalShow] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
-    const [profile, setProfile] = useState(props.profile);
+    const [profile, setProfile] = useState({...props.profile, tags: props.profile.tags.map(tag => tag.name)});
+
     const [urlPic, setURLPic] = useState(null);
     const [required, setRequired] = useState({
         firstname: '',
@@ -24,6 +26,7 @@ export const editProfile = (props) => {
         address: '',
         phone: '',
         birthDate: '',
+        province: '',
     })
 
     useEffect(() => {
@@ -41,6 +44,14 @@ export const editProfile = (props) => {
             [id]: value,
         }));
     };
+
+    const handleSelectMultiChange = (e) => {
+        let tempTags = [];
+        for (let i=0;i<e.length;i++){
+          tempTags.push(e[i]['value']);
+        }
+        setProfile((prevState) => ({...prevState,tags: tempTags}));
+      }
 
     const handleFileChange = (e) => {
         const { id } = e.target;
@@ -84,6 +95,11 @@ export const editProfile = (props) => {
             allInfo = false;
         } else setRequired((prevRequired) => ({ ...prevRequired, birthDate: "" }));
 
+        if (!profile.province.length) {
+            setRequired((prevRequired) => ({ ...prevRequired, province: "*required" }))
+            allInfo = false;
+        } else setRequired((prevRequired) => ({ ...prevRequired, province: "" }));
+
         if (!allInfo) {
             return
         }
@@ -96,6 +112,8 @@ export const editProfile = (props) => {
             telNumber: profile.telNumber,
             avatarFileId: profile.avatarFile?.id || null,
             birthDate: profile.birthDate,
+            tags: profile.tags,
+            province: profile.province
         };
         if (profile.profilePic != null) {
             await applicationStore.uploadFile(profile.profilePic);
@@ -212,6 +230,37 @@ export const editProfile = (props) => {
                                     </FormControl.Feedback>
                                 </Form.Group>
                                 <Form.Group>
+                                <Form.Label>Job Tag</Form.Label>
+                                <Select
+                                    defaultValue={props.allTags.filter(tag => profile.tags.includes(tag.value))}
+                                    name="colors"
+                                    options={profile.tags.length >= 3 ? [] : props.allTags}
+                                    noOptionsMessage={() =>
+                                    'You could only assign 3 tags to your profile'
+                                    }
+                                    className="basic-multi-select "
+                                    classNamePrefix="select"
+                                    onChange={handleSelectMultiChange}
+                                    isDisabled={isEdit ? '' : 'yes'}
+                                    isMulti
+                                />
+                                </Form.Group>
+                                <label>Province</label>
+                                <Select
+                                defaultValue={provinceList.filter(province => profile.province == province.value)}
+                                options={provinceList}
+                                name="province"
+                                isSearchable="true"
+                                maxMenuHeight={200}
+                                className="basic-select mb-3"
+                                classNamePrefix="select"
+                                isDisabled={isEdit ? '' : 'yes'}
+                                onChange={(e) => {
+                                    setProfile({...profile,province: e.value})
+                                }}
+                                />
+                        
+                                <Form.Group>
                                     <Form.Label>Phone Number</Form.Label>
                                     <FormControl
                                         type="text"
@@ -282,11 +331,19 @@ export async function getServerSideProps(context) {
             Cookie: `jwt=${cookie['jwt']}`,
         },
     });
-    return {
-        props: {
-            profile: data
-        }
+    const tagapi = await axios.get('http://localhost:8000/api/job/tag/index');
+    let allTags = []
+    for (const tag of tagapi.data) {
+        allTags.push({ value: tag.name, label: tag.name });
     }
+        return {
+            props: {
+                profile: data,
+                allTags: allTags
+            }
+        }
 }
+
+const provinceList = [{ 'label': 'นครราชสีมา', 'value': 'นครราชสีมา' }, { 'label': 'เชียงใหม่', 'value': 'เชียงใหม่' }, { 'label': 'กาญจนบุรี', 'value': 'กาญจนบุรี' }, { 'label': 'ตาก', 'value': 'ตาก' }, { 'label': 'อุบลราชธานี', 'value': 'อุบลราชธานี' }, { 'label': 'สุราษฎร์ธานี', 'value': 'สุราษฎร์ธานี' }, { 'label': 'ชัยภูมิ', 'value': 'ชัยภูมิ' }, { 'label': 'แม่ฮ่องสอน', 'value': 'แม่ฮ่องสอน' }, { 'label': 'เพชรบูรณ์', 'value': 'เพชรบูรณ์' }, { 'label': 'ลำปาง', 'value': 'ลำปาง' }, { 'label': 'อุดรธานี', 'value': 'อุดรธานี' }, { 'label': 'เชียงราย', 'value': 'เชียงราย' }, { 'label': 'น่าน', 'value': 'น่าน' }, { 'label': 'เลย', 'value': 'เลย' }, { 'label': 'ขอนแก่น', 'value': 'ขอนแก่น' }, { 'label': 'พิษณุโลก', 'value': 'พิษณุโลก' }, { 'label': 'บุรีรัมย์', 'value': 'บุรีรัมย์' }, { 'label': 'นครศรีธรรมราช', 'value': 'นครศรีธรรมราช' }, { 'label': 'สกลนคร', 'value': 'สกลนคร' }, { 'label': 'นครสวรรค์', 'value': 'นครสวรรค์' }, { 'label': 'ศรีสะเกษ', 'value': 'ศรีสะเกษ' }, { 'label': 'กำแพงเพชร', 'value': 'กำแพงเพชร' }, { 'label': 'ร้อยเอ็ด', 'value': 'ร้อยเอ็ด' }, { 'label': 'สุรินทร์', 'value': 'สุรินทร์' }, { 'label': 'อุตรดิตถ์', 'value': 'อุตรดิตถ์' }, { 'label': 'สงขลา', 'value': 'สงขลา' }, { 'label': 'สระแก้ว', 'value': 'สระแก้ว' }, { 'label': 'กาฬสินธุ์', 'value': 'กาฬสินธุ์' }, { 'label': 'อุทัยธานี', 'value': 'อุทัยธานี' }, { 'label': 'สุโขทัย', 'value': 'สุโขทัย' }, { 'label': 'แพร่', 'value': 'แพร่' }, { 'label': 'ประจวบคีรีขันธ์', 'value': 'ประจวบคีรีขันธ์' }, { 'label': 'จันทบุรี', 'value': 'จันทบุรี' }, { 'label': 'พะเยา', 'value': 'พะเยา' }, { 'label': 'เพชรบุรี', 'value': 'เพชรบุรี' }, { 'label': 'ลพบุรี', 'value': 'ลพบุรี' }, { 'label': 'ชุมพร', 'value': 'ชุมพร' }, { 'label': 'นครพนม', 'value': 'นครพนม' }, { 'label': 'สุพรรณบุรี', 'value': 'สุพรรณบุรี' }, { 'label': 'ฉะเชิงเทรา', 'value': 'ฉะเชิงเทรา' }, { 'label': 'มหาสารคาม', 'value': 'มหาสารคาม' }, { 'label': 'ราชบุรี', 'value': 'ราชบุรี' }, { 'label': 'ตรัง', 'value': 'ตรัง' }, { 'label': 'ปราจีนบุรี', 'value': 'ปราจีนบุรี' }, { 'label': 'กระบี่', 'value': 'กระบี่' }, { 'label': 'พิจิตร', 'value': 'พิจิตร' }, { 'label': 'ยะลา', 'value': 'ยะลา' }, { 'label': 'ลำพูน', 'value': 'ลำพูน' }, { 'label': 'นราธิวาส', 'value': 'นราธิวาส' }, { 'label': 'ชลบุรี', 'value': 'ชลบุรี' }, { 'label': 'มุกดาหาร', 'value': 'มุกดาหาร' }, { 'label': 'บึงกาฬ', 'value': 'บึงกาฬ' }, { 'label': 'พังงา', 'value': 'พังงา' }, { 'label': 'ยโสธร', 'value': 'ยโสธร' }, { 'label': 'หนองบัวลำภู', 'value': 'หนองบัวลำภู' }, { 'label': 'สระบุรี', 'value': 'สระบุรี' }, { 'label': 'ระยอง', 'value': 'ระยอง' }, { 'label': 'พัทลุง', 'value': 'พัทลุง' }, { 'label': 'ระนอง', 'value': 'ระนอง' }, { 'label': 'อำนาจเจริญ', 'value': 'อำนาจเจริญ' }, { 'label': 'หนองคาย', 'value': 'หนองคาย' }, { 'label': 'ตราด', 'value': 'ตราด' }, { 'label': 'พระนครศรีอยุธยา', 'value': 'พระนครศรีอยุธยา' }, { 'label': 'สตูล', 'value': 'สตูล' }, { 'label': 'ชัยนาท', 'value': 'ชัยนาท' }, { 'label': 'นครปฐม', 'value': 'นครปฐม' }, { 'label': 'นครนายก', 'value': 'นครนายก' }, { 'label': 'ปัตตานี', 'value': 'ปัตตานี' }, { 'label': 'กรุงเทพมหานคร', 'value': 'กรุงเทพมหานคร' }, { 'label': 'ปทุมธานี', 'value': 'ปทุมธานี' }, { 'label': 'สมุทรปราการ', 'value': 'สมุทรปราการ' }, { 'label': 'อ่างทอง', 'value': 'อ่างทอง' }, { 'label': 'สมุทรสาคร', 'value': 'สมุทรสาคร' }, { 'label': 'สิงห์บุรี', 'value': 'สิงห์บุรี' }, { 'label': 'นนทบุรี', 'value': 'นนทบุรี' }, { 'label': 'ภูเก็ต', 'value': 'ภูเก็ต' }, { 'label': 'สมุทรสงคราม', 'value': 'สมุทรสงคราม' }]
 
 export default editProfile;

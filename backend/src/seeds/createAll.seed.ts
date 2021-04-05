@@ -31,7 +31,7 @@ export class CreateAll implements Seeder {
             user.tags = []
 
             // newly added
-            if(i<5) user.province = "กรุงเทพ"
+            if(i<5) user.province = 'กรุงเทพมหานคร'
             else user.province = provinces[Math.floor(Math.random()*provinces.length)]
             if(i<5){
               user.tags.push(this.tagEntity[0])
@@ -55,7 +55,7 @@ export class CreateAll implements Seeder {
                 let nameTag;
                 if(i>5) {
                   nameTag = 0
-                  announcement.province = "กรุงเทพ"
+                  announcement.province = 'กรุงเทพมหานคร'
                 }
                 else nameTag = Math.floor(Math.random()*this.tagEntity.length)
                 const nameTag2 = Math.floor(Math.random()*this.tagEntity.length)
@@ -139,7 +139,7 @@ export class CreateAll implements Seeder {
       }).create()
     }
 
-    // Creating Admin and job to mock only 'กรุงเทพ'
+    // Creating Admin and job to mock only 'กรุงเทพมหานคร'
     await factory(User)().create({isAdmin:true});
   };
 

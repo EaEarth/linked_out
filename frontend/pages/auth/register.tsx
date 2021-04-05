@@ -36,7 +36,6 @@ export const Register = (props) => {
     phone: '',
     birthDate: '',
     password: '',
-    tags: '',
     province: '',
     confirmPassword: '',
   })
@@ -269,7 +268,6 @@ export const Register = (props) => {
                     onChange={handleSelectMultiChange}
                     isMulti
                   />
-                  <p style={{ color: 'red' }}>{required.tags}</p>
                 </Form.Group>
                 
                 <label>Province</label>
