@@ -14,31 +14,24 @@ import ChatLog from '../../components/Chat/ChatLog';
 
 export const chatRoom = (props) => {
   const [chatrooms, setChatRooms] = useState(props.chatrooms || []);
-  const [messages, setMessages] = useState([])
-  const [currentRoom, setCurrentRoom] = useState()
+  const [messages, setMessages] = useState([]);
+  const [currentRoom, setCurrentRoom] = useState();
 
-  const chatLog = messages.map(log=>{
-    <ChatLog {...{log}}></ChatLog>
-  })
+  const chatLog = messages.map((log) => {
+    <ChatLog {...{ log }}></ChatLog>;
+  });
 
-  const setNewRoom = chatRoom => async e => {
-    setCurrentRoom(chatRoom)
-    setNewMessage(chatRoom.id)
-  }
+  const setNewRoom = (chatRoom) => async (e) => {
+    setCurrentRoom(chatRoom);
+    setNewMessage(chatRoom.id);
+  };
 
-  const setNewMessage = async chatRoomId => {
-    const cookie = props.cookie
+  const setNewMessage = async (chatRoomId) => {
     const { data } = await axios.get(
-      `http://localhost:8000/api/chat/index/message/chat-room/${chatRoomId}`,
-      {
-        headers: {
-          Cookie: `jwt=${cookie['jwt']}`,
-        },
-      }
+      `http://localhost:8000/api/chat/index/message/chat-room/${chatRoomId}`
     );
     setMessages(data);
-  }
-
+  };
 
   return (
     <DefaultLayout>
@@ -49,13 +42,15 @@ export const chatRoom = (props) => {
       <Container className="my-3">
         <Row>
           <Col md={3}>
-            <ChatList chat={chatrooms} setNewRoom={setNewRoom} currentRoom={currentRoom}></ChatList>
+            <ChatList
+              chat={chatrooms}
+              setNewRoom={setNewRoom}
+              currentRoom={currentRoom}></ChatList>
           </Col>
           {currentRoom && (
             <ChatRoom message={messages} chat={currentRoom}></ChatRoom>
           )}
         </Row>
-        
       </Container>
     </DefaultLayout>
   );
@@ -74,7 +69,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       chatrooms: data,
-      cookie: cookie
     },
   };
 }

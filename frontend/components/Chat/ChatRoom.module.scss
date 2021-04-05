@@ -2,15 +2,13 @@
   background-color: rgba(73, 82, 76, 0.6);
   color: white;
 }
+
 .chatlog {
-  background-color: rgba(73, 82, 76, 0.6);
-  color: white;
+  overflow: hidden auto;
 }
 
-.chatLogCard{
+.chatLogCard {
   border: hidden;
-  
-
 }
 
 .temp {
@@ -18,4 +16,10 @@
   color: white;
   margin: 0px;
   padding: 0px;
+}
+
+.sendbox {
+  position: absolute;
+  width: 97%;
+  bottom: 0px;
 }
