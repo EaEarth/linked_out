@@ -1,15 +1,16 @@
+import { toJS } from "mobx";
 import { observer } from "mobx-react-lite";
 import Head from "next/head";
-import React from "react";
+import React, { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { useLifecycles } from "react-use";
+import { useLifecycles, useMount } from "react-use";
 import DefaultLayout from "../../layouts/Default";
 import { useRootStore } from "../../stores/stores";
 
 export const WebSocket = observer((props) => {
   const webSocketStore = useRootStore().webSocketStore;
   useLifecycles(() => {
-    webSocketStore.init();
+    webSocketStore.connect();
   }, () => {
     webSocketStore.close();
   });
@@ -31,7 +32,18 @@ export const WebSocket = observer((props) => {
             </span>
             </p>
             <p>Url: {webSocketStore.url}</p>
-            <button className="btn btn-primary" onClick={() => { console.log(webSocketStore.socket); }}>Connect</button>
+            <button className="btn btn-primary mr-2" onClick={() => {
+              if (webSocketStore.isConnected) webSocketStore.close();
+              else webSocketStore.connect();
+            }}>{webSocketStore.isConnected ? 'Disconnect' : 'Connect'}</button>
+            <button className="btn btn-secondary" onClick={() => {
+              webSocketStore.socket.emit('msgToServer', 'ทดสอบ');
+            }}>Send message</button>
+            <p>Messages({webSocketStore.messages.length}): </p>
+            <ul>{webSocketStore.messages.map((each, i) =>
+              <li key={i}>{each}</li>
+            )}</ul>
+
           </Col>
         </Row>
       </Container>
