@@ -4,7 +4,8 @@
 }
 
 .chatlog {
-  overflow: hidden auto;
+  height: 460px;
+  overflow-y: scroll;
 }
 
 .chatLogCard {
@@ -20,7 +21,6 @@
 }
 
 .sendbox {
-  position: absolute;
-  width: 97%;
-  bottom: 0px;
+  height: 54px;
+  width: 100%;
 }

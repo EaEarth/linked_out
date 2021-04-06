@@ -13,7 +13,13 @@ export const ContactCard: React.FC<any> = (props) => {
             ? 'white'
             : 'Azure',
       }}
-      onClick={props.setNewRoom(props)}>
+      onClick={props.setNewRoom({
+        recruiter: props.recruiter,
+        jobAnnouncement: props.jobAnnouncement,
+        applicant: props.applicant,
+        user: props.user,
+        id: props.id,
+      })}>
       <Row>
         <Col md={3} className="px-1 py-1">
           <Image

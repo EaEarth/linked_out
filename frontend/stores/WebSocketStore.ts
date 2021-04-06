@@ -27,10 +27,10 @@ export class WebSocketStore {
   messages: any[];
 
   @observable
-  cookie: string
+  cookie: string;
 
   @observable
-  opts: any
+  opts: any;
 
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
@@ -93,11 +93,13 @@ export class WebSocketStore {
 
   @action
   setCookie(cookie: any): void {
-    this.cookie = cookie
+    this.cookie = cookie;
   }
 
   @action
   close(): void {
     this.socket.disconnect();
+    this.socket.off('connect');
+    this.socket.off('disconnect');
   }
 }
