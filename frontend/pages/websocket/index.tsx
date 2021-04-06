@@ -10,7 +10,8 @@ import { GetServerSidePropsContext } from 'next';
 
 export const WebSocket = observer((props: any) => {
   const webSocketStore = useRootStore().webSocketStore;
-  //const cookie = props.cook;
+  webSocketStore.init()
+  webSocketStore.setCookie(props.cookie)
   useLifecycles(
     () => {
       webSocketStore.connect();
@@ -56,14 +57,14 @@ export const WebSocket = observer((props: any) => {
                 className="btn btn-secondary"
                 onClick={() => {
                   webSocketStore.socket.emit('send_message', {
-                    chatRoomId: 10,
+                    chatRoomId: 22,
                     message: 'testWebSocket',
-                    cookie: props.cookie,
+                    cookie: props.cookie
                   });
                 }}>
                 Send message
               </button>
-              <p>Messages({webSocketStore.messages.length}): </p>
+              <p>Message({webSocketStore.messages.length}): </p>
               <ul>
                 {webSocketStore.messages.map((each, i) => (
                   <li key={i}>{each}</li>

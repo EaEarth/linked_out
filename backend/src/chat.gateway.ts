@@ -29,6 +29,7 @@ export class AppGateway
   // for testing
   @SubscribeMessage('msgToServer')
   testHandleMessage(client: Socket): void {
+    console.log("test")
     this.server.emit('msgToClient', 'test');
   }
 
@@ -38,21 +39,19 @@ export class AppGateway
     @ConnectedSocket() socket: Socket,
   ) {
     // const sender = await this.userService.findById(1);
-    console.log(socket.handshake.headers.cookie);
-    const { Authentication: authenticationToken } = parse(content.cookie);
-    const sender = await this.userService.getUserFromAuthenticationToken(
-      authenticationToken,
-    );
+    const sender = await this.chatService.getUserFromSocket(socket);
     const message = await this.chatService.createMessage(sender, {
       chatRoomId: content.chatRoomId,
       message: content.message,
     });
-
-    this.server.sockets.emit('receive_message', {
+    this.server.sockets.emit('recieve_message', {
+      id: message.id,
       message: message.message, // message
+      createdAt: message.createdAt,
       sender: {
         senderId: sender.id, // sender id
         username: sender.username, // sender username
+        avatarFile: message.sender.avatarFile // sender avatar picture
       },
       chatroomId: message.chatRoom.id, // chat room id
     });

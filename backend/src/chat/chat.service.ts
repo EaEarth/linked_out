@@ -32,9 +32,15 @@ export class ChatService {
 
   async getUserFromSocket(socket: Socket): Promise<User> {
     const cookie = socket.handshake.headers.cookie;
-    const { Authentication: authenticationToken } = parse(cookie);
+    //const { Authentication: authenticationToken } = parse(cookie);
+    const cookieSplit = cookie.split(' ')
+    var jwt, jwtToken
+    if(cookieSplit[1].startsWith("jwt="))jwt = cookieSplit[1].split("jwt=s%3A")
+    else jwt = cookieSplit[0].split("jwt=s%3A")
+    if(jwt[1].endsWith(";")) jwtToken = jwt[1].split(";")[0]
+    else jwtToken =jwt[1]
     const user = await this.userService.getUserFromAuthenticationToken(
-      authenticationToken,
+      jwtToken.split("%")[0],
     );
     if (!user) {
       throw new WsException('Invalid credentials.');

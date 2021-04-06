@@ -26,12 +26,21 @@ export class WebSocketStore {
   @observable
   messages: any[];
 
+  @observable
+  cookie: string
+
+  @observable
+  opts: any
+
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     this.socket = null;
     this.isConnected = false;
     const urlObject = new URL(process.env.NEXT_PUBLIC_API_ENDPOINT);
     this.url = `ws://${urlObject.host}`;
+    this.opts = {
+      withCredentials: true,
+    };
     this.messages = [];
     makeObservable(this);
     if (typeof window !== 'undefined') {
@@ -41,14 +50,14 @@ export class WebSocketStore {
 
   @action
   init(): void {
-    this.socket = io(this.url);
+    this.socket = io(this.url, this.opts);
     this.socket.on('connect', () => {
       this.setConnected(true);
     });
     this.socket.on('disconnect', () => {
       this.setConnected(false);
     });
-    this.registerListeners();
+    //this.registerListeners();
   }
 
   @action
@@ -65,14 +74,26 @@ export class WebSocketStore {
   registerListeners(): void {
     // Chat
     this.socket.on('recieve_message', (payload) => {
-      console.log(payload);
-      this.addMessage(payload);
+      this.addMessage(payload.message);
+    });
+  }
+
+  @action
+  registerListenersTest(): void {
+    // Chat
+    this.socket.on('msgToClient', (payload) => {
+      this.addMessage(payload.message);
     });
   }
 
   @action
   addMessage(message: any): void {
     this.messages.push(message);
+  }
+
+  @action
+  setCookie(cookie: any): void {
+    this.cookie = cookie
   }
 
   @action

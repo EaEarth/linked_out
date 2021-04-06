@@ -11,7 +11,6 @@ export class UsersController {
     @UseGuards(JwtAuthGuard)
     @Get('profile')
     async getProfile(@Request() req) {
-        console.log(req.user)
         const { hashedPassword, ...output } = await this.service.findById(req.user.id);
         return output;
     }
