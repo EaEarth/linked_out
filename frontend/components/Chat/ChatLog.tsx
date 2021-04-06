@@ -4,39 +4,40 @@ import styles from './ChatRoom.module.scss';
 import Image from 'next/image';
 
 export const ChatLog: React.FC<any> = (props) => {
+  console.log(props);
   return (
-      <Card className={styles['chatLogCard']}>
-        <Row noGutters>
-          <Col className={`pl-2 pt-3 pr-0`} md={1}>
-            <Image
-              src={
-                props.sender.avatarFile
-                  ? props.sender.avatarFile.path
-                  : '/images/company/central.png'
-              }
-              width="50"
-              height="50"
-              layout="intrinsic"
-            />
-          </Col>
-          {/* Content */}
-          <Col className={`p-0 m-0`} xs={9} md={11}>
-            <Card.Body>
-              <Row>
-                <Col className={`p-0 m-0`} xs={8} md={12}>
-                  <h5 className="card-title">{props.sender.username}</h5>
-                </Col>
-              </Row>
+    <Card className={styles['chatLogCard']}>
+      <Row noGutters>
+        <Col className={`pl-2 pt-3 pr-0`} md={1}>
+          <Image
+            src={
+              props.sender.avatarFile
+                ? props.sender.avatarFile.path
+                : '/images/company/central.png'
+            }
+            width="50"
+            height="50"
+            layout="intrinsic"
+          />
+        </Col>
+        {/* Content */}
+        <Col className={`p-0 m-0`} xs={9} md={11}>
+          <Card.Body>
+            <Row>
+              <Col className={`p-0 m-0`} xs={8} md={12}>
+                <h5 className="card-title">{props.sender.firstname}</h5>
+              </Col>
+            </Row>
 
-              <Row>
-                <Col className={`p-0 m-0`} xs={8} md={12}>
-                  {props.message}
-                </Col>
-              </Row>
-            </Card.Body>
-          </Col>
-        </Row>
-      </Card>
+            <Row>
+              <Col className={`p-0 m-0`} xs={8} md={12}>
+                {props.message}
+              </Col>
+            </Row>
+          </Card.Body>
+        </Col>
+      </Row>
+    </Card>
   );
 };
 

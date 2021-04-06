@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import axios from 'axios';
 import DefaultLayout from '../../layouts/Default';
@@ -7,23 +7,21 @@ import ChatList from '../../components/Chat/ChatList';
 import ChatRoom from '../../components/Chat/ChatRoom';
 import { GetServerSidePropsContext } from 'next';
 import { useRootStore } from '../../stores/stores';
-import { useLifecycles } from 'react-use';
+import { useEffectOnce, useLifecycles } from 'react-use';
 
 export const chatRoom = (props) => {
   const [chatrooms, setChatRooms] = useState(props.chatrooms || []);
   const [messages, setMessages] = useState([]);
-  const [currentRoom, setCurrentRoom] = useState<any>(null);
   const [messageBox, setMessageBox] = useState();
+  const [currentRoom, setCurrentRoom] = useState<any>();
 
   const webSocketStore = useRootStore().webSocketStore;
+  const self = this;
   useLifecycles(
     () => {
       webSocketStore.connect();
       webSocketStore.setCookie(props.cookie);
       // register
-      webSocketStore.socket.on('recieve_message', (payload) => {
-        appendMessage(payload);
-      });
     },
     () => {
       // unregister
@@ -33,38 +31,27 @@ export const chatRoom = (props) => {
     }
   );
 
-  // const appendMessage = async (message) => {
-  //   console.log(message);
-  //   //console.log(currentRoom);
-  //   //if (message.chatroomId === currentRoom.id) {
-  //   console.log(messages);
-  //   setMessages((prevState) => {
-  //     console.log(prevState);
-  //     const newList = prevState;
-  //     if (newList.length === 0 || message.id !== newList[newList.length - 1].id)
-  //       prevStat.push(message);
-  //     return newList;
-  //   });
-  //   // console.log(messages);
-  //   //}
-  // };
-
-  const appendMessage = async (message) => {
-    console.log(message);
-    //console.log(currentRoom);
-    //if (message.chatroomId === currentRoom.id) {
-    console.log(messages);
-    setMessages((prevState) => {
-      console.log(prevState);
-      if (
-        prevState.length === 0 ||
-        message.id !== prevState[prevState.length - 1].id
-      )
-        prevState.push(message);
-      return prevState;
+  useEffect(() => {
+    webSocketStore.socket.on('recieve_message', (payload) => {
+      appendMessage(payload);
     });
-    // console.log(messages);
-    //}
+    return () => {
+      webSocketStore.socket.off('recieve_message');
+    };
+  }, [messages]);
+
+  const appendMessage = (message) => {
+    if (currentRoom && message.chatroomId === currentRoom.id) {
+      setMessages((prevState) => {
+        const nextState = prevState.slice();
+        if (
+          nextState.length === 0 ||
+          message.id !== nextState[nextState.length - 1].id
+        )
+          nextState.push(message);
+        return nextState;
+      });
+    }
   };
 
   const setNewRoom = (chatRoom) => async (e) => {

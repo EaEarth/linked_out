@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import ScrollableFeed from 'react-scrollable-feed';
+import ScrollToBottom from 'react-scroll-to-bottom';
 import {
   Col,
   FormControl,
@@ -32,15 +34,16 @@ export const ChatRoom: React.FC<any> = ({
       <Row className={styles['chatlog-header']}>
         <p className="font-weight-bold w-100 pb-0 mb-0 text-center">
           {chat.user.id === chat.recruiter.id
-            ? chat.applicant.username
-            : chat.recruiter.username}
+            ? chat.applicant.firstname
+            : chat.recruiter.firstname}
         </p>
       </Row>
       <Row className={styles['chatlog']}>
-        <Col>{text}</Col>
+        <ScrollableFeed>{text}</ScrollableFeed>
       </Row>
+
       <Row className={`fixed-button pl-3 pt-2 ${styles['sendbox']}`}>
-        <InputGroup className="mb-3 align-buttom">
+        <InputGroup className={`mb-3 align-buttom`}>
           <FormControl
             placeholder="Text Message"
             aria-label="Recipient's username"
@@ -48,6 +51,7 @@ export const ChatRoom: React.FC<any> = ({
             onChange={handleChange}
             onKeyPress={keyPress}
             value={value || ''}
+            className={styles['input']}
           />
           <InputGroup.Append>
             <Button variant="outline-secondary" onClick={sendMessage}>

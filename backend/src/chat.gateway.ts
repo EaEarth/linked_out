@@ -29,7 +29,7 @@ export class AppGateway
   // for testing
   @SubscribeMessage('msgToServer')
   testHandleMessage(client: Socket): void {
-    console.log("test")
+    console.log('test');
     this.server.emit('msgToClient', 'test');
   }
 
@@ -51,7 +51,9 @@ export class AppGateway
       sender: {
         senderId: sender.id, // sender id
         username: sender.username, // sender username
-        avatarFile: message.sender.avatarFile // sender avatar picture
+        firstname: message.sender.firstname,
+        lastname: message.sender.lastname,
+        avatarFile: message.sender.avatarFile, // sender avatar picture
       },
       chatroomId: message.chatRoom.id, // chat room id
     });
