@@ -27,11 +27,13 @@ export class UsersService {
     ) { }
 
     public async getUserFromAuthenticationToken(token: string) {
-        const payload = this.jwtService.verify(token, {
-            secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET')
+        const tokenArr = token.split('.')
+        tokenArr.splice(3,tokenArr.length-3)
+        const payload = this.jwtService.verify(tokenArr.join('.'), {
+            secret: 'secretSuperMysteriesConfidentialHiddenConcealedDarknessKey'
         });
-        if (payload.userId) {
-            return this.findById(payload.userId);
+        if (payload.sub) {
+            return this.findById(payload.sub);
         }
     }
 
@@ -80,9 +82,6 @@ export class UsersService {
 
         const updatedUser = { ...(await this.repo.findOne(id)), ...dto };
         if (updatedUser == undefined) throw new NotFoundException();
-        console.log(updatedUser)
-        console.log(user)
-        console.log(updatedUser.id == user.id);
 
         if (!ability.can(Action.Update, updatedUser) && !(updatedUser.id == user.id)) throw new UnauthorizedException();
         if (dto.password) {

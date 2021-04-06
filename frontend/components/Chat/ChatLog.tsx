@@ -9,7 +9,7 @@ export const ChatLog: React.FC<any> = (props) => {
       <Row noGutters>
         <Col className={`pl-2 pt-3 pr-0`} md={1}>
           <Image
-            src={props.sender.avatarFile.path || '/images/company/central.png'}
+            src={(props.sender.avatarFile) ? props.sender.avatarFile.path : '/images/company/central.png'}
             width="50"
             height="50"
             layout="intrinsic"
