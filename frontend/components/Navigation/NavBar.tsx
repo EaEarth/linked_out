@@ -58,16 +58,20 @@ export const NavBar = observer((props) => {
               Home
             </Nav.Link>
           </Link>
-          <Link href="/test">
-            <Nav.Link active={router.pathname === '/test'} href="/test">
-              Test
-            </Nav.Link>
-          </Link>
           <Link href="/jobs">
             <Nav.Link active={router.pathname === '/jobs'} href="/jobs">
               Jobs
             </Nav.Link>
           </Link>
+          {authStore.isLoggedIn && (
+            <Link href="/chat-room">
+              <Nav.Link
+                active={router.pathname === '/chat-room'}
+                href="/chat-room">
+                Chat
+              </Nav.Link>
+            </Link>
+          )}
         </Nav>
         <Form inline className="d-none d-md-flex">
           <Button
@@ -95,6 +99,11 @@ export const NavBar = observer((props) => {
               </Link>
             )}
             {authStore.isLoggedIn && (
+              <NavDropdown.Item onClick={() => router.push('/profile')}>
+                My Profile
+              </NavDropdown.Item>
+            )}
+            {authStore.isLoggedIn && (
               <NavDropdown.Item onClick={() => router.push('/jobs/list')}>
                 My Recruited Job
               </NavDropdown.Item>
@@ -105,7 +114,11 @@ export const NavBar = observer((props) => {
               </NavDropdown.Item>
             )}
             {authStore.isLoggedIn && (
-              <NavDropdown.Item onClick={() => { authStore.logout(); router.push('/') }}>
+              <NavDropdown.Item
+                onClick={() => {
+                  authStore.logout();
+                  router.push('/');
+                }}>
                 Logout
               </NavDropdown.Item>
             )}

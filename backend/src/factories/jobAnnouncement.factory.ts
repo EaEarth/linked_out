@@ -88,7 +88,8 @@ define(JobAnnouncement, (faker: typeof Faker) => {
   announcement.amountRequired = faker.random.number(10000);
   announcement.company = faker.company.companyName();
   announcement.description = faker.lorem.sentence();
-  announcement.isPublished = faker.random.boolean();
+  announcement.isPublished = true;
+  // announcement.isPublished = faker.random.boolean();
   announcement.lowerBoundSalary = faker.random.number(10000);
   announcement.upperBoundSalary =
     faker.random.number(10000) + announcement.lowerBoundSalary;

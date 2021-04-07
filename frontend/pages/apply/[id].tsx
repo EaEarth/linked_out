@@ -7,7 +7,7 @@ import styles from './job_detail.module.scss';
 import axios from 'axios';
 import Link from 'next/link';
 import { ApplyModal } from '../../components/JobApply/modal';
-import { useRouter } from 'next/router'
+import { Router, useRouter } from 'next/router'
 import dayjs from 'dayjs';
 import { observer } from 'mobx-react-lite';
 import { useRootStore } from '../../stores/stores';
@@ -58,16 +58,16 @@ export const appForm = (props) => {
             coverLetterId: null
         };
         if (state.resume) {
-            await applicationStore.uploadFile(state.resume, 'resume');
-            payload['resumeId'] = applicationStore.resumeId;
+            await applicationStore.uploadFile(state.resume);
+            payload['resumeId'] = applicationStore.id;
         }
         if (state.coverLetter) {
-            await applicationStore.uploadFile(state.coverLetter, 'coverLetter');
-            payload['coverLetterId'] = applicationStore.coverLetterId;
+            await applicationStore.uploadFile(state.coverLetter);
+            payload['coverLetterId'] = applicationStore.id;
         }
         if (state.transcript) {
-            await applicationStore.uploadFile(state.transcript, 'transcript');
-            payload['transcriptId'] = applicationStore.transcriptId;
+            await applicationStore.uploadFile(state.transcript);
+            payload['transcriptId'] = applicationStore.id;
         }
         await applicationStore.apply(payload);
         setModalShow(applicationStore.show);
@@ -221,11 +221,22 @@ export async function getServerSideProps(context) {
         headers: {
             Cookie: `jwt=${cookie['jwt']}`,
         },
+    })
+    .catch((err) => {
+        console.log(err)
     });
+    if(!profile){
+        return {
+            redirect: {
+            permanent: false,
+            destination: '/auth/login'
+            }
+        }
+    }
     return {
         props: {
             jobDetails: data,
-            profile: profile.data
+            profile: profile ? profile.data:null
         }
     }
 }

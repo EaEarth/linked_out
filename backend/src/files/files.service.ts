@@ -23,7 +23,6 @@ export class FilesService {
     }
 
     async findByTitle(user: User,title: string): Promise<FileItem[] | undefined> {
-        console.log(await this.repo.find({title:title, owner:user}))
         return this.repo.find({title:title, owner:user});
     }
 

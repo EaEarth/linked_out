@@ -186,14 +186,13 @@ Get all tags
 ```json
 [
     {
- 
+
         "id": "tagId",
         "name": "tagname"
     },
     ...
 ]
 ```
-
 
 ---
 
@@ -522,4 +521,45 @@ Path Variable
     "avatarFile": "avatarFile"
   }
 }
+```
+
+---
+
+## `GET` api/job/user/recommendation
+
+---
+
+**Explanation**
+
+```js
+Recommend a job announcement at most 10 announcement to a user
+```
+
+**Guard**
+
+```js
+["OptionalJwtAuthGuard"];
+```
+
+**Response**
+
+```json
+[
+    {
+        "id": "announcementId",
+        "title": "announcement title",
+        "description": "announcement description",
+        "company": "company",
+        "lowerBoundSalary": "lowerBoundSalary",
+        "upperBoundSalary": "upperBoundSalary",
+        "province": "province",
+        "isPublished": "isPublished",
+        "address": "address",
+        "amountRequired": "amountRequired",
+        "createdAt": "createdAt",
+        "updatedAt": "updatedAt",
+        "deletedAt": "deletedAt"
+    },
+    ...
+]
 ```

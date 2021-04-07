@@ -6,7 +6,7 @@ define(FileItem, (faker: typeof Faker) => {
     const file = new FileItem();
     file.title = faker.system.fileName('jpeg')
     file.type = "image/jpeg"
-    file.path = "http://localhost:8000/api/files/default.jpeg"
+    file.path = "http://localhost:8000/api/files/default.jpg"
     
     return file;
 })

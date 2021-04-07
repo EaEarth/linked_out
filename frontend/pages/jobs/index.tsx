@@ -9,7 +9,7 @@ import DefaultLayout from '../../layouts/Default';
 import axios from 'axios';
 import JobAnnouncement from '../../models/job/JobAnnouncement';
 import { GetServerSidePropsContext } from 'next';
-import { makeServerAxios } from '../../utils/request';
+import { isServerReq, makeServerAxios } from '../../utils/request';
 
 export const Jobs: React.FC<any> = (props) => {
   const router = useRouter();
@@ -64,9 +64,10 @@ export const Jobs: React.FC<any> = (props) => {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  let searchQuery = context.query.search || '';
-  let lowerBoundSalaryQuery = Number(context.query.lowerBoundSalary) || 0;
-  let provinceQuery = context.query.province || '';
+  //if (isServerReq(context.req)) return { props: {} };
+  const searchQuery = context.query.search || '';
+  const lowerBoundSalaryQuery = Number(context.query.lowerBoundSalary) || 0;
+  const provinceQuery = context.query.province || '';
   let tagQuery = context.query.tags || [];
   if (!Array.isArray(tagQuery) && typeof tagQuery === 'string') {
     tagQuery = tagQuery.split(',');
@@ -78,7 +79,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
   if (context.query.browse) {
     const { data } = await axios.get<JobAnnouncement[]>(
-      'http://localhost:8000/api/job/search',
+      'job/search',
       {
         data: {
           search: searchQuery,
@@ -96,7 +97,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
   const { data } = await axios.get<JobAnnouncement[]>(
-    'http://localhost:8000/api/job/index'
+    'job/index'
   );
 
   return {

@@ -21,6 +21,7 @@ import { JobService } from './job.service';
 import { searchAnnouncement } from './jobDto/search-announcement.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Tag } from 'src/entities/job/tag.entity';
+import { OptionalJwtAuthGuard } from 'src/auth/guards/optional-auth.guard';
 
 @Controller('job')
 export class JobController {
@@ -50,7 +51,8 @@ export class JobController {
   @Get('search')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async searchGet(@Body() dto: searchAnnouncement): Promise<JobAnnouncement[]> {
-    return this.service.search(dto);
+    let qb = this.service.search(dto);
+    return qb.getMany();
   }
 
   @Post()
@@ -99,5 +101,15 @@ export class JobController {
   @Post('tag/:name')
   async createTag(@Param('name') name: string): Promise<Tag> {
     return this.service.createTag(name);
+  }
+
+  @UseGuards(OptionalJwtAuthGuard)
+  @Get('user/recommendation')
+  async recommended(@Request() req): Promise<JobAnnouncement[]> {
+    if (req.user) {
+      return this.service.recommendedJob(req.user.id);
+    } else return this.service.defaultRecommendation();
+
+    ``;
   }
 }

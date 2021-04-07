@@ -13,9 +13,9 @@ export const JobApplyCard: React.FC<ApplicationFormCardProps> = (
 ) => {
   const router = useRouter();
   const statusHandler = (status) => {
-    if (status == 1) return 'waiting';
-    else if (status == 2) return 'accepted';
-    else return 'denied';
+    if (status == 1) return 'Waiting';
+    else if (status == 2) return 'Accepted';
+    else return 'Denied';
   }
   const statusColorHandler = (status) => {
     if (status == 1) return 'secondary';
@@ -34,7 +34,7 @@ export const JobApplyCard: React.FC<ApplicationFormCardProps> = (
         }}>
         <Row noGutters className="align-items-center">
           {/* Image */}
-          <Col xs={3} md={5}>
+          <Col xs={3} md={5} className="">
             <Image
               src={props.jobAnnouncement.picture?.path || '/images/company/default.png'}
               width="500"
@@ -60,7 +60,7 @@ export const JobApplyCard: React.FC<ApplicationFormCardProps> = (
               </h6>
               <p className="card-text m-0 text-primary">{props.jobAnnouncement.title}</p>
               <Row className="d-flex m-0">
-                <p className="card-text mr-1">status:</p>
+                <p className="card-text mr-1">Status:</p>
                 <p className={`card-text m-0 text-${statusColorHandler(props.status)}`}>{statusHandler(props.status)}</p>
               </Row>
               <p className="card-text m-0 d-none d-md-block mt-md-4">
