@@ -109,5 +109,7 @@ export class JobController {
     if (req.user) {
       return this.service.recommendedJob(req.user.id);
     } else return this.service.defaultRecommendation();
+
+    ``;
   }
 }
