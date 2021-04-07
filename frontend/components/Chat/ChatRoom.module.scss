@@ -1,0 +1,29 @@
+.chatlog-header {
+  background-color: rgba(73, 82, 76, 0.6);
+  color: white;
+}
+
+.chatlog {
+  height: 460px;
+}
+
+.chatLogCard {
+  border: hidden;
+  width: 100%;
+}
+
+.temp {
+  background-color: rgba(47, 226, 107, 0.6);
+  color: white;
+  margin: 0px;
+  padding: 0px;
+}
+
+.sendbox {
+  height: 54px;
+  width: 100%;
+}
+
+.input {
+  box-shadow: none !important;
+}

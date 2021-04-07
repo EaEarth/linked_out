@@ -65,7 +65,7 @@ Body
     "firstname": "firstName",
     "lastname": "lastName",
     "birthDate": "birthDate",
-    "address": "address",
+    "address<": "address",
     "latitude": "latitude",
     "longtitude": "longtitude",
     "telNumber": "telNumber",
@@ -142,6 +142,21 @@ Get all chat rooms
         "type": "file type e.g. image/png",
         "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
       }
+    },
+    "jobAnnouncement" : {
+      "id": "announcementId",
+      "title": "announcement title",
+      "description": "announcement description",
+      "company": "company",
+      "lowerBoundSalary": "lowerBoundSalary",
+      "upperBoundSalary": "upperBoundSalary",
+      "province": "province",
+      "isPublished": "isPublished",
+      "address": "address",
+      "amountRequired": "amountRequired",
+      "createdAt": "createdAt",
+      "updatedAt": "updatedAt",
+      "deletedAt": "deletedAt"
     }
   },
   ...
@@ -217,6 +232,21 @@ Path Variable
       "type": "file type e.g. image/png",
       "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
     }
+  },
+  "jobAnnouncement": {
+    "id": "announcementId",
+    "title": "announcement title",
+    "description": "announcement description",
+    "company": "company",
+    "lowerBoundSalary": "lowerBoundSalary",
+    "upperBoundSalary": "upperBoundSalary",
+    "province": "province",
+    "isPublished": "isPublished",
+    "address": "address",
+    "amountRequired": "amountRequired",
+    "createdAt": "createdAt",
+    "updatedAt": "updatedAt",
+    "deletedAt": "deletedAt"
   }
 }
 ```
@@ -288,6 +318,21 @@ Get all chat rooms in which current user has role as recruiter
             "type": "file type e.g. image/png",
             "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
             }
+        },
+        "jobAnnouncement" : {
+            "id": "announcementId",
+            "title": "announcement title",
+            "description": "announcement description",
+            "company": "company",
+            "lowerBoundSalary": "lowerBoundSalary",
+            "upperBoundSalary": "upperBoundSalary",
+            "province": "province",
+            "isPublished": "isPublished",
+            "address": "address",
+            "amountRequired": "amountRequired",
+            "createdAt": "createdAt",
+            "updatedAt": "updatedAt",
+            "deletedAt": "deletedAt"
         }
     },
     ...
@@ -361,6 +406,21 @@ Get all chat rooms in which current user has role as applicant
             "type": "file type e.g. image/png",
             "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
             }
+        },
+        "jobAnnouncement" : {
+            "id": "announcementId",
+            "title": "announcement title",
+            "description": "announcement description",
+            "company": "company",
+            "lowerBoundSalary": "lowerBoundSalary",
+            "upperBoundSalary": "upperBoundSalary",
+            "province": "province",
+            "isPublished": "isPublished",
+            "address": "address",
+            "amountRequired": "amountRequired",
+            "createdAt": "createdAt",
+            "updatedAt": "updatedAt",
+            "deletedAt": "deletedAt"
         }
     },
     ...
@@ -388,56 +448,64 @@ Get all chat rooms in which current user has role as applicant or recruiter
 **Response**
 
 ```json
-[
-    {
-        "id": "chat room id",
-        "recruiter": {
-            "id": "userId",
-            "username": "username",
-            "hashedPassword": "hashedPassword",
-            "email": "email",
-            "prefix": "prefix",
-            "firstname": "firstName",
-            "lastname": "lastName",
-            "birthDate": "birthDate",
-            "address": "address",
-            "latitude": "latitude",
-            "longtitude": "longtitude",
-            "telNumber": "telNumber",
-            "vertifyAt": "vertifyAt",
-            "isAdmin": "isAdmin",
-            "avatarFile": {
-            "id": "file id",
-            "title": "title e.g. 2021-02-16T14:37:16.624Z.png",
-            "type": "file type e.g. image/png",
-            "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
+{
+  "chat" :
+    [
+        {
+            "id": "chat room id",
+            "recruiter": {
+                "id": "userId",
+                "username": "username",
+                "hashedPassword": "hashedPassword",
+                "email": "email",
+                "prefix": "prefix",
+                "firstname": "firstName",
+                "lastname": "lastName",
+                "birthDate": "birthDate",
+                "address": "address",
+                "latitude": "latitude",
+                "longtitude": "longtitude",
+                "telNumber": "telNumber",
+                "vertifyAt": "vertifyAt",
+                "isAdmin": "isAdmin",
+                "avatarFile": {
+                "id": "file id",
+                "title": "title e.g. 2021-02-16T14:37:16.624Z.png",
+                "type": "file type e.g. image/png",
+                "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
+                }
+            },
+            "applicant": {
+                "id": "userId",
+                "username": "username",
+                "hashedPassword": "hashedPassword",
+                "email": "email",
+                "prefix": "prefix",
+                "firstname": "firstName",
+                "lastname": "lastName",
+                "birthDate": "birthDate",
+                "address": "address",
+                "latitude": "latitude",
+                "longtitude": "longtitude",
+                "telNumber": "telNumber",
+                "vertifyAt": "vertifyAt",
+                "isAdmin": "isAdmin",
+                "avatarFile": {
+                "id": "file id",
+                "title": "title e.g. 2021-02-16T14:37:16.624Z.png",
+                "type": "file type e.g. image/png",
+                "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
+                }
             }
         },
-        "applicant": {
-            "id": "userId",
-            "username": "username",
-            "hashedPassword": "hashedPassword",
-            "email": "email",
-            "prefix": "prefix",
-            "firstname": "firstName",
-            "lastname": "lastName",
-            "birthDate": "birthDate",
-            "address": "address",
-            "latitude": "latitude",
-            "longtitude": "longtitude",
-            "telNumber": "telNumber",
-            "vertifyAt": "vertifyAt",
-            "isAdmin": "isAdmin",
-            "avatarFile": {
-            "id": "file id",
-            "title": "title e.g. 2021-02-16T14:37:16.624Z.png",
-            "type": "file type e.g. image/png",
-            "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
-            }
-        }
-    },
-    ...
-]
+        ...
+  ],
+  "user": {
+      "id": "current user id",
+      "username": "current username",
+      "isAdmin": false
+  }
+}
 ```
 
 ---
@@ -676,6 +744,21 @@ Get all paginate chat rooms
           "type": "file type e.g. image/png",
           "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
         }
+      },
+      "jobAnnouncement" : {
+        "id": "announcementId",
+        "title": "announcement title",
+        "description": "announcement description",
+        "company": "company",
+        "lowerBoundSalary": "lowerBoundSalary",
+        "upperBoundSalary": "upperBoundSalary",
+        "province": "province",
+        "isPublished": "isPublished",
+        "address": "address",
+        "amountRequired": "amountRequired",
+        "createdAt": "createdAt",
+        "updatedAt": "updatedAt",
+        "deletedAt": "deletedAt"
       }
     },
     ...
@@ -759,11 +842,26 @@ Get all paginate chat rooms in which current user has role as recruiter
               "vertifyAt": "vertifyAt",
               "isAdmin": "isAdmin",
               "avatarFile": {
-              "id": "file id",
-              "title": "title e.g. 2021-02-16T14:37:16.624Z.png",
-              "type": "file type e.g. image/png",
-              "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
-              }
+                "id": "file id",
+                "title": "title e.g. 2021-02-16T14:37:16.624Z.png",
+                "type": "file type e.g. image/png",
+                "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
+              },
+          },
+          "jobAnnouncement" : {
+              "id": "announcementId",
+              "title": "announcement title",
+              "description": "announcement description",
+              "company": "company",
+              "lowerBoundSalary": "lowerBoundSalary",
+              "upperBoundSalary": "upperBoundSalary",
+              "province": "province",
+              "isPublished": "isPublished",
+              "address": "address",
+              "amountRequired": "amountRequired",
+              "createdAt": "createdAt",
+              "updatedAt": "updatedAt",
+              "deletedAt": "deletedAt"
           }
       },
       ...
@@ -847,12 +945,27 @@ Get all paginate chat rooms in which current user has role as applicant
               "vertifyAt": "vertifyAt",
               "isAdmin": "isAdmin",
               "avatarFile": {
-              "id": "file id",
-              "title": "title e.g. 2021-02-16T14:37:16.624Z.png",
-              "type": "file type e.g. image/png",
-              "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
+                "id": "file id",
+                "title": "title e.g. 2021-02-16T14:37:16.624Z.png",
+                "type": "file type e.g. image/png",
+                "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
               }
-          }
+          },
+          "jobAnnouncement" : {
+              "id": "announcementId",
+              "title": "announcement title",
+              "description": "announcement description",
+              "company": "company",
+              "lowerBoundSalary": "lowerBoundSalary",
+              "upperBoundSalary": "upperBoundSalary",
+              "province": "province",
+              "isPublished": "isPublished",
+              "address": "address",
+              "amountRequired": "amountRequired",
+              "createdAt": "createdAt",
+              "updatedAt": "updatedAt",
+              "deletedAt": "deletedAt"
+          },
       },
       ...
   ],
@@ -894,69 +1007,91 @@ Get all paginate chat rooms in which current user has role as applicant or recru
 
 ```json
 {
-  "items": [
-      {
-          "id": "chat room id",
-          "recruiter": {
-              "id": "userId",
-              "username": "username",
-              "hashedPassword": "hashedPassword",
-              "email": "email",
-              "prefix": "prefix",
-              "firstname": "firstName",
-              "lastname": "lastName",
-              "birthDate": "birthDate",
-              "address": "address",
-              "latitude": "latitude",
-              "longtitude": "longtitude",
-              "telNumber": "telNumber",
-              "vertifyAt": "vertifyAt",
-              "isAdmin": "isAdmin",
-              "avatarFile": {
-              "id": "file id",
-              "title": "title e.g. 2021-02-16T14:37:16.624Z.png",
-              "type": "file type e.g. image/png",
-              "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
-              }
-          },
-          "applicant": {
-              "id": "userId",
-              "username": "username",
-              "hashedPassword": "hashedPassword",
-              "email": "email",
-              "prefix": "prefix",
-              "firstname": "firstName",
-              "lastname": "lastName",
-              "birthDate": "birthDate",
-              "address": "address",
-              "latitude": "latitude",
-              "longtitude": "longtitude",
-              "telNumber": "telNumber",
-              "vertifyAt": "vertifyAt",
-              "isAdmin": "isAdmin",
-              "avatarFile": {
-              "id": "file id",
-              "title": "title e.g. 2021-02-16T14:37:16.624Z.png",
-              "type": "file type e.g. image/png",
-              "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
-              }
-          }
+  "chat": {
+    "items": [
+        {
+            "id": "chat room id",
+            "recruiter": {
+                "id": "userId",
+                "username": "username",
+                "hashedPassword": "hashedPassword",
+                "email": "email",
+                "prefix": "prefix",
+                "firstname": "firstName",
+                "lastname": "lastName",
+                "birthDate": "birthDate",
+                "address": "address",
+                "latitude": "latitude",
+                "longtitude": "longtitude",
+                "telNumber": "telNumber",
+                "vertifyAt": "vertifyAt",
+                "isAdmin": "isAdmin",
+                "avatarFile": {
+                "id": "file id",
+                "title": "title e.g. 2021-02-16T14:37:16.624Z.png",
+                "type": "file type e.g. image/png",
+                "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
+                }
+            },
+            "applicant": {
+                "id": "userId",
+                "username": "username",
+                "hashedPassword": "hashedPassword",
+                "email": "email",
+                "prefix": "prefix",
+                "firstname": "firstName",
+                "lastname": "lastName",
+                "birthDate": "birthDate",
+                "address": "address",
+                "latitude": "latitude",
+                "longtitude": "longtitude",
+                "telNumber": "telNumber",
+                "vertifyAt": "vertifyAt",
+                "isAdmin": "isAdmin",
+                "avatarFile": {
+                  "id": "file id",
+                  "title": "title e.g. 2021-02-16T14:37:16.624Z.png",
+                  "type": "file type e.g. image/png",
+                  "path": "file path e.g. http://localhost:3000/api/files/2021-02-16T14:37:16.624Z.png"
+                }
+            },
+            "jobAnnouncement" : {
+                "id": "announcementId",
+                "title": "announcement title",
+                "description": "announcement description",
+                "company": "company",
+                "lowerBoundSalary": "lowerBoundSalary",
+                "upperBoundSalary": "upperBoundSalary",
+                "province": "province",
+                "isPublished": "isPublished",
+                "address": "address",
+                "amountRequired": "amountRequired",
+                "createdAt": "createdAt",
+                "updatedAt": "updatedAt",
+                "deletedAt": "deletedAt"
+            },
+        },
+        ...
+    ],
+    "meta": {
+          "totalItems": "The total amount of SomeEntity matching the filter conditions",
+          "itemCount": "The length of items array (i.e., the amount of items on this page)",
+          "itemsPerPage": "The requested items per page (i.e., the limit parameter)",
+          "totalPages": "The total amount of pages (based on the limit)",
+          "currentPage": "The current page this paginator 'points' to (i.e., the page parameter)"
       },
-      ...
-  ],
-   "meta": {
-        "totalItems": "The total amount of SomeEntity matching the filter conditions",
-        "itemCount": "The length of items array (i.e., the amount of items on this page)",
-        "itemsPerPage": "The requested items per page (i.e., the limit parameter)",
-        "totalPages": "The total amount of pages (based on the limit)",
-        "currentPage": "The current page this paginator 'points' to (i.e., the page parameter)"
-    },
-    "links": {
-        "first": "A URL for the first page to call | '' (blank) if no route is defined e.g. http://localhost:8000/api/chat/paginate/index/member/chat-room?limit=10",
-        "previous": "A URL for the previous page to call | '' (blank) if no previous to call",
-        "next": "A URL for the next page to call | '' (blank) if no page to call",
-        "last": "A URL for the last page to call | '' (blank) if no route is defined e.g. http://localhost:8000/api/chat/paginate/index/member/chat-room?page=5&limit=10"
-    }
+      "links": {
+          "first": "A URL for the first page to call | '' (blank) if no route is defined e.g. http://localhost:8000/api/chat/paginate/index/member/chat-room?limit=10",
+          "previous": "A URL for the previous page to call | '' (blank) if no previous to call",
+          "next": "A URL for the next page to call | '' (blank) if no page to call",
+          "last": "A URL for the last page to call | '' (blank) if no route is defined e.g. http://localhost:8000/api/chat/paginate/index/member/chat-room?page=5&limit=10"
+      }
+  },
+  "user": {
+      "id": 14,
+      "username": "test3",
+      "isAdmin": false
+  }
 }
 ```
 

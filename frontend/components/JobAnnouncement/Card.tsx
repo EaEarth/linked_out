@@ -48,7 +48,7 @@ export const JobAnnouncementCard: React.FC<JobAnnouncementCardProps> = (
                   </Col>
                 </Row>
               </h6>
-              <p className="card-text m-0 text-primary">{props.company}</p>
+              <p className="card-text m-0 text-primary ">{props.company}</p>
               <p className="card-text m-0">{props.province}</p>
               <p className="card-text m-0 d-none d-md-block mt-md-4">
                 <small className="text-muted">

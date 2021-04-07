@@ -76,9 +76,9 @@ export const login = observer((props) => {
                 </p>
               </Form.Group>
 
-              <Link href="/test">
+              {/* <Link href="/test">
                 <a className="d-block text-right">forget password?</a>
-              </Link>
+              </Link> */}
 
               <Row className="d-flex justify-content-center">
                 <button

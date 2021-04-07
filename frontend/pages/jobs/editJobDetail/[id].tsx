@@ -133,7 +133,6 @@ export const EditJobDetails = (props) => {
 
   const handleFileUpload = (e) => {
     const files = e.target.files;
-    // console.log(files)
     if (files && files.length) {
       const filename = files[0].name;
 

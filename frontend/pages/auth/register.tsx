@@ -36,7 +36,6 @@ export const Register = (props) => {
     phone: '',
     birthDate: '',
     password: '',
-    tags: '',
     province: '',
     confirmPassword: '',
   })
@@ -55,7 +54,6 @@ export const Register = (props) => {
       tempTags.push(e[i]['value']);
     }
     setState((prevState) => ({...prevState,tags: tempTags}));
-    console.log(state)
   }
 
   const handleSubmitClick = (e) => {
@@ -64,7 +62,6 @@ export const Register = (props) => {
     if (!state.username.length) {
       setRequired((prevRequired) => ({ ...prevRequired, username: "*required" }));
       allInfo = false;
-      console.log(required)
     } else setRequired((prevRequired) => ({ ...prevRequired, username: "" }));
 
     if (!state.firstname.length) {
@@ -269,7 +266,6 @@ export const Register = (props) => {
                     onChange={handleSelectMultiChange}
                     isMulti
                   />
-                  <p style={{ color: 'red' }}>{required.tags}</p>
                 </Form.Group>
                 
                 <label>Province</label>

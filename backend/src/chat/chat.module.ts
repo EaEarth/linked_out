@@ -10,6 +10,7 @@ import { ChatService } from './chat.service';
 @Module({
   imports: [TypeOrmModule.forFeature([ChatRoom, Message]), UsersModule, JobModule],
   controllers: [ChatController],
-  providers: [ChatService]
+  providers: [ChatService],
+  exports: [ChatService]
 })
 export class ChatModule {}
