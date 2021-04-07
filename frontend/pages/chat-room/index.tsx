@@ -15,13 +15,11 @@ export const chatRoom = (props) => {
   const [messageBox, setMessageBox] = useState();
   const [currentRoom, setCurrentRoom] = useState<any>();
 
-  const webSocketStore = useRootStore().webSocketStore;
-  const self = this;
+  const { webSocketStore, authStore } = useRootStore();
   useLifecycles(
     () => {
       webSocketStore.connect();
-      webSocketStore.setCookie(props.cookie);
-      // register
+      // registers
     },
     () => {
       // unregister
@@ -71,7 +69,7 @@ export const chatRoom = (props) => {
       webSocketStore.socket.emit('send_message', {
         chatRoomId: currentRoom.id,
         message: messageBox,
-        cookie: props.cookie,
+        cookie: webSocketStore.cookie,
       });
       setMessageBox(() => null);
     }

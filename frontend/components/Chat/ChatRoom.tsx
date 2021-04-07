@@ -39,7 +39,7 @@ export const ChatRoom: React.FC<any> = ({
         </p>
       </Row>
       <Row className={styles['chatlog']}>
-        <ScrollableFeed>{text}</ScrollableFeed>
+        <ScrollableFeed className="w-100">{text}</ScrollableFeed>
       </Row>
 
       <Row className={`fixed-button pl-3 pt-2 ${styles['sendbox']}`}>

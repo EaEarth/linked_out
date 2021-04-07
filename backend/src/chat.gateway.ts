@@ -15,7 +15,7 @@ import { UsersService } from './users/users.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { parse } from 'cookie';
 
-@WebSocketGateway()
+@WebSocketGateway({ cookie: false })
 export class AppGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
