@@ -56,6 +56,7 @@ export const chatRoom = (props) => {
     console.log(messages);
     setMessages((prevState) => {
       console.log(prevState);
+      console.log('test');
       if (
         prevState.length === 0 ||
         message.id !== prevState[prevState.length - 1].id
