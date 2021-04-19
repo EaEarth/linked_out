@@ -5,7 +5,6 @@
 
 .chatlog {
   height: 460px;
-  overflow-y: scroll;
 }
 
 .chatLogCard {
@@ -23,4 +22,8 @@
 .sendbox {
   height: 54px;
   width: 100%;
+}
+
+.input {
+  box-shadow: none !important;
 }

@@ -1,5 +1,6 @@
 import {
   action,
+  autorun,
   computed,
   makeObservable,
   observable,
@@ -30,6 +31,10 @@ export class AuthStore {
     this.rootStore = rootStore;
     this.accessToken = null;
     this.init();
+    autorun(() => {
+      if (rootStore.webSocketStore)
+        rootStore.webSocketStore.setCookie(this.accessToken);
+    });
   }
 
   @action
@@ -71,8 +76,19 @@ export class AuthStore {
 
   @action
   async logout(): Promise<void> {
-    this.accessToken = null;
-    window.localStorage.removeItem('accessToken');
+    try {
+      await axios.post('/auth/logout');
+      runInAction(() => {
+        this.accessToken = null;
+        window.localStorage.removeItem('accessToken');
+      });
+    } catch (err) {
+      if ((err as AxiosError).response?.status !== 200) {
+        console.error('Problem while attempting to log out:', err.stack);
+      } else {
+        console.error('Something went wrong:', err.stack);
+      }
+    }
   }
 
   @computed

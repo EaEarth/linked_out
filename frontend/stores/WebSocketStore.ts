@@ -35,6 +35,7 @@ export class WebSocketStore {
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore;
     this.socket = null;
+    this.cookie = null;
     this.isConnected = false;
     const urlObject = new URL(process.env.NEXT_PUBLIC_API_ENDPOINT);
     this.url = `ws://${urlObject.host}`;

@@ -58,11 +58,6 @@ export const NavBar = observer((props) => {
               Home
             </Nav.Link>
           </Link>
-          <Link href="/test">
-            <Nav.Link active={router.pathname === '/test'} href="/test">
-              Test
-            </Nav.Link>
-          </Link>
           <Link href="/jobs">
             <Nav.Link active={router.pathname === '/jobs'} href="/jobs">
               Jobs

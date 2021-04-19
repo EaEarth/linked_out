@@ -288,6 +288,7 @@ export class JobService {
       .createQueryBuilder('jobAnnouncement')
       .leftJoin('jobAnnouncement.application', 'jobApplication')
       .addSelect('COUNT(jobApplication.id)', 'application_count')
+      .leftJoinAndSelect('jobAnnouncement.picture', 'picture')
       .groupBy('jobAnnouncement.id')
       .orderBy('application_count', 'DESC')
       .take(10)

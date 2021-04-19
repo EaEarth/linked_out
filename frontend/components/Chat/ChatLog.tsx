@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardColumns, Col, Row } from 'react-bootstrap';
 import styles from './ChatRoom.module.scss';
 import Image from 'next/image';
+import dayjs from 'dayjs';
 
 export const ChatLog: React.FC<any> = (props) => {
   return (
@@ -23,8 +24,18 @@ export const ChatLog: React.FC<any> = (props) => {
         <Col className={`p-0 m-0`} xs={9} md={11}>
           <Card.Body>
             <Row>
+<<<<<<< HEAD
               <Col className={`p-0 m-0`} xs={8} md={12}>
                 <h5 className="card-title">{props.sender.username}</h5>
+=======
+              <Col className={`p-0 m-0`} xs={8} md={8}>
+                <h5 className="card-title">{props.sender.firstname}</h5>
+              </Col>
+              <Col className="text-right" md={4}>
+                <small>
+                  {dayjs(props.createdAt).format('MMM D, YYYY h:mm a')}
+                </small>
+>>>>>>> 6f2a334c7f9336060acab89b5c3bd16382685c18
               </Col>
             </Row>
 

@@ -39,8 +39,8 @@ export const ContactCard: React.FC<any> = (props) => {
           <div className="d-flex w-100">
             <h5 className={`mb-1  ${styles['chatName']}`}>
               {props.user.id === props.recruiter.id
-                ? props.applicant.username
-                : props.recruiter.username}
+                ? props.applicant.firstname
+                : props.recruiter.firstname}
             </h5>
           </div>
           <div className="d-flex w-100">
