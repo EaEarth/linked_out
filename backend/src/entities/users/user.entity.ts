@@ -6,11 +6,13 @@ import { JobApplication } from "../job/jobApplication.entity";
 import { Tag } from "../job/tag.entity";
 import { Message } from "../chats/message.entity";
 import { ChatRoom } from "../chats/chatRoom.entity";
+import { PaymentSlip } from "../payment/paymentSlip.entity";
 
 @Entity()
 @Unique(["username"])
 @Unique(["email"])
 export class User {
+
     @PrimaryGeneratedColumn()
     id: number;
     
@@ -82,4 +84,7 @@ export class User {
 
     @OneToMany(() => ChatRoom, chatRoom => chatRoom.applicant)
     joinChatRooms: ChatRoom[];
+
+    @OneToMany(() => PaymentSlip, paymentSlip => paymentSlip.payer)
+    paymentSlips: PaymentSlip[];
 }

@@ -47,7 +47,6 @@ export class FilesController {
 
   @UseGuards(JwtAuthGuard)
   @Get('title/:fileTitle')
-  @UsePipes(new ValidationPipe({ whitelist: true }))
   async findByTitle(@Request() req, @Param('fileTitle') fileTitle: string) {
     return this.fileService.findByTitle(req.user, fileTitle);
   }

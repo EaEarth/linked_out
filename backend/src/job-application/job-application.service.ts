@@ -112,10 +112,10 @@ export class JobApplicationService {
         if(coverLetter === undefined) throw new NotFoundException("Cover letter file not found")
         if(application === undefined) throw new NotFoundException("Job application not found")
 
-        application.coverLetter = coverLetter;
-        application.jobAnnouncement = jobAnnouncement;
-        application.transcript = transcript;
-        application.resume = resume;
+        if(coverLetter != null) application.coverLetter = coverLetter;
+        if(jobAnnouncement != null) application.jobAnnouncement = jobAnnouncement;
+        if(transcript != null) application.transcript = transcript;
+        if(resume != null) application.resume = resume;
 
         const newApplication = {...application, ...form};
         return this.repo.save(newApplication)

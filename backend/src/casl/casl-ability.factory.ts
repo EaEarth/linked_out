@@ -2,6 +2,7 @@ import { Ability, AbilityBuilder, AbilityClass, ExtractSubjectType, InferSubject
 import { Injectable } from "@nestjs/common";
 import { JobAnnouncement } from "src/entities/job/jobAnnouncement.entity";
 import { JobApplication } from "src/entities/job/jobApplication.entity";
+import { PaymentSlip } from "src/entities/payment/paymentSlip.entity";
 import { User } from "src/entities/users/user.entity";
 import { Action } from "src/policies/action.enum";
 
@@ -25,6 +26,7 @@ export class CaslAbilityFactory {
     }
     can(Action.Update, User, { id: user.id });
     can(Action.Delete, User, { id: user.id });
+
 
     return build({
       // Read https://casl.js.org/v5/en/guide/subject-type-detection#use-classes-as-subject-types for details

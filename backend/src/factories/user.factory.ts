@@ -30,6 +30,5 @@ define(User, (faker: typeof Faker) => {
   user.tags = [];
   user.jobAnnouncements = [];
   user.files = [];
-
   return user;
 });

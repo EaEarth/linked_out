@@ -6,6 +6,7 @@ import * as helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
 import { SocketIoAdapter } from './socketio.adapter';
+import { DocumentBuilder, SwaggerCustomOptions, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -21,6 +22,7 @@ async function bootstrap() {
   app.use(cookieParser('superDuperSecretCookieKey'));
   app.useWebSocketAdapter(new SocketIoAdapter(app, true));
   //app.set('trust proxy', 1);
+
   await app.listen(8000);
 }
 bootstrap();

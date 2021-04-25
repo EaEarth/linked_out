@@ -6,6 +6,7 @@ import { Tag } from '../entities/job/tag.entity';
 import { JobApplication } from '../entities/job/jobApplication.entity';
 import { ChatRoom } from '../entities/chats/chatRoom.entity';
 import { Message } from '../entities/chats/message.entity';
+import { PaymentSlip } from '../entities/payment/paymentSlip.entity';
 
 export class CreateAll implements Seeder {
   
@@ -20,6 +21,7 @@ export class CreateAll implements Seeder {
       }
       else this.tagEntity.push(await factory(Tag)().create())
     }
+    let qrCodePaymentFile = await factory(FileItem)().create({title:"qr_code_payment",path:'http://localhost:8000/api/files/qr_code_payment.jpg'});
     for (let i=0; i<10; i++){
       this.userEntity.push(
         await factory(User)()
@@ -29,6 +31,7 @@ export class CreateAll implements Seeder {
             user.avatarFile = file;
             user.jobAnnouncements = []
             user.tags = []
+            user.paymentSlips = []
 
             // newly added
             if(i<5) user.province = 'กรุงเทพมหานคร'
@@ -78,6 +81,7 @@ export class CreateAll implements Seeder {
               user.jobAnnouncements.push(job)
               this.announcementEntity.push(job)
             }
+
             return user;
         })
         .create()
@@ -137,6 +141,14 @@ export class CreateAll implements Seeder {
 
         return application
       }).create()
+      for(let k =0; k<3;k++){
+        await factory(PaymentSlip)()
+        .map(async (slip: PaymentSlip) : Promise<PaymentSlip> =>{
+          slip.payer = this.userEntity[i]
+          slip.qrCodeFile = qrCodePaymentFile
+          return slip
+        }).create()
+      }
     }
 
     // Creating Admin and job to mock only 'กรุงเทพมหานคร'

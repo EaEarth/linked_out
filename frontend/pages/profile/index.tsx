@@ -45,13 +45,8 @@ export const editProfile = (props) => {
     const url = URL.createObjectURL(profile.profilePic);
     setURLPic(url);
 
-<<<<<<< HEAD
-      return () => URL.revokeObjectURL(url)
-    }, [profile.profilePic])
-=======
     return () => URL.revokeObjectURL(url);
   }, [profile.profilePic]);
->>>>>>> 6f2a334c7f9336060acab89b5c3bd16382685c18
 
   const handleChange = (e) => {
     const { id, value } = e.target;

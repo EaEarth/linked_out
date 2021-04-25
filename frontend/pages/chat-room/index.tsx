@@ -29,42 +29,9 @@ export const chatRoom = (props) => {
     }
   );
 
-<<<<<<< HEAD
-  // const appendMessage = async (message) => {
-  //   console.log(message);
-  //   //console.log(currentRoom);
-  //   //if (message.chatroomId === currentRoom.id) {
-  //   console.log(messages);
-  //   setMessages((prevState) => {
-  //     console.log(prevState);
-  //     const newList = prevState;
-  //     if (newList.length === 0 || message.id !== newList[newList.length - 1].id)
-  //       prevStat.push(message);
-  //     return newList;
-  //   });
-  //   // console.log(messages);
-  //   //}
-  // };
-
-  const appendMessage = async (message) => {
-    console.log(message);
-    //console.log(currentRoom);
-    //if (message.chatroomId === currentRoom.id) {
-    console.log(messages);
-    setMessages((prevState) => {
-      console.log(prevState);
-      console.log('test');
-      if (
-        prevState.length === 0 ||
-        message.id !== prevState[prevState.length - 1].id
-      )
-        prevState.push(message);
-      return prevState;
-=======
   useEffect(() => {
     webSocketStore.socket.on('recieve_message', (payload) => {
       appendMessage(payload);
->>>>>>> 6f2a334c7f9336060acab89b5c3bd16382685c18
     });
     return () => {
       webSocketStore.socket.off('recieve_message');

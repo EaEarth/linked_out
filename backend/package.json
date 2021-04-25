@@ -33,6 +33,7 @@
     "@nestjs/passport": "^7.1.5",
     "@nestjs/platform-express": "^7.5.1",
     "@nestjs/platform-socket.io": "^7.6.14",
+    "@nestjs/swagger": "^4.8.0",
     "@nestjs/typeorm": "^7.1.5",
     "@nestjs/websockets": "^7.6.14",
     "@types/bcrypt": "^3.0.0",
@@ -55,6 +56,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.3",
     "socket.io": "3",
+    "swagger-ui-express": "^4.1.6",
     "typeorm": "^0.2.31",
     "typeorm-seeding": "^1.6.1"
   },

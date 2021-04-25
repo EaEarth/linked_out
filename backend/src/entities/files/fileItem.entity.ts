@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { JobAnnouncement } from "../job/jobAnnouncement.entity";
 import { JobApplication } from "../job/jobApplication.entity";
+import { PaymentSlip } from "../payment/paymentSlip.entity";
 import { User } from "../users/user.entity";
 
 @Entity()
@@ -34,4 +35,7 @@ export class FileItem {
 
   @OneToOne(() => JobApplication)
   jobApplicationTranscript: JobApplication;
+
+  @OneToMany(() => PaymentSlip, paymentSlip => paymentSlip.qrCodeFile)
+  paymentSlips: PaymentSlip;
 }

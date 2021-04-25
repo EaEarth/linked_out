@@ -24,10 +24,6 @@ export const ChatLog: React.FC<any> = (props) => {
         <Col className={`p-0 m-0`} xs={9} md={11}>
           <Card.Body>
             <Row>
-<<<<<<< HEAD
-              <Col className={`p-0 m-0`} xs={8} md={12}>
-                <h5 className="card-title">{props.sender.username}</h5>
-=======
               <Col className={`p-0 m-0`} xs={8} md={8}>
                 <h5 className="card-title">{props.sender.firstname}</h5>
               </Col>
@@ -35,7 +31,6 @@ export const ChatLog: React.FC<any> = (props) => {
                 <small>
                   {dayjs(props.createdAt).format('MMM D, YYYY h:mm a')}
                 </small>
->>>>>>> 6f2a334c7f9336060acab89b5c3bd16382685c18
               </Col>
             </Row>
 

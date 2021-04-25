@@ -1,5 +1,7 @@
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsDate, IsEmail, IsEmpty, IsLatitude, IsLongitude, IsNotEmpty, IsNumberString, IsOptional, Length } from "class-validator";
+import { type } from "os";
 import { JobAnnouncement } from "src/entities/job/jobAnnouncement.entity";
 import { Tag } from "src/entities/job/tag.entity";
 import { Double } from "typeorm";
