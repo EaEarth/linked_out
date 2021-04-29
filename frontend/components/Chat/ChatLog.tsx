@@ -13,7 +13,7 @@ export const ChatLog: React.FC<any> = (props) => {
             src={
               props.sender.avatarFile
                 ? props.sender.avatarFile.path
-                : '/images/company/central.png'
+                : '/images/user/user.svg'
             }
             width="50"
             height="50"

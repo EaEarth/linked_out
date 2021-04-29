@@ -25,8 +25,8 @@ export const ContactCard: React.FC<any> = (props) => {
           <Image
             src={
               props.user.id === props.recruiter.id
-                ? props.applicant.avatarFile.path
-                : props.recruiter.avatarFile.path
+                ? props.applicant.avatarFile?.path || '/images/user/user.svg'
+                : props.recruiter.avatarFile?.path || '/images/user/user.svg'
             }
             width={300}
             height={300}
