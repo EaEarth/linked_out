@@ -11,7 +11,9 @@ const isServer = typeof window === 'undefined';
 enableStaticRendering(isServer);
 // Axios inject host
 axios.defaults.baseURL =
-  process.env.NEXT_PUBLIC_API_ENDPOINT || 'http://localhost:8000/api';
+  (isServer
+    ? process.env.API_ENDPOINT_SSR
+    : process.env.NEXT_PUBLIC_API_ENDPOINT) || 'http://localhost:8000/api';
 axios.defaults.withCredentials = true;
 // Axios inject token
 axios.interceptors.request.use((config) => {

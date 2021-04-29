@@ -1,0 +1,39 @@
+version: "3.9" # optional since v1.27.0
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - linkedout
+    depends_on:
+      - backend
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    networks:
+      - linkedout
+    depends_on:
+      - mysql
+    environment:
+      - DB_HOST=mysql
+    volumes:
+      - upload:/app/uploads
+  mysql:
+    image: mysql:8
+    volumes:
+      - mysql:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=solus
+      - MYSQL_USER=solus
+      - MYSQL_PASSWORD=solus
+      - MYSQL_ROOT_PASSWORD=solus
+    networks:
+      - linkedout
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-authentication-plugin=mysql_native_password
+volumes:
+  mysql: {}
+  upload: {}
+networks:
+  linkedout: {}

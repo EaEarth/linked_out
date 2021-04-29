@@ -232,10 +232,7 @@ export const EditJobDetails = (props) => {
     if (file !== null) {
       let formData = new FormData();
       formData.append('file', file, file.name);
-      fileEntity = await axios.post(
-        'http://localhost:8000/api/files/upload',
-        formData
-      );
+      fileEntity = await axios.post('/files/upload', formData);
     }
     for (let i = 0; i < jobTag.length; ++i) {
       tagArr.push(jobTag[i]['value']);
@@ -253,16 +250,14 @@ export const EditJobDetails = (props) => {
       isPublished: publish,
       pictureId: file !== null ? fileEntity.data.id : null,
     };
-    axios
-      .patch(`http://localhost:8000/api/job/${jobId}`, payload)
-      .then(function (response) {
-        if (response.status == 200) {
-          setMessage('Update successful. Redirecting to job page..');
-          router.push('/jobs/list');
-        } else {
-          console.log('There is an Error');
-        }
-      });
+    axios.patch(`/job/${jobId}`, payload).then(function (response) {
+      if (response.status == 200) {
+        setMessage('Update successful. Redirecting to job page..');
+        router.push('/jobs/list');
+      } else {
+        console.log('There is an Error');
+      }
+    });
   };
 
   return (
@@ -467,10 +462,8 @@ export const EditJobDetails = (props) => {
 };
 
 export async function getServerSideProps(context) {
-  const detail = await axios.get(
-    `http://localhost:8000/api/job/index/${context.params.id}`
-  );
-  const tagapi = await axios.get('http://localhost:8000/api/job/tag/index');
+  const detail = await axios.get(`/job/index/${context.params.id}`);
+  const tagapi = await axios.get('/job/tag/index');
   let tag = [];
   let tags = tagapi.data;
   const tempTags = [];

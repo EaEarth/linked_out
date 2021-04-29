@@ -23,8 +23,7 @@ type tempErrors = {
   amount: string | null;
   province: string | null;
   profilePic: string | null;
-}
-
+};
 
 export const RegisterJobAnnouncement = (props) => {
   const router = useRouter();
@@ -40,64 +39,87 @@ export const RegisterJobAnnouncement = (props) => {
   const [province, setProvince] = useState(null);
   const [profilePic, setProfile] = useState(null);
   const [urlPicture, setURLPicture] = useState(null);
-  const [errors, setError] = useState({ title: null, description: null, jobTag: null, company: null, address: null, province: null, publish: null, lowerBoundSalary: null, upperBoundSalary: null, amount: null });
+  const [errors, setError] = useState({
+    title: null,
+    description: null,
+    jobTag: null,
+    company: null,
+    address: null,
+    province: null,
+    publish: null,
+    lowerBoundSalary: null,
+    upperBoundSalary: null,
+    amount: null,
+  });
 
-  const options = props.jobTag
+  const options = props.jobTag;
   const choices = [
     { value: 'yes', label: 'Yes' },
     { value: 'no', label: 'No' },
   ];
 
   useEffect(() => {
-    if (profilePic == null) return
-    const url = URL.createObjectURL(profilePic)
-    setURLPicture(url)
+    if (profilePic == null) return;
+    const url = URL.createObjectURL(profilePic);
+    setURLPicture(url);
 
-    return () => URL.revokeObjectURL(url)
-  }, [profilePic])
+    return () => URL.revokeObjectURL(url);
+  }, [profilePic]);
 
   const createJobDetailsToServer = async () => {
-    let temp_errors: tempErrors | null = { title: null, description: null, jobTag: null, company: null, address: null, publish: null, lowerBoundSalary: null, upperBoundSalary: null, amount: null, profilePic: null, province: null };
+    let temp_errors: tempErrors | null = {
+      title: null,
+      description: null,
+      jobTag: null,
+      company: null,
+      address: null,
+      publish: null,
+      lowerBoundSalary: null,
+      upperBoundSalary: null,
+      amount: null,
+      profilePic: null,
+      province: null,
+    };
     let checkError = false;
     if (!title.length) {
-      temp_errors.title = "The title is required";
+      temp_errors.title = 'The title is required';
       checkError = true;
     }
     if (!description.length) {
-      temp_errors.description = "The description is required"
+      temp_errors.description = 'The description is required';
       checkError = true;
     }
     if (!jobTag.length) {
-      temp_errors.jobTag = "The tags are required to be at least 1"
+      temp_errors.jobTag = 'The tags are required to be at least 1';
       checkError = true;
     }
     if (!company.length) {
-      temp_errors.company = "The company is required"
+      temp_errors.company = 'The company is required';
       checkError = true;
     }
     if (!address.length) {
-      temp_errors.address = "The address is required"
+      temp_errors.address = 'The address is required';
       checkError = true;
     }
     if (lowerBoundSalary < 0) {
-      temp_errors.lowerBoundSalary = "The lowerbound salary is required"
+      temp_errors.lowerBoundSalary = 'The lowerbound salary is required';
       checkError = true;
     }
     if (upperBoundSalary < 0) {
-      temp_errors.upperBoundSalary = "The upperbound salary is required"
+      temp_errors.upperBoundSalary = 'The upperbound salary is required';
       checkError = true;
     }
     if (amount <= 0) {
-      temp_errors.amount = "The amount is required"
+      temp_errors.amount = 'The amount is required';
       checkError = true;
     }
     if (!province) {
-      temp_errors.province = "The province is required"
+      temp_errors.province = 'The province is required';
       checkError = true;
     }
-    setError(temp_errors)
+    setError(temp_errors);
     if (checkError) {
-      return
+      return;
     }
     let tags = [];
     for (let i = 0; i < jobTag.length; i++) {
@@ -114,42 +136,41 @@ export const RegisterJobAnnouncement = (props) => {
       address: address,
       isPublished: publish,
       amountRequired: Number(amount),
-      pictureId: 1
-    }
+      pictureId: 1,
+    };
     if (profilePic) {
-      let formData = new FormData()
-      formData.append('file', profilePic, profilePic.name)
-      await axios.post('http://localhost:8000/api/files/upload', formData)
+      let formData = new FormData();
+      formData.append('file', profilePic, profilePic.name);
+      await axios
+        .post('/files/upload', formData)
         .then((response) => {
           if (response.status == 201) {
-            payload['pictureId'] = Number(response.data.id)
+            payload['pictureId'] = Number(response.data.id);
           } else {
-            console.log("There is an error in uploaded picture")
+            console.log('There is an error in uploaded picture');
           }
         })
         .catch((error) => {
-          console.log(error)
-        })
+          console.log(error);
+        });
     }
-    await axios.post('http://localhost:8000/api/job', payload)
+    await axios
+      .post('/job', payload)
       .then(function (response) {
         if (response.status == 201) {
-          router.push("/jobs/list");
+          router.push('/jobs/list');
         } else {
-          console.log("There is an Error")
+          console.log('There is an Error');
         }
       })
       .catch(function (error) {
-        console.log(error)
+        console.log(error);
       });
-
-  }
+  };
 
   const fileChangedHandler = (e) => {
-    setProfile(e.target.files[0])
-  }
-
-
+    setProfile(e.target.files[0]);
+  };
 
   return (
     <DefaultLayout>
@@ -161,23 +182,30 @@ export const RegisterJobAnnouncement = (props) => {
         <Row>
           <Col md={{ span: 5, offset: 1 }} className="d-flex flex-column">
             <Row className="mt-4">
-              {!profilePic ?
+              {!profilePic ? (
                 <Image
                   src="/images/user/User.svg"
                   className="d-block w-50 mx-auto"
                   rounded
-                /> :
+                />
+              ) : (
                 <Image
                   className="d-block w-75 mx-auto"
                   src={urlPicture}
                   rounded
                 />
-              }
+              )}
             </Row>
             <Row>
               <Form className="w-100 p-3">
                 <Form.Group>
-                  <Form.File className="d-flex justify-content-center w-75 mx-auto mb-3" label={!urlPicture ? "Profile picture" : "Success upload"} data-browse="Add profile" onChange={fileChangedHandler} custom />
+                  <Form.File
+                    className="d-flex justify-content-center w-75 mx-auto mb-3"
+                    label={!urlPicture ? 'Profile picture' : 'Success upload'}
+                    data-browse="Add profile"
+                    onChange={fileChangedHandler}
+                    custom
+                  />
                 </Form.Group>
                 <Form.Group>
                   <Form.Label className={styles.label}>Title</Form.Label>
@@ -212,7 +240,7 @@ export const RegisterJobAnnouncement = (props) => {
             </Row>
           </Col>
 
-          <Col md={{ span: 5, offset: 1 }} >
+          <Col md={{ span: 5, offset: 1 }}>
             <Row>
               <Form className="w-100 p-3">
                 <label className={styles.label}>Tag</label>
@@ -220,12 +248,12 @@ export const RegisterJobAnnouncement = (props) => {
                   isMulti
                   value={jobTag}
                   name="colors"
-                  options={
-                    jobTag.length >= 3 ? jobTag : options
-                  }
+                  options={jobTag.length >= 3 ? jobTag : options}
                   isSearchable="true"
                   maxMenuHeight={200}
-                  noOptionsMessage={() => "You could only assign 3 tags to Job Announcement"}
+                  noOptionsMessage={() =>
+                    'You could only assign 3 tags to Job Announcement'
+                  }
                   className="basic-multi-select"
                   classNamePrefix="select"
                   onChange={(e) => setJobTag(e)}
@@ -270,7 +298,9 @@ export const RegisterJobAnnouncement = (props) => {
                 />
                 <small className="text-danger">{errors.province}</small>
                 <Form.Group>
-                  <Form.Label className={styles.label}>Lowerbound salary per month</Form.Label>
+                  <Form.Label className={styles.label}>
+                    Lowerbound salary per month
+                  </Form.Label>
                   <Form.Control
                     type="number"
                     placeholder="Lowerbound salary"
@@ -285,7 +315,9 @@ export const RegisterJobAnnouncement = (props) => {
                   </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label className={styles.label}>Upperbound salary per month</Form.Label>
+                  <Form.Label className={styles.label}>
+                    Upperbound salary per month
+                  </Form.Label>
                   <Form.Control
                     type="number"
                     placeholder="Upperbound salary"
@@ -316,7 +348,11 @@ export const RegisterJobAnnouncement = (props) => {
                   </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group>
-                  <Form.Check type="checkbox" label="Publish" onClick={() => setPublish(!publish)} />
+                  <Form.Check
+                    type="checkbox"
+                    label="Publish"
+                    onClick={() => setPublish(!publish)}
+                  />
                 </Form.Group>
               </Form>
             </Row>
@@ -324,12 +360,18 @@ export const RegisterJobAnnouncement = (props) => {
           <Col>
             <Row className="text-center">
               <Col className="my-2">
-                <button type="button" className="mr-5 btn btn-primary" onClick={createJobDetailsToServer}>
+                <button
+                  type="button"
+                  className="mr-5 btn btn-primary"
+                  onClick={createJobDetailsToServer}>
                   Create
                 </button>
-                <button type="button" className="ml-5 btn btn-primary" onClick={() => {
-                  router.push('/jobs')
-                }}>
+                <button
+                  type="button"
+                  className="ml-5 btn btn-primary"
+                  onClick={() => {
+                    router.push('/jobs');
+                  }}>
                   Cancel
                 </button>
               </Col>
@@ -342,22 +384,100 @@ export const RegisterJobAnnouncement = (props) => {
 };
 
 export async function getServerSideProps(context) {
-  const detail = await axios.get('http://localhost:8000/api/job/tag/index')
-  let jobTags = []
+  const detail = await axios.get('/job/tag/index');
+  let jobTags = [];
   let tags = detail.data;
   for (const tag of tags) {
     jobTags.push({
       value: tag.name,
-      label: tag.name
-    })
+      label: tag.name,
+    });
   }
   return {
     props: {
-      jobTag: jobTags
-    }
-  }
+      jobTag: jobTags,
+    },
+  };
 }
 
-const provinceList = [{ 'label': 'นครราชสีมา', 'value': 'นครราชสีมา' }, { 'label': 'เชียงใหม่', 'value': 'เชียงใหม่' }, { 'label': 'กาญจนบุรี', 'value': 'กาญจนบุรี' }, { 'label': 'ตาก', 'value': 'ตาก' }, { 'label': 'อุบลราชธานี', 'value': 'อุบลราชธานี' }, { 'label': 'สุราษฎร์ธานี', 'value': 'สุราษฎร์ธานี' }, { 'label': 'ชัยภูมิ', 'value': 'ชัยภูมิ' }, { 'label': 'แม่ฮ่องสอน', 'value': 'แม่ฮ่องสอน' }, { 'label': 'เพชรบูรณ์', 'value': 'เพชรบูรณ์' }, { 'label': 'ลำปาง', 'value': 'ลำปาง' }, { 'label': 'อุดรธานี', 'value': 'อุดรธานี' }, { 'label': 'เชียงราย', 'value': 'เชียงราย' }, { 'label': 'น่าน', 'value': 'น่าน' }, { 'label': 'เลย', 'value': 'เลย' }, { 'label': 'ขอนแก่น', 'value': 'ขอนแก่น' }, { 'label': 'พิษณุโลก', 'value': 'พิษณุโลก' }, { 'label': 'บุรีรัมย์', 'value': 'บุรีรัมย์' }, { 'label': 'นครศรีธรรมราช', 'value': 'นครศรีธรรมราช' }, { 'label': 'สกลนคร', 'value': 'สกลนคร' }, { 'label': 'นครสวรรค์', 'value': 'นครสวรรค์' }, { 'label': 'ศรีสะเกษ', 'value': 'ศรีสะเกษ' }, { 'label': 'กำแพงเพชร', 'value': 'กำแพงเพชร' }, { 'label': 'ร้อยเอ็ด', 'value': 'ร้อยเอ็ด' }, { 'label': 'สุรินทร์', 'value': 'สุรินทร์' }, { 'label': 'อุตรดิตถ์', 'value': 'อุตรดิตถ์' }, { 'label': 'สงขลา', 'value': 'สงขลา' }, { 'label': 'สระแก้ว', 'value': 'สระแก้ว' }, { 'label': 'กาฬสินธุ์', 'value': 'กาฬสินธุ์' }, { 'label': 'อุทัยธานี', 'value': 'อุทัยธานี' }, { 'label': 'สุโขทัย', 'value': 'สุโขทัย' }, { 'label': 'แพร่', 'value': 'แพร่' }, { 'label': 'ประจวบคีรีขันธ์', 'value': 'ประจวบคีรีขันธ์' }, { 'label': 'จันทบุรี', 'value': 'จันทบุรี' }, { 'label': 'พะเยา', 'value': 'พะเยา' }, { 'label': 'เพชรบุรี', 'value': 'เพชรบุรี' }, { 'label': 'ลพบุรี', 'value': 'ลพบุรี' }, { 'label': 'ชุมพร', 'value': 'ชุมพร' }, { 'label': 'นครพนม', 'value': 'นครพนม' }, { 'label': 'สุพรรณบุรี', 'value': 'สุพรรณบุรี' }, { 'label': 'ฉะเชิงเทรา', 'value': 'ฉะเชิงเทรา' }, { 'label': 'มหาสารคาม', 'value': 'มหาสารคาม' }, { 'label': 'ราชบุรี', 'value': 'ราชบุรี' }, { 'label': 'ตรัง', 'value': 'ตรัง' }, { 'label': 'ปราจีนบุรี', 'value': 'ปราจีนบุรี' }, { 'label': 'กระบี่', 'value': 'กระบี่' }, { 'label': 'พิจิตร', 'value': 'พิจิตร' }, { 'label': 'ยะลา', 'value': 'ยะลา' }, { 'label': 'ลำพูน', 'value': 'ลำพูน' }, { 'label': 'นราธิวาส', 'value': 'นราธิวาส' }, { 'label': 'ชลบุรี', 'value': 'ชลบุรี' }, { 'label': 'มุกดาหาร', 'value': 'มุกดาหาร' }, { 'label': 'บึงกาฬ', 'value': 'บึงกาฬ' }, { 'label': 'พังงา', 'value': 'พังงา' }, { 'label': 'ยโสธร', 'value': 'ยโสธร' }, { 'label': 'หนองบัวลำภู', 'value': 'หนองบัวลำภู' }, { 'label': 'สระบุรี', 'value': 'สระบุรี' }, { 'label': 'ระยอง', 'value': 'ระยอง' }, { 'label': 'พัทลุง', 'value': 'พัทลุง' }, { 'label': 'ระนอง', 'value': 'ระนอง' }, { 'label': 'อำนาจเจริญ', 'value': 'อำนาจเจริญ' }, { 'label': 'หนองคาย', 'value': 'หนองคาย' }, { 'label': 'ตราด', 'value': 'ตราด' }, { 'label': 'พระนครศรีอยุธยา', 'value': 'พระนครศรีอยุธยา' }, { 'label': 'สตูล', 'value': 'สตูล' }, { 'label': 'ชัยนาท', 'value': 'ชัยนาท' }, { 'label': 'นครปฐม', 'value': 'นครปฐม' }, { 'label': 'นครนายก', 'value': 'นครนายก' }, { 'label': 'ปัตตานี', 'value': 'ปัตตานี' }, { 'label': 'กรุงเทพมหานคร', 'value': 'กรุงเทพมหานคร' }, { 'label': 'ปทุมธานี', 'value': 'ปทุมธานี' }, { 'label': 'สมุทรปราการ', 'value': 'สมุทรปราการ' }, { 'label': 'อ่างทอง', 'value': 'อ่างทอง' }, { 'label': 'สมุทรสาคร', 'value': 'สมุทรสาคร' }, { 'label': 'สิงห์บุรี', 'value': 'สิงห์บุรี' }, { 'label': 'นนทบุรี', 'value': 'นนทบุรี' }, { 'label': 'ภูเก็ต', 'value': 'ภูเก็ต' }, { 'label': 'สมุทรสงคราม', 'value': 'สมุทรสงคราม' }]
+const provinceList = [
+  { label: 'นครราชสีมา', value: 'นครราชสีมา' },
+  { label: 'เชียงใหม่', value: 'เชียงใหม่' },
+  { label: 'กาญจนบุรี', value: 'กาญจนบุรี' },
+  { label: 'ตาก', value: 'ตาก' },
+  { label: 'อุบลราชธานี', value: 'อุบลราชธานี' },
+  { label: 'สุราษฎร์ธานี', value: 'สุราษฎร์ธานี' },
+  { label: 'ชัยภูมิ', value: 'ชัยภูมิ' },
+  { label: 'แม่ฮ่องสอน', value: 'แม่ฮ่องสอน' },
+  { label: 'เพชรบูรณ์', value: 'เพชรบูรณ์' },
+  { label: 'ลำปาง', value: 'ลำปาง' },
+  { label: 'อุดรธานี', value: 'อุดรธานี' },
+  { label: 'เชียงราย', value: 'เชียงราย' },
+  { label: 'น่าน', value: 'น่าน' },
+  { label: 'เลย', value: 'เลย' },
+  { label: 'ขอนแก่น', value: 'ขอนแก่น' },
+  { label: 'พิษณุโลก', value: 'พิษณุโลก' },
+  { label: 'บุรีรัมย์', value: 'บุรีรัมย์' },
+  { label: 'นครศรีธรรมราช', value: 'นครศรีธรรมราช' },
+  { label: 'สกลนคร', value: 'สกลนคร' },
+  { label: 'นครสวรรค์', value: 'นครสวรรค์' },
+  { label: 'ศรีสะเกษ', value: 'ศรีสะเกษ' },
+  { label: 'กำแพงเพชร', value: 'กำแพงเพชร' },
+  { label: 'ร้อยเอ็ด', value: 'ร้อยเอ็ด' },
+  { label: 'สุรินทร์', value: 'สุรินทร์' },
+  { label: 'อุตรดิตถ์', value: 'อุตรดิตถ์' },
+  { label: 'สงขลา', value: 'สงขลา' },
+  { label: 'สระแก้ว', value: 'สระแก้ว' },
+  { label: 'กาฬสินธุ์', value: 'กาฬสินธุ์' },
+  { label: 'อุทัยธานี', value: 'อุทัยธานี' },
+  { label: 'สุโขทัย', value: 'สุโขทัย' },
+  { label: 'แพร่', value: 'แพร่' },
+  { label: 'ประจวบคีรีขันธ์', value: 'ประจวบคีรีขันธ์' },
+  { label: 'จันทบุรี', value: 'จันทบุรี' },
+  { label: 'พะเยา', value: 'พะเยา' },
+  { label: 'เพชรบุรี', value: 'เพชรบุรี' },
+  { label: 'ลพบุรี', value: 'ลพบุรี' },
+  { label: 'ชุมพร', value: 'ชุมพร' },
+  { label: 'นครพนม', value: 'นครพนม' },
+  { label: 'สุพรรณบุรี', value: 'สุพรรณบุรี' },
+  { label: 'ฉะเชิงเทรา', value: 'ฉะเชิงเทรา' },
+  { label: 'มหาสารคาม', value: 'มหาสารคาม' },
+  { label: 'ราชบุรี', value: 'ราชบุรี' },
+  { label: 'ตรัง', value: 'ตรัง' },
+  { label: 'ปราจีนบุรี', value: 'ปราจีนบุรี' },
+  { label: 'กระบี่', value: 'กระบี่' },
+  { label: 'พิจิตร', value: 'พิจิตร' },
+  { label: 'ยะลา', value: 'ยะลา' },
+  { label: 'ลำพูน', value: 'ลำพูน' },
+  { label: 'นราธิวาส', value: 'นราธิวาส' },
+  { label: 'ชลบุรี', value: 'ชลบุรี' },
+  { label: 'มุกดาหาร', value: 'มุกดาหาร' },
+  { label: 'บึงกาฬ', value: 'บึงกาฬ' },
+  { label: 'พังงา', value: 'พังงา' },
+  { label: 'ยโสธร', value: 'ยโสธร' },
+  { label: 'หนองบัวลำภู', value: 'หนองบัวลำภู' },
+  { label: 'สระบุรี', value: 'สระบุรี' },
+  { label: 'ระยอง', value: 'ระยอง' },
+  { label: 'พัทลุง', value: 'พัทลุง' },
+  { label: 'ระนอง', value: 'ระนอง' },
+  { label: 'อำนาจเจริญ', value: 'อำนาจเจริญ' },
+  { label: 'หนองคาย', value: 'หนองคาย' },
+  { label: 'ตราด', value: 'ตราด' },
+  { label: 'พระนครศรีอยุธยา', value: 'พระนครศรีอยุธยา' },
+  { label: 'สตูล', value: 'สตูล' },
+  { label: 'ชัยนาท', value: 'ชัยนาท' },
+  { label: 'นครปฐม', value: 'นครปฐม' },
+  { label: 'นครนายก', value: 'นครนายก' },
+  { label: 'ปัตตานี', value: 'ปัตตานี' },
+  { label: 'กรุงเทพมหานคร', value: 'กรุงเทพมหานคร' },
+  { label: 'ปทุมธานี', value: 'ปทุมธานี' },
+  { label: 'สมุทรปราการ', value: 'สมุทรปราการ' },
+  { label: 'อ่างทอง', value: 'อ่างทอง' },
+  { label: 'สมุทรสาคร', value: 'สมุทรสาคร' },
+  { label: 'สิงห์บุรี', value: 'สิงห์บุรี' },
+  { label: 'นนทบุรี', value: 'นนทบุรี' },
+  { label: 'ภูเก็ต', value: 'ภูเก็ต' },
+  { label: 'สมุทรสงคราม', value: 'สมุทรสงคราม' },
+];
 
 export default RegisterJobAnnouncement;

@@ -394,7 +394,7 @@ export async function getServerSideProps(context) {
       Cookie: `jwt=${cookie['jwt']}`,
     },
   });
-  const tagapi = await axios.get('http://localhost:8000/api/job/tag/index');
+  const tagapi = await axios.get('/job/tag/index');
   let allTags = [];
   for (const tag of tagapi.data) {
     allTags.push({ value: tag.name, label: tag.name });

@@ -17,7 +17,7 @@ export const BrowseModal = (props) => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:8000/api/job/tag/index')
+      .get('/job/tag/index')
       .then(function (response) {
         if (response.status === 200) {
           let tags = response.data;

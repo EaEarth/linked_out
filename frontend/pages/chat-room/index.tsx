@@ -5,17 +5,17 @@ import axios from 'axios';
 import DefaultLayout from '../../layouts/Default';
 import ChatList from '../../components/Chat/ChatList';
 import ChatRoom from '../../components/Chat/ChatRoom';
-import { GetServerSidePropsContext } from 'next';
+import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import { useRootStore } from '../../stores/stores';
-import { useEffectOnce, useLifecycles } from 'react-use';
+import { useLifecycles } from 'react-use';
 
 export const chatRoom = (props) => {
-  const [chatrooms, setChatRooms] = useState(props.chatrooms || []);
+  const [chatrooms] = useState(props.chatrooms || []);
   const [messages, setMessages] = useState([]);
   const [messageBox, setMessageBox] = useState();
   const [currentRoom, setCurrentRoom] = useState<any>();
 
-  const { webSocketStore, authStore } = useRootStore();
+  const { webSocketStore } = useRootStore();
   useLifecycles(
     () => {
       webSocketStore.connect();
@@ -59,7 +59,7 @@ export const chatRoom = (props) => {
 
   const setNewMessage = async (chatRoomId) => {
     const { data } = await axios.get(
-      `http://localhost:8000/api/chat/index/message/chat-room/${chatRoomId}`
+      `/chat/index/message/chat-room/${chatRoomId}`
     );
     setMessages(data);
   };
@@ -115,16 +115,15 @@ export const chatRoom = (props) => {
   );
 };
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export async function getServerSideProps(
+  context: GetServerSidePropsContext
+): Promise<GetServerSidePropsResult<any>> {
   const cookie = context.req.cookies;
-  const { data } = await axios.get(
-    'http://localhost:8000/api/chat/index/member/chat-room',
-    {
-      headers: {
-        Cookie: `jwt=${cookie['jwt']}`,
-      },
-    }
-  );
+  const { data } = await axios.get('/chat/index/member/chat-room', {
+    headers: {
+      Cookie: `jwt=${cookie['jwt']}`,
+    },
+  });
   return {
     props: {
       chatrooms: data,

@@ -66,14 +66,11 @@ export const lists: React.FC<any> = (props) => {
 };
 export async function getServerSideProps(context) {
   const cookie = context.req.cookies;
-  const { data } = await axios.get<JobAnnouncement[]>(
-    'http://localhost:8000/api/job/owner',
-    {
-      headers: {
-        Cookie: `jwt=${cookie['jwt']}`,
-      },
-    }
-  );
+  const { data } = await axios.get<JobAnnouncement[]>('/job/owner', {
+    headers: {
+      Cookie: `jwt=${cookie['jwt']}`,
+    },
+  });
 
   return {
     props: {

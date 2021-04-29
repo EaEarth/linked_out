@@ -1,15 +1,15 @@
 import Head from 'next/head';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Col, Container, Jumbotron, Row } from 'react-bootstrap';
 import DefaultLayout from '../layouts/Default';
 import JobAnnouncementGrid from '../components/Homepage/Grid';
 import styles from '../components/Homepage/homepage.module.scss';
 import JobAnnouncement from '../models/job/JobAnnouncement';
-import { GetServerSidePropsContext } from 'next';
+import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import axios from 'axios';
 
 export const Home = (props) => {
-  const [jobs, setJobs] = useState(props.job);
+  const [jobs] = useState(props.job);
   return (
     <DefaultLayout>
       <Head>
@@ -39,10 +39,12 @@ export const Home = (props) => {
   );
 };
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export async function getServerSideProps(
+  context: GetServerSidePropsContext
+): Promise<GetServerSidePropsResult<any>> {
   const cookie = context.req.cookies;
   const recommendJobs = await axios.get<JobAnnouncement[]>(
-    `http://localhost:8000/api/job/user/recommendation`,
+    `/job/user/recommendation`,
     {
       headers: {
         Cookie: `jwt=${cookie['jwt']}`,

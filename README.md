@@ -30,3 +30,26 @@
 2. Run command `yarn install`
 3. Create .env file using example from .env.example
 4. Run command `yarn dev`
+
+## Docker-Compose
+
+1. Run `docker compose up -d --build`
+2. Seed the database by runnng the following commands
+
+```bash
+# Replace <mysql-container-name> with the mysql container name
+$ docker cp solus.sql <mysql-container-name>:/
+$ docker exec -it <mysql-container-name> bash
+# Inside container
+mysql -p
+# Inside mysql console
+> source solus.sql;
+> exit;
+# Inside container
+exit
+```
+
+3. Copy the content in the /uploads folder to the backend container by running
+   `docker cp backend/uploads/* <backend-container-name>:/app/uploads`
+
+4. Add tcp relay to the backend server (Necessary for next/image component) by running `docker exec -it <frontend-container-name> socat TCP-LISTEN:8000,fork TCP:host.docker.internal:8000 &`
