@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: linkedout-frontend
+  labels:
+    app: linkedout-frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: linkedout-frontend
+  template:
+    metadata:
+      labels:
+        app: linkedout-frontend
+    spec:
+      containers:
+        - name: linkedout-frontend
+          image: zuikaru/linkedout-frontend
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NEXT_PUBLIC_API_ENDPOINT
+              value: ''
+            - name: API_ENDPOINT_SSR
+              value: 'http://linkedout-backend:8000/api'
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: linkedout-frontend
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: linkedout-frontend
+  type: LoadBalancer

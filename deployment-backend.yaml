@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: linkedout-backend
+  labels:
+    app: linkedout-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: linkedout-backend
+  template:
+    metadata:
+      labels:
+        app: linkedout-backend
+    spec:
+      containers:
+      - name: linkedout-backend
+        image: zuikaru/linkedout-backend
+        ports: 
+          - containerPort: 8000
+        env:
+          - name: DB_CONNECTION
+            value: "mysql"
+          - name: DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: linkedout-backend-secret
+                key: DB_HOST
+                optional: true
+          - name: DB_PORT
+            value: "3306"
+          - name: DB_DATABASE
+            value: "solus"
+          - name: DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: linkedout-backend-secret
+                key: DB_USERNAME
+                optional: true
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: linkedout-backend-secret
+                key: DB_PASSWORD
+                optional: true
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "250m"
+      #volumes:
+      #  - name: linkedout-upload
+      #    persistentVolumeClaim:
+      #      claimName: linkedout-upload
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: linkedout-backend
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: linkedout-backend
+  type: LoadBalancer
