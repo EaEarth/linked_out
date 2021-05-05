@@ -110,6 +110,9 @@ describe('UsersService', () => {
     it('findByIdUserInfo', async () => {
       expect(await service.findUserById(2)).toBe(indexResult[1]);
     });
+    it('findByUsername', async () => {
+      expect(await service.findByUsername("Bianka_Schuster")).toBe(indexResult[0]);
+    });
   });
 
   describe('Create, update, delete', () => {
@@ -125,6 +128,7 @@ describe('UsersService', () => {
       const deletedUser = await service.delete(new User(),1);
       expect(deletedUser).toStrictEqual(indexResult[0])
     })
+    
   });
 });
 
@@ -282,6 +286,11 @@ export class MockUserRepository {
           for (let i = 0; i < indexResult.length; ++i) {
             if (typeof condition == 'number') {
               if (indexResult[i].id === condition) {
+                entity = indexResult[i];
+              }
+            }
+            if (typeof condition == 'object'){
+              if (indexResult[i].username == condition.username) {
                 entity = indexResult[i];
               }
             }
