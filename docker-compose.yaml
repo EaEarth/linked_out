@@ -18,6 +18,7 @@ services:
       - mysql
     environment:
       - DB_HOST=mysql
+      - URL=http://localhost:8000
     volumes:
       - upload:/app/uploads
   mysql:

@@ -37,6 +37,10 @@
 2. Seed the database by runnng the following commands
 
 ```bash
+$ cd backend
+# Change url if necessary
+$ cross-env URL=http://localhost:8000 yarn seed:run
+$ mysqldump -u <username> -p solus > solus.sql
 # Replace <mysql-container-name> with the mysql container name
 $ docker cp solus.sql <mysql-container-name>:/
 $ docker exec -it <mysql-container-name> bash
