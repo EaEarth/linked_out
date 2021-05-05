@@ -17,6 +17,7 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.setGlobalPrefix('api');
+  app.enableCors();
   //app.useGlobalFilters(new AllExceptionFilter());
   app.use(helmet());
   app.use(cookieParser('superDuperSecretCookieKey'));
