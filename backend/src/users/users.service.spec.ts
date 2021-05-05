@@ -19,43 +19,44 @@ describe('UsersService', () => {
         UsersService,
         {
           provide: getRepositoryToken(User),
-          useClass: Repository,
-          useValue: {
-            find: jest.fn().mockImplementation((object: any) => {
-              Promise.resolve(indexResult);
-            }),
-            findOne: jest
-              .fn()
-              .mockImplementation((condition: any, object: object = {}) => {
-                var entity = undefined;
-                for (let i = 0; i < indexResult.length; ++i) {
-                  if (typeof condition == 'number') {
-                    if (indexResult[i].id === condition) {
-                      entity = indexResult[i];
-                    }
-                  }
-                }
-                return Promise.resolve(entity);
-              }),
-            save: jest.fn().mockImplementation((object: object) => {
-              Promise.resolve({ id: 1, ...object });
-            }),
-          },
+          useClass: MockUserRepository,
+          // useValue: {
+          //   find: jest.fn().mockImplementation((condition: any,object: any = {}) => {
+          //     return Promise.resolve(indexResult);
+          //   }),
+          //   findOne: jest
+          //     .fn()
+          //     .mockImplementation((condition: any, object: object = {}) => {
+          //       var entity = undefined;
+          //       for (let i = 0; i < indexResult.length; ++i) {
+          //         if (typeof condition == 'number') {
+          //           if (indexResult[i].id === condition) {
+          //             entity = indexResult[i];
+          //           }
+          //         }
+          //       }
+          //       return Promise.resolve(entity);
+          //     }),
+          //   save: jest.fn().mockImplementation((object: object) => {
+          //     return Promise.resolve({ id: 1, ...object });
+          //   }),
+          // },
         },
         {
           provide: getRepositoryToken(Tag),
-          useClass: Repository,
-          useValue: {
-            save: jest.fn().mockImplementation((object: object) => {
-              Promise.resolve({ id: 1, ...object });
-            }),
-          },
+          useClass: MockTagRepository,
+          // useValue: {
+          //   save: jest.fn().mockImplementation((object: object) => {
+          //     return Promise.resolve({ id: 1, ...object });
+          //   }),
+            
+          // },
         },
         {
           provide: FilesService,
           useValue: {
             findById: jest.fn().mockImplementation((id: number) => {
-              Promise.resolve({
+              return Promise.resolve({
                 id: id,
                 title: 'default.jpg',
                 type: 'image/jpeg',
@@ -91,8 +92,12 @@ describe('UsersService', () => {
     repo = module.get<Repository<User>>(getRepositoryToken(User));
   });
 
-  it('should be defined', () => {
+  it('Service should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('Repo should be defined', () => {
+    expect(repo).toBeDefined();
   });
 
   describe('Basic index and get service', () => {
@@ -100,17 +105,26 @@ describe('UsersService', () => {
       expect(await service.index()).toBe(indexResult);
     });
     it('findById', async () => {
-      expect(await service.findById(1)).toBe(indexResult[1]);
+      expect(await service.findById(1)).toBe(indexResult[0]);
     });
     it('findByIdUserInfo', async () => {
-      expect(await service.findById(2)).toBe(indexResult[2]);
+      expect(await service.findUserById(2)).toBe(indexResult[1]);
     });
   });
 
   describe('Create, update, delete', () => {
     it('create user', async () => {
-      expect(await service.create(create)).toBe(indexResult);
+      const user = await service.create(create);
+      expect(user).toStrictEqual({...createOutput,hashedPassword: user.hashedPassword});
     });
+    it('update user', async () => {
+      const user = await service.update({...(new User()),id:1}, update);
+      expect(user).toStrictEqual({...createOutput ,password: "123456",hashedPassword: user.hashedPassword});
+    });
+    it('delete user', async () => {
+      const deletedUser = await service.delete(new User(),1);
+      expect(deletedUser).toStrictEqual(indexResult[0])
+    })
   });
 });
 
@@ -201,15 +215,35 @@ const create = {
   jobAnnouncement: null,
 };
 
-const createOutput = {
-  id: 2,
+const update = {
+  id: 1,
   username: 'Kenyatta_Osinski',
   password: '123456',
   email: 'Monte91@hotmail.com',
   prefix: 'MR.',
   firstname: 'Keyshawn',
   lastname: 'Beier',
-  birthDate: '2020-09-09',
+  birthDate: new Date('2020-09-09'),
+  address: '254 Phayathai Rd, Wang Mai, Pathum Wan District, Bangkok 10330',
+  latitude: -74.3284,
+  longtitude: -147.5317,
+  telNumber: '0945555555',
+  jobAnnouncement: null,
+  vertifyAt: null,
+  isAdmin: false,
+  province: 'กรุงเทพมหานคร',
+  tags: ['Testtag1'],
+  avatarFileId: 2
+};
+
+const createOutput = {
+  id: 1,
+  username: 'Kenyatta_Osinski',
+  email: 'Monte91@hotmail.com',
+  prefix: 'MR.',
+  firstname: 'Keyshawn',
+  lastname: 'Beier',
+  birthDate: new Date('2020-09-09'),
   address: '254 Phayathai Rd, Wang Mai, Pathum Wan District, Bangkok 10330',
   latitude: -74.3284,
   longtitude: -147.5317,
@@ -217,6 +251,8 @@ const createOutput = {
   vertifyAt: null,
   isAdmin: false,
   province: 'กรุงเทพมหานคร',
+  jobAnnouncement: null,
+  avatarFileId: 2,
   tags: [
     {
       id: 1,
@@ -230,3 +266,35 @@ const createOutput = {
     path: 'http://localhost:8000/api/files/default_profile_0.jpg',
   },
 };
+
+export class MockUserRepository {
+  public async save(object: object): Promise<any> {
+    return Promise.resolve({ id: 1, ...object });
+  }
+  public async find(condition: any,object: any = {}): Promise<any> {
+    return Promise.resolve(indexResult);
+  }
+  public async remove(object: object): Promise<any> {
+    return Promise.resolve(object);
+  }
+  public async findOne(condition: any, object: object = {}): Promise<any> {
+    var entity = undefined;
+          for (let i = 0; i < indexResult.length; ++i) {
+            if (typeof condition == 'number') {
+              if (indexResult[i].id === condition) {
+                entity = indexResult[i];
+              }
+            }
+          }
+          return Promise.resolve(entity);
+  }
+}
+
+export class MockTagRepository {
+  public async save(object: any = {}): Promise<any> {
+      return Promise.resolve({ id: 1, ...object });
+  }
+  public async findOne(object: any): Promise<any> {
+      return Promise.resolve({id:1,name:object.where.name})
+  }
+}

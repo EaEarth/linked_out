@@ -49,6 +49,10 @@ export class UsersService {
         return this.repo.findOne(id);
     }
 
+    async findByUsername(username: string): Promise<User | undefined> {
+        return this.repo.findOne({ username }, { relations: ["avatarFile", "tags"] });
+    }
+
     async create({ password, tags, ...dto }: Omit<createUser, 'id'>): Promise<User> {
         const user = { ...new User(), ...dto };
         if (dto.avatarFileId) {
