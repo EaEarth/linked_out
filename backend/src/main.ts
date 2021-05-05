@@ -6,12 +6,16 @@ import * as helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
 import { SocketIoAdapter } from './socketio.adapter';
-import { DocumentBuilder, SwaggerCustomOptions, SwaggerModule } from '@nestjs/swagger';
+import {
+  DocumentBuilder,
+  SwaggerCustomOptions,
+  SwaggerModule,
+} from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: {
-      origin: ['http://localhost:3000'],
+      origin: ['http://localhost:3000', process.env.URL],
       credentials: true,
     },
   });
@@ -20,6 +24,7 @@ async function bootstrap() {
   //app.useGlobalFilters(new AllExceptionFilter());
   app.use(helmet());
   app.use(cookieParser('superDuperSecretCookieKey'));
+  app.enableCors();
   app.useWebSocketAdapter(new SocketIoAdapter(app, true));
   //app.set('trust proxy', 1);
 

@@ -38,7 +38,9 @@ export class WebSocketStore {
     this.cookie = null;
     this.isConnected = false;
     const urlObject = new URL(process.env.NEXT_PUBLIC_API_ENDPOINT);
-    this.url = `ws://${urlObject.host}`;
+    this.url = `${urlObject.protocol === 'https:' ? 'wss' : 'ws'}://${
+      urlObject.host
+    }`;
     this.opts = {
       withCredentials: true,
     };
