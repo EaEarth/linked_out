@@ -24,6 +24,8 @@ export class AuthController {
       expires: new Date(Date.now() + 24 * 3600000),
       signed: true,
       httpOnly: true,
+      secure: process.env.HTTPS === 'true',
+      sameSite: process.env.HTTPS === 'true' ? 'none' : 'lax',
     });
     return token;
   }

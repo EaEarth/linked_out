@@ -13,18 +13,16 @@ import {
 } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    cors: {
-      origin: ['http://localhost:3000', process.env.URL],
-      credentials: true,
-    },
-  });
+  const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.setGlobalPrefix('api');
   //app.useGlobalFilters(new AllExceptionFilter());
   app.use(helmet());
   app.use(cookieParser('superDuperSecretCookieKey'));
-  app.enableCors();
+  app.enableCors({
+    origin: ['http://localhost:3000', process.env.URL],
+    credentials: true,
+  });
   app.useWebSocketAdapter(new SocketIoAdapter(app, true));
   //app.set('trust proxy', 1);
 

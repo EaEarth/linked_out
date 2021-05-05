@@ -17,4 +17,7 @@ module.exports = {
   sassOptions: {
     includePaths: [path.join(__dirname, 'styles')],
   },
+  rewrites: () => [
+    { source: '/api/:path*', destination: `${process.env.NEXT_PUBLIC_API_ENDPOINT}/:path*` }
+  ]
 };
