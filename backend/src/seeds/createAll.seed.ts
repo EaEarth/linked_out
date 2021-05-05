@@ -9,7 +9,6 @@ import { Message } from '../entities/chats/message.entity';
 import { PaymentSlip } from '../entities/payment/paymentSlip.entity';
 
 export class CreateAll implements Seeder {
-  //cross-env ENV=value ENV=value yarn seed:run
   tagEntity = [];
   userEntity = [];
   announcementEntity = [];
