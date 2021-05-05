@@ -9,7 +9,7 @@ import { Message } from '../entities/chats/message.entity';
 import { PaymentSlip } from '../entities/payment/paymentSlip.entity';
 
 export class CreateAll implements Seeder {
-  
+  //cross-env ENV=value ENV=value yarn seed:run
   tagEntity = [];
   userEntity = [];
   announcementEntity = [];
@@ -21,12 +21,12 @@ export class CreateAll implements Seeder {
       }
       else this.tagEntity.push(await factory(Tag)().create())
     }
-    let qrCodePaymentFile = await factory(FileItem)().create({title:"qr_code_payment",path:'http://localhost:8000/api/files/qr_code_payment.jpg'});
+    let qrCodePaymentFile = await factory(FileItem)().create({title:"qr_code_payment",path:`${process.env.URL}/api/files/qr_code_payment.jpg`});
     for (let i=0; i<10; i++){
       this.userEntity.push(
         await factory(User)()
           .map(async (user: User) : Promise<User> => {
-            const file = await factory(FileItem)().create({ path:`http://localhost:8000/api/files/default_profile_${i%5}.jpg`});
+            const file = await factory(FileItem)().create({ path:`${process.env.URL}/api/files/default_profile_${i%5}.jpg`});
             file.owner = user;
             user.avatarFile = file;
             user.jobAnnouncements = []
@@ -72,7 +72,7 @@ export class CreateAll implements Seeder {
                 }
                 var nPic = 5
                 var rng = Math.floor(Math.random()*nPic)
-                const fileAnnounce = await factory(FileItem)().create({ path:`http://localhost:8000/api/files/default_announcement_${rng%nPic}.jpg`});
+                const fileAnnounce = await factory(FileItem)().create({ path:`${process.env.URL}/api/files/default_announcement_${rng%nPic}.jpg`});
                 announcement.picture = fileAnnounce
                 fileAnnounce.jobAnnouncements = [announcement]
                 return announcement
