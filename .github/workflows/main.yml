@@ -23,6 +23,6 @@ jobs:
       - name: Install modules
         run: cd backend && yarn
       - name: Run tests of user service
-        run: yarn test -- users.service.spec.ts
+        run: cd backend && yarn test -- users.service.spec.ts
       - name: Run tests of user controller
-        run: yarn test -- users.controller.spec.ts
+        run: cd backend && yarn test -- users.controller.spec.ts
