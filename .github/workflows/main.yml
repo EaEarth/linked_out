@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install modules
-        run: yarn
+        run: cd backend && yarn
       - name: Run tests of user service
         run: yarn test -- users.service.spec.ts
       - name: Run tests of user controller
