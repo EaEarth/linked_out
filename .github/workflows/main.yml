@@ -22,5 +22,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install modules
         run: yarn
-      - name: Run tests
-        run: yarn test
+      - name: Run tests of user service
+        run: yarn test -- users.service.spec.ts
+      - name: Run tests of user controller
+        run: yarn test -- users.controller.spec.ts
