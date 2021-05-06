@@ -18,6 +18,7 @@ export const chatRoom = (props) => {
   const { webSocketStore } = useRootStore();
   useLifecycles(
     () => {
+      webSocketStore.init();
       webSocketStore.connect();
       // registers
     },

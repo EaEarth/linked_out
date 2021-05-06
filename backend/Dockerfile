@@ -25,6 +25,8 @@ ENV NODE_ENV=production
 WORKDIR /app
 
 COPY --from=builder ./app/ ./
+COPY ./uploads/ ./uploads/
+# Seed Upload folder
 
 EXPOSE 8000
 CMD [ "yarn", "run", "start:prod" ]

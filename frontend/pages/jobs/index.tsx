@@ -77,35 +77,41 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   for (const tag of tagQuery) {
     tags.push({ name: tag });
   }
-  if (context.query.browse) {
-    const { data } = await axios.get<JobAnnouncement[]>(
-      'job/search',
-      {
+
+  try {
+    if (context.query.browse) {
+      const { data } = await axios.get<JobAnnouncement[]>('job/search', {
         data: {
           search: searchQuery,
           lowerBoundSalary: lowerBoundSalaryQuery,
           province: provinceQuery,
           tag: tagQuery,
         },
-      }
-    );
+      });
+      return {
+        props: {
+          jobs: data,
+          tags: tags,
+        },
+      };
+    }
+    const { data } = await axios.get<JobAnnouncement[]>('job/index');
+
     return {
       props: {
         jobs: data,
         tags: tags,
       },
     };
+  } catch (err) {
+    console.error(err.stack);
+    return {
+      props: {
+        jobs: [],
+        tags: tags,
+      },
+    };
   }
-  const { data } = await axios.get<JobAnnouncement[]>(
-    'job/index'
-  );
-
-  return {
-    props: {
-      jobs: data,
-      tags: tags,
-    },
-  };
 }
 
 export default Jobs;

@@ -38,8 +38,11 @@ export class WebSocketStore {
     this.cookie = null;
     this.isConnected = false;
     const urlObject = new URL(process.env.NEXT_PUBLIC_API_ENDPOINT);
-    this.url = `ws://${urlObject.host}`;
+    this.url = `${urlObject.protocol === 'https:' ? 'wss' : 'ws'}://${
+      urlObject.host
+    }`;
     this.opts = {
+      auth: { token: this.rootStore.authStore.accessToken },
       withCredentials: true,
     };
     this.messages = [];
@@ -50,7 +53,17 @@ export class WebSocketStore {
   }
 
   @action
+  initOpts(): void {
+    this.opts = {
+      auth: { token: this.rootStore.authStore.accessToken },
+      withCredentials: true,
+    };
+  }
+
+  @action
   init(): void {
+    if (this.socket) this.close();
+    this.initOpts();
     this.socket = io(this.url, this.opts);
     this.socket.on('connect', () => {
       this.setConnected(true);
