@@ -32,7 +32,12 @@ export class ChatService {
 
   async getUserFromSocket(socket: Socket): Promise<User> {
     const cookie = socket.handshake.headers.cookie;
-    console.log(socket);
+    const auth = socket.handshake.auth;
+    //console.log(socket);
+    if (auth.token) {
+      console.log('Using auth token to retrieve user');
+      return await this.userService.getUserFromAuthenticationToken(auth.token);
+    }
     //const { Authentication: authenticationToken } = parse(cookie);
     const cookieSplit = cookie.split(' ');
     var jwt, jwtToken;

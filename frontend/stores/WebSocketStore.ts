@@ -42,6 +42,7 @@ export class WebSocketStore {
       urlObject.host
     }`;
     this.opts = {
+      auth: { token: this.rootStore.authStore.accessToken },
       withCredentials: true,
     };
     this.messages = [];
@@ -52,7 +53,17 @@ export class WebSocketStore {
   }
 
   @action
+  initOpts(): void {
+    this.opts = {
+      auth: { token: this.rootStore.authStore.accessToken },
+      withCredentials: true,
+    };
+  }
+
+  @action
   init(): void {
+    if (this.socket) this.close();
+    this.initOpts();
     this.socket = io(this.url, this.opts);
     this.socket.on('connect', () => {
       this.setConnected(true);
